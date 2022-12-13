@@ -21,7 +21,7 @@ namespace Yandex.API360 {
             httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _options.Token);
         }
-        
+
         /// <summary>
         /// Получить список сотрудников
         /// </summary>
@@ -88,7 +88,29 @@ namespace Yandex.API360 {
             }
             return await response.Content.ReadFromJsonAsync<User>();
         }
+        /// <summary>
+        /// Изменить сотрудника
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public async Task<User> EditUser(User user) {
+            if (user is null) {
+                throw new ArgumentNullException(nameof(user));
+            }
+            var response = await httpClient.PatchAsJsonAsync($"{_options.URLUsers}/{user.id}", user);
+            if (response.StatusCode != System.Net.HttpStatusCode.OK) {
+                if (response.Content is null) {
+                    throw new APIRequestException(
+                        message: "Response doesn't contain any content",
+                        httpStatusCode: response.StatusCode
+                    );
+                }
+                var failedResponse = await response.Content.ReadFromJsonAsync<FailedAPIResponse>();
+                throw new APIRequestException(response.StatusCode, failedResponse);
+            }
+            return await response.Content.ReadFromJsonAsync<User>();
         }
+    }
 }
 
 
