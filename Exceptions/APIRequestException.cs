@@ -11,6 +11,11 @@ namespace Yandex.API360.Exceptions {
             Code = code;
             Details = details;
         }
+        public APIRequestException(HttpStatusCode httpStatusCode, FailedAPIResponse failedAPIResponse) : base(failedAPIResponse.message) {
+            HttpStatusCode = httpStatusCode;
+            Code = failedAPIResponse.code;
+            Details = failedAPIResponse.details;
+        }
         public APIRequestException(string message, HttpStatusCode httpStatusCode) : base(message) {
             HttpStatusCode = httpStatusCode;
         }

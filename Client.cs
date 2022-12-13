@@ -38,11 +38,7 @@ namespace Yandex.API360 {
                     );
                 }
                 var failedResponse = await response.Content.ReadFromJsonAsync<FailedAPIResponse>();
-                throw new APIRequestException(
-                    message: failedResponse.message,
-                    httpStatusCode: response.StatusCode,
-                    code: failedResponse.code,
-                    details: failedResponse.details);
+                throw new APIRequestException(response.StatusCode, failedResponse);
             }
             var apiResponse = await response.Content.ReadFromJsonAsync<GetUsersAPIResponse>();
             return apiResponse.users;
@@ -65,14 +61,9 @@ namespace Yandex.API360 {
                     );
                 }
                 var failedResponse = await response.Content.ReadFromJsonAsync<FailedAPIResponse>();
-                throw new APIRequestException(
-                    message: failedResponse.message,
-                    httpStatusCode: response.StatusCode,
-                    code: failedResponse.code,
-                    details: failedResponse.details);
+                throw new APIRequestException(response.StatusCode, failedResponse);
             }
-            var apiResponse = await response.Content.ReadFromJsonAsync<User>();
-            return apiResponse;
+            return await response.Content.ReadFromJsonAsync<User>();
         }
         /// <summary>
         /// Добавить сотрудника
@@ -93,14 +84,9 @@ namespace Yandex.API360 {
                     );
                 }
                 var failedResponse = await response.Content.ReadFromJsonAsync<FailedAPIResponse>();
-                throw new APIRequestException(
-                    message: failedResponse.message,
-                    httpStatusCode: response.StatusCode,
-                    code: failedResponse.code,
-                    details: failedResponse.details);
+                throw new APIRequestException(response.StatusCode, failedResponse);
             }
-            var apiResponse = await response.Content.ReadFromJsonAsync<User>();
-            return apiResponse;
+            return await response.Content.ReadFromJsonAsync<User>();
         }
         }
 }
