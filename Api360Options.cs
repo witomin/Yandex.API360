@@ -31,7 +31,7 @@ namespace Yandex.API360 {
             }
         }
         /// <summary>
-        /// URL Просмотреть список сотрудников
+        /// URL управления сотрудниками
         /// </summary>
         public string URLUsers {
             get {

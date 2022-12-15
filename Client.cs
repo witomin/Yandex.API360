@@ -46,7 +46,7 @@ namespace Yandex.API360 {
         /// <summary>
         /// Получить сотрудника по Id
         /// </summary>
-        /// <param name="userId">Id </param>
+        /// <param name="userId">Id сотрудника</param>
         /// <returns></returns>
         public async Task<User> GetUserById(string userId) {
             if (string.IsNullOrEmpty(userId)) {
@@ -68,7 +68,7 @@ namespace Yandex.API360 {
         /// <summary>
         /// Добавить сотрудника
         /// </summary>
-        /// <param name="user"></param>
+        /// <param name="user">Сотрудник</param>
         /// <returns></returns>
         public async Task<User> AddUser(User user) {
             if (user is null) {
@@ -91,13 +91,37 @@ namespace Yandex.API360 {
         /// <summary>
         /// Изменить сотрудника
         /// </summary>
-        /// <param name="user"></param>
+        /// <param name="user">Сотрудник</param>
         /// <returns></returns>
         public async Task<User> EditUser(User user) {
             if (user is null) {
                 throw new ArgumentNullException(nameof(user));
             }
             var response = await httpClient.PatchAsJsonAsync($"{_options.URLUsers}/{user.id}", user);
+            if (response.StatusCode != System.Net.HttpStatusCode.OK) {
+                if (response.Content is null) {
+                    throw new APIRequestException(
+                        message: "Response doesn't contain any content",
+                        httpStatusCode: response.StatusCode
+                    );
+                }
+                var failedResponse = await response.Content.ReadFromJsonAsync<FailedAPIResponse>();
+                throw new APIRequestException(response.StatusCode, failedResponse);
+            }
+            return await response.Content.ReadFromJsonAsync<User>();
+        }
+        /// <summary>
+        /// Добавить сотруднику алиас почтового ящика
+        /// </summary>
+        /// <param name="userId">Id сотрудника</param>
+        /// <param name="alias">Алиас</param>
+        /// <returns></returns>
+        public async Task<User> AddAliasToUser(string userId, string alias) {
+            if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(alias)) {
+                throw new ArgumentNullException(string.IsNullOrEmpty(userId) ? nameof(userId) : null, string.IsNullOrEmpty(alias) ? nameof(alias) : null);
+            }
+
+            var response = await httpClient.PostAsJsonAsync($"{_options.URLUsers}/{userId}/aliases", new { alias = alias });
             if (response.StatusCode != System.Net.HttpStatusCode.OK) {
                 if (response.Content is null) {
                     throw new APIRequestException(
