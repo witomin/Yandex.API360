@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using System.Text.Json;
 using System.Threading.Tasks;
 using Yandex.API360.Exceptions;
 using Yandex.API360.Models;
@@ -37,7 +35,7 @@ namespace Yandex.API360 {
         /// <summary>
         /// Получить сотрудника по Id
         /// </summary>
-        /// <param name="userId">Id сотрудника</param>
+        /// <param name="userId">Идентификатор сотрудника</param>
         /// <returns></returns>
         public async Task<User> GetUserById(string userId) {
             if (string.IsNullOrEmpty(userId)) {
@@ -77,7 +75,7 @@ namespace Yandex.API360 {
         /// <summary>
         /// Добавить сотруднику алиас почтового ящика
         /// </summary>
-        /// <param name="userId">Id сотрудника</param>
+        /// <param name="userId">Идентификатор сотрудника</param>
         /// <param name="alias">Алиас</param>
         /// <returns></returns>
         public async Task<User> AddAliasToUser(string userId, string alias) {
@@ -91,7 +89,7 @@ namespace Yandex.API360 {
         /// <summary>
         /// Удалить у сотрудника алиас почтового ящика.
         /// </summary>
-        /// <param name="userId">Id сотрудника</param>
+        /// <param name="userId">Идентификатор сотрудника</param>
         /// <param name="alias">Алиас</param>
         /// <returns></returns>
         public async Task<bool> DeleteAliasFromUser(string userId, string alias) {
@@ -103,7 +101,20 @@ namespace Yandex.API360 {
             var result = await response.Content.ReadFromJsonAsync<Alias>();
             return result.removed;
         }
-
+        /// <summary>
+        /// Возвращает информацию о статусе 2FA сотрудника.
+        /// </summary>
+        /// <param name="userId">Идентификатор сотрудника</param>
+        /// <returns></returns>
+        public async Task<bool> GetStatus2FAUser(string userId) {
+            if (string.IsNullOrEmpty(userId)) {
+                throw new ArgumentNullException(nameof(userId));
+            }
+            var response = await httpClient.GetAsync($"{_options.URLUsers}/{userId}/2fa");
+            await CheckResponse(response);
+            var result = await response.Content.ReadFromJsonAsync<Status2FA>();
+            return result.has2fa;
+        }
 
         /// <summary>
         /// Проверить ответ API
