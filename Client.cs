@@ -88,7 +88,21 @@ namespace Yandex.API360 {
             await CheckResponse(response);
             return await response.Content.ReadFromJsonAsync<User>();
         }
-
+        /// <summary>
+        /// Удалить у сотрудника алиас почтового ящика.
+        /// </summary>
+        /// <param name="userId">Id сотрудника</param>
+        /// <param name="alias">Алиас</param>
+        /// <returns></returns>
+        public async Task<bool> DeleteAliasFromUser(string userId, string alias) {
+            if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(alias)) {
+                throw new ArgumentNullException(string.IsNullOrEmpty(userId) ? nameof(userId) : null, string.IsNullOrEmpty(alias) ? nameof(alias) : null);
+            }
+            var response = await httpClient.DeleteAsync($"{_options.URLUsers}/{userId}/aliases/{alias}");
+            await CheckResponse(response);
+            var result = await response.Content.ReadFromJsonAsync<Alias>();
+            return result.removed;
+        }
 
 
         /// <summary>
