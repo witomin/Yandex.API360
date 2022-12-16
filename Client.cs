@@ -30,16 +30,7 @@ namespace Yandex.API360 {
         /// <returns></returns>
         public async Task<List<User>> GetUsers(int page = 1, int perPage = 10) {
             var response = await httpClient.GetAsync($"{_options.URLUsers}?page={page}&perPage={perPage}");
-            if (response.StatusCode != System.Net.HttpStatusCode.OK) {
-                if (response.Content is null) {
-                    throw new APIRequestException(
-                        message: "Response doesn't contain any content",
-                        httpStatusCode: response.StatusCode
-                    );
-                }
-                var failedResponse = await response.Content.ReadFromJsonAsync<FailedAPIResponse>();
-                throw new APIRequestException(response.StatusCode, failedResponse);
-            }
+            await CheckResponse(response);
             var apiResponse = await response.Content.ReadFromJsonAsync<GetUsersAPIResponse>();
             return apiResponse.users;
         }
@@ -53,16 +44,7 @@ namespace Yandex.API360 {
                 throw new ArgumentNullException(nameof(userId));
             }
             var response = await httpClient.GetAsync($"{_options.URLUsers}/{userId}");
-            if (response.StatusCode != System.Net.HttpStatusCode.OK) {
-                if (response.Content is null) {
-                    throw new APIRequestException(
-                        message: "Response doesn't contain any content",
-                        httpStatusCode: response.StatusCode
-                    );
-                }
-                var failedResponse = await response.Content.ReadFromJsonAsync<FailedAPIResponse>();
-                throw new APIRequestException(response.StatusCode, failedResponse);
-            }
+            await CheckResponse(response);
             return await response.Content.ReadFromJsonAsync<User>();
         }
         /// <summary>
@@ -76,16 +58,7 @@ namespace Yandex.API360 {
             }
             var content = JsonContent.Create(user);
             var response = await httpClient.PostAsync($"{_options.URLUsers}", content);
-            if (response.StatusCode != System.Net.HttpStatusCode.OK) {
-                if (response.Content is null) {
-                    throw new APIRequestException(
-                        message: "Response doesn't contain any content",
-                        httpStatusCode: response.StatusCode
-                    );
-                }
-                var failedResponse = await response.Content.ReadFromJsonAsync<FailedAPIResponse>();
-                throw new APIRequestException(response.StatusCode, failedResponse);
-            }
+            await CheckResponse(response);
             return await response.Content.ReadFromJsonAsync<User>();
         }
         /// <summary>
@@ -98,16 +71,7 @@ namespace Yandex.API360 {
                 throw new ArgumentNullException(nameof(user));
             }
             var response = await httpClient.PatchAsJsonAsync($"{_options.URLUsers}/{user.id}", user);
-            if (response.StatusCode != System.Net.HttpStatusCode.OK) {
-                if (response.Content is null) {
-                    throw new APIRequestException(
-                        message: "Response doesn't contain any content",
-                        httpStatusCode: response.StatusCode
-                    );
-                }
-                var failedResponse = await response.Content.ReadFromJsonAsync<FailedAPIResponse>();
-                throw new APIRequestException(response.StatusCode, failedResponse);
-            }
+            await CheckResponse(response);
             return await response.Content.ReadFromJsonAsync<User>();
         }
         /// <summary>
@@ -120,19 +84,26 @@ namespace Yandex.API360 {
             if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(alias)) {
                 throw new ArgumentNullException(string.IsNullOrEmpty(userId) ? nameof(userId) : null, string.IsNullOrEmpty(alias) ? nameof(alias) : null);
             }
-
             var response = await httpClient.PostAsJsonAsync($"{_options.URLUsers}/{userId}/aliases", new { alias = alias });
+            await CheckResponse(response);
+            return await response.Content.ReadFromJsonAsync<User>();
+        }
+
+
+
+        /// <summary>
+        /// Проверить ответ API
+        /// </summary>
+        /// <param name="response"></param>
+        /// <returns></returns>
+        private async Task CheckResponse(HttpResponseMessage response) {
             if (response.StatusCode != System.Net.HttpStatusCode.OK) {
                 if (response.Content is null) {
-                    throw new APIRequestException(
-                        message: "Response doesn't contain any content",
-                        httpStatusCode: response.StatusCode
-                    );
+                    throw new APIRequestException("Response doesn't contain any content", response.StatusCode);
                 }
                 var failedResponse = await response.Content.ReadFromJsonAsync<FailedAPIResponse>();
                 throw new APIRequestException(response.StatusCode, failedResponse);
             }
-            return await response.Content.ReadFromJsonAsync<User>();
         }
     }
 }
