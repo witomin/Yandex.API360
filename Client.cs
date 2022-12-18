@@ -146,6 +146,19 @@ namespace Yandex.API360 {
             var result = await response.Content.ReadFromJsonAsync<Alias>();
             return result.removed;
         }
+        /// <summary>
+        /// Создать подразделение
+        /// </summary>
+        /// <param name="newDepartment"></param>
+        /// <returns></returns>
+        public async Task<Department> AddDepartment(CreateDepartment newDepartment) {
+            if (newDepartment is null) {
+                throw new ArgumentNullException(nameof(newDepartment));
+            }
+            var response = await httpClient.PostAsJsonAsync($"{_options.URLDepartments}", newDepartment);
+            await CheckResponse(response);
+            return await response.Content.ReadFromJsonAsync<Department>();
+        }
         #endregion
         #region Private
         /// <summary>
