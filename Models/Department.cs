@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Yandex.API360.Models {
     /// <summary>
@@ -12,7 +13,7 @@ namespace Yandex.API360.Models {
         /// <summary>
         /// Дата и время создания подразделения
         /// </summary>
-        public string createdAt { get; set; }
+        public DateTime createdAt { get; set; }
         /// <summary>
         /// <summary>
         /// Адрес почтовой рассылки подразделения

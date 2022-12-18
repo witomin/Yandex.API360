@@ -212,6 +212,20 @@ namespace Yandex.API360 {
             return result.removed;
         }
         #endregion
+        #region Группы
+        /// <summary>
+        /// Получить список групп
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="perPage"></param>
+        /// <returns></returns>
+        public async Task<List<Group>> GetGroups(long page = 1, long perPage = 10) {
+            var response = await httpClient.GetAsync($"{_options.URLGroups}?page={page}&perPage={perPage}");
+            await CheckResponse(response);
+            var apiResponse = await response.Content.ReadFromJsonAsync<GetGroupsModel>();
+            return apiResponse.groups;
+        }
+        #endregion
         #region Private
         /// <summary>
         /// Проверить ответ API
