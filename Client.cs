@@ -19,7 +19,7 @@ namespace Yandex.API360 {
             httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _options.Token);
         }
-
+        #region Сотрудники
         /// <summary>
         /// Получить список сотрудников
         /// </summary>
@@ -115,7 +115,39 @@ namespace Yandex.API360 {
             var result = await response.Content.ReadFromJsonAsync<Status2FA>();
             return result.has2fa;
         }
-
+        #endregion
+        #region Подразделения
+        /// <summary>
+        /// Добавить подразделению алиас
+        /// </summary>
+        /// <param name="departmentId">Идентификатор подразделения</param>
+        /// <param name="alias">Алиас почтовой рассылки подразделения</param>
+        /// <returns></returns>
+        public async Task<User> AddAliasToDepartment(string departmentId, string alias) {
+            if (string.IsNullOrEmpty(departmentId) || string.IsNullOrEmpty(alias)) {
+                throw new ArgumentNullException(string.IsNullOrEmpty(departmentId) ? nameof(departmentId) : null, string.IsNullOrEmpty(alias) ? nameof(alias) : null);
+            }
+            var response = await httpClient.PostAsJsonAsync($"{_options.URLDepartments}/{departmentId}/aliases", new { alias = alias });
+            await CheckResponse(response);
+            return await response.Content.ReadFromJsonAsync<User>();
+        }
+        /// <summary>
+        /// Удалить алиас почтовой рассылки подразделения.
+        /// </summary>
+        /// <param name="departmentId">Идентификатор сотрудника</param>
+        /// <param name="alias">Алиас</param>
+        /// <returns></returns>
+        public async Task<bool> DeleteAliasFromDepartment(string departmentId, string alias) {
+            if (string.IsNullOrEmpty(departmentId) || string.IsNullOrEmpty(alias)) {
+                throw new ArgumentNullException(string.IsNullOrEmpty(departmentId) ? nameof(departmentId) : null, string.IsNullOrEmpty(alias) ? nameof(alias) : null);
+            }
+            var response = await httpClient.DeleteAsync($"{_options.URLDepartments}/{departmentId}/aliases/{alias}");
+            await CheckResponse(response);
+            var result = await response.Content.ReadFromJsonAsync<Alias>();
+            return result.removed;
+        }
+        #endregion
+        #region Private
         /// <summary>
         /// Проверить ответ API
         /// </summary>
@@ -130,6 +162,7 @@ namespace Yandex.API360 {
                 throw new APIRequestException(response.StatusCode, failedResponse);
             }
         }
+        #endregion
     }
 }
 

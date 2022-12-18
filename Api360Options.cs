@@ -38,5 +38,13 @@ namespace Yandex.API360 {
                 return $"{API360Host}/directory/v1/org/{_organizationId}/users";
             }
         }
+        /// <summary>
+        /// URL управления подразделениями
+        /// </summary>
+        public string URLDepartments {
+            get {
+                return $"{API360Host}/directory/v1/org/{_organizationId}/departments";
+            }
+        }
     }
 }
