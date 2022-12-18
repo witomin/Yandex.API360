@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
+using Yandex.API360.Enums;
 using Yandex.API360.Exceptions;
 using Yandex.API360.Models;
 
@@ -149,7 +150,7 @@ namespace Yandex.API360 {
         /// <summary>
         /// Создать подразделение
         /// </summary>
-        /// <param name="newDepartment"></param>
+        /// <param name="newDepartment">Новое подразделение</param>
         /// <returns></returns>
         public async Task<Department> AddDepartment(CreateDepartment newDepartment) {
             if (newDepartment is null) {
@@ -158,6 +159,33 @@ namespace Yandex.API360 {
             var response = await httpClient.PostAsJsonAsync($"{_options.URLDepartments}", newDepartment);
             await CheckResponse(response);
             return await response.Content.ReadFromJsonAsync<Department>();
+        }
+        /// <summary>
+        /// Получить подразделение по ID
+        /// </summary>
+        /// <param name="departmentId">Идентификатор подразделения</param>
+        /// <returns></returns>
+        public async Task<Department> GetDapartmentById(long departmentId) {
+            var response = await httpClient.GetAsync($"{_options.URLDepartments}/{departmentId}");
+            await CheckResponse(response);
+            return await response.Content.ReadFromJsonAsync<Department>();
+        }
+        /// <summary>
+        /// Получить список подразделений
+        /// </summary>
+        /// <param name="page">Номер страницы ответа</param>
+        /// <param name="perPage">Количество сотрудников на одной странице ответа</param>
+        /// <param name="parentId">НИдентификатор родительского подразделения. Если не указан, то выводятся все подразделения организации.</param>
+        /// <param name="orderBy">Вид сортировки. id: По идентификатору.name: По названию.Значение по умолчанию: id.</param>
+        /// <returns></returns>
+        public async Task<List<Department>> GetDepartments(long page = 1, long perPage = 10, long? parentId = default, DepartmentsOrderBy orderBy = DepartmentsOrderBy.id) {
+            string url = $"{_options.URLDepartments}?page={page}&perPage={perPage}" +
+                $"{(parentId != null ? $"&parentId={parentId}" : string.Empty)}" +
+                $"&orderBy={orderBy}";
+            var response = await httpClient.GetAsync(url);
+            await CheckResponse(response);
+            var apiResponse = await response.Content.ReadFromJsonAsync<GetDepartmentsAPIResponse>();
+            return apiResponse.departments;
         }
         #endregion
         #region Private
