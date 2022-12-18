@@ -1,5 +1,5 @@
 ﻿namespace Yandex.API360.Models {
-    class Alias {
+    class RemovedAliasModel {
         /// <summary>
         /// Алиас почтового ящика сотрудника
         /// </summary>

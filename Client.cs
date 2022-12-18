@@ -30,7 +30,7 @@ namespace Yandex.API360 {
         public async Task<List<User>> GetUsers(int page = 1, int perPage = 10) {
             var response = await httpClient.GetAsync($"{_options.URLUsers}?page={page}&perPage={perPage}");
             await CheckResponse(response);
-            var apiResponse = await response.Content.ReadFromJsonAsync<GetUsersAPIResponse>();
+            var apiResponse = await response.Content.ReadFromJsonAsync<GetUsersModel>();
             return apiResponse.users;
         }
         /// <summary>
@@ -99,7 +99,7 @@ namespace Yandex.API360 {
             }
             var response = await httpClient.DeleteAsync($"{_options.URLUsers}/{userId}/aliases/{alias}");
             await CheckResponse(response);
-            var result = await response.Content.ReadFromJsonAsync<Alias>();
+            var result = await response.Content.ReadFromJsonAsync<RemovedAliasModel>();
             return result.removed;
         }
         /// <summary>
@@ -124,9 +124,9 @@ namespace Yandex.API360 {
         /// <param name="departmentId">Идентификатор подразделения</param>
         /// <param name="alias">Алиас почтовой рассылки подразделения</param>
         /// <returns></returns>
-        public async Task<User> AddAliasToDepartment(string departmentId, string alias) {
-            if (string.IsNullOrEmpty(departmentId) || string.IsNullOrEmpty(alias)) {
-                throw new ArgumentNullException(string.IsNullOrEmpty(departmentId) ? nameof(departmentId) : null, string.IsNullOrEmpty(alias) ? nameof(alias) : null);
+        public async Task<User> AddAliasToDepartment(long departmentId, string alias) {
+            if (string.IsNullOrEmpty(alias)) {
+                throw new ArgumentNullException(string.IsNullOrEmpty(alias) ? nameof(alias) : null);
             }
             var response = await httpClient.PostAsJsonAsync($"{_options.URLDepartments}/{departmentId}/aliases", new { alias = alias });
             await CheckResponse(response);
@@ -138,13 +138,13 @@ namespace Yandex.API360 {
         /// <param name="departmentId">Идентификатор сотрудника</param>
         /// <param name="alias">Алиас</param>
         /// <returns></returns>
-        public async Task<bool> DeleteAliasFromDepartment(string departmentId, string alias) {
-            if (string.IsNullOrEmpty(departmentId) || string.IsNullOrEmpty(alias)) {
-                throw new ArgumentNullException(string.IsNullOrEmpty(departmentId) ? nameof(departmentId) : null, string.IsNullOrEmpty(alias) ? nameof(alias) : null);
+        public async Task<bool> DeleteAliasFromDepartment(long departmentId, string alias) {
+            if (string.IsNullOrEmpty(alias)) {
+                throw new ArgumentNullException(string.IsNullOrEmpty(alias) ? nameof(alias) : null);
             }
             var response = await httpClient.DeleteAsync($"{_options.URLDepartments}/{departmentId}/aliases/{alias}");
             await CheckResponse(response);
-            var result = await response.Content.ReadFromJsonAsync<Alias>();
+            var result = await response.Content.ReadFromJsonAsync<RemovedAliasModel>();
             return result.removed;
         }
         /// <summary>
@@ -184,7 +184,7 @@ namespace Yandex.API360 {
                 $"&orderBy={orderBy}";
             var response = await httpClient.GetAsync(url);
             await CheckResponse(response);
-            var apiResponse = await response.Content.ReadFromJsonAsync<GetDepartmentsAPIResponse>();
+            var apiResponse = await response.Content.ReadFromJsonAsync<GetDepartmentsModel>();
             return apiResponse.departments;
         }
         /// <summary>
@@ -207,6 +207,17 @@ namespace Yandex.API360 {
             var response = await httpClient.PatchAsJsonAsync($"{_options.URLDepartments}/{department.id}", editDepartment);
             await CheckResponse(response);
             return await response.Content.ReadFromJsonAsync<Department>();
+        }
+        /// <summary>
+        /// Удалить подразделение
+        /// </summary>
+        /// <param name="departmentId">Идентификатор подразделения</param>
+        /// <returns></returns>
+        public async Task<bool> DeleteDepartment(long departmentId) {
+            var response = await httpClient.DeleteAsync($"{_options.URLDepartments}/{departmentId}");
+            await CheckResponse(response);
+            var result = await response.Content.ReadFromJsonAsync<RemovedAliasModel>();
+            return result.removed;
         }
         #endregion
         #region Private

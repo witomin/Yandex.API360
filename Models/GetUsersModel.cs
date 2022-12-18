@@ -1,8 +1,11 @@
 ﻿using System.Collections.Generic;
 
 namespace Yandex.API360.Models {
-    class GetDepartmentsAPIResponse {
-        public List<Department> departments { get; set; }
+    class GetUsersModel {
+        public List<User> users { get; set; }
+        /// <summary>
+        /// Номер страницы ответа
+        /// </summary>
         public long page { get; set; }
         /// <summary>
         /// Количество страниц ответа
@@ -17,4 +20,12 @@ namespace Yandex.API360.Models {
         /// </summary>
         public long total { get; set; }
     }
+
+
+    
+
+   
+
+    
+
 }
