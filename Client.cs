@@ -152,7 +152,7 @@ namespace Yandex.API360 {
         /// </summary>
         /// <param name="newDepartment">Новое подразделение</param>
         /// <returns></returns>
-        public async Task<Department> AddDepartment(CreateDepartment newDepartment) {
+        public async Task<Department> AddDepartment(EditDepartment newDepartment) {
             if (newDepartment is null) {
                 throw new ArgumentNullException(nameof(newDepartment));
             }
@@ -186,6 +186,27 @@ namespace Yandex.API360 {
             await CheckResponse(response);
             var apiResponse = await response.Content.ReadFromJsonAsync<GetDepartmentsAPIResponse>();
             return apiResponse.departments;
+        }
+        /// <summary>
+        /// Изменить подразделение
+        /// </summary>
+        /// <param name="department">подразделение</param>
+        /// <returns></returns>
+        public async Task<Department> EditDepartment(Department department) {
+            if (department is null) {
+                throw new ArgumentNullException(nameof(department));
+            }
+            var editDepartment = new EditDepartment {
+                description = department.description,
+                externalId = department.externalId,
+                headId = department.headId,
+                label = department.label,
+                name = department.name,
+                parentId = department.parentId
+            };
+            var response = await httpClient.PatchAsJsonAsync($"{_options.URLDepartments}/{department.id}", editDepartment);
+            await CheckResponse(response);
+            return await response.Content.ReadFromJsonAsync<Department>();
         }
         #endregion
         #region Private

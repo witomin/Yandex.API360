@@ -48,6 +48,6 @@ namespace Yandex.API360.Models {
         /// <summary>
         /// Идентификатор родительского подразделения
         /// </summary>
-        public long integer { get; set; }
+        public long parentId { get; set; }
     }
 }

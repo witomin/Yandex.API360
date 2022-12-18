@@ -2,7 +2,7 @@
     /// <summary>
     /// Подразделение
     /// </summary>
-    public class CreateDepartment {
+    public class EditDepartment {
         /// <summary>
         /// Описание подразделения
         /// </summary>
