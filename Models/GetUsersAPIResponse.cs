@@ -6,19 +6,19 @@ namespace Yandex.API360.Models {
         /// <summary>
         /// Номер страницы ответа
         /// </summary>
-        public int page { get; set; }
+        public long page { get; set; }
         /// <summary>
         /// Количество страниц ответа
         /// </summary>
-        public int pages { get; set; }
+        public long pages { get; set; }
         /// <summary>
         /// Количество сотрудников на одной странице ответа
         /// </summary>
-        public int perPage { get; set; }
+        public long perPage { get; set; }
         /// <summary>
         /// Общее количество сотрудников
         /// </summary>
-        public int total { get; set; }
+        public long total { get; set; }
     }
 
 

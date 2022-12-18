@@ -14,7 +14,7 @@ namespace Yandex.API360.Models {
         /// <summary>
         /// Идентификатор подразделения, в котором состоит сотрудник
         /// </summary>
-        public int departmentId { get; set; }
+        public long departmentId { get; set; }
         /// <summary>
         /// Основной адрес электронной почты сотрудника
         /// </summary>
