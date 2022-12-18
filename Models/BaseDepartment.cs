@@ -2,23 +2,34 @@
     /// <summary>
     /// Подразделение
     /// </summary>
-    public class EditDepartment {
+    public class BaseDepartment {
+        private ulong? _headId;
         /// <summary>
         /// Описание подразделения
         /// </summary>
-        public string description { get; set; }
+        public string? description { get; set; }
         /// <summary>
         /// Произвольный внешний идентификатор подразделения
         /// </summary>
-        public string externalId { get; set; }
+        public string? externalId { get; set; }
         /// <summary>
         /// Идентификатор сотрудника-руководителя отдела
         /// </summary>
-        public string headId { get; set; }
+        public ulong? headId {
+            get {
+                return _headId;
+            }
+            set {
+                if (value == 0)
+                    _headId = null;
+                else
+                    _headId = value;
+            }
+        }
         /// <summary>
         /// Имя почтовой рассылки подразделения. Например, для адреса new-department@ваш-домен.ru имя почтовой рассылки — это new-department
         /// </summary>
-        public string label { get; set; }
+        public string? label { get; set; }
         /// <summary>
         /// Название подразделения
         /// </summary>

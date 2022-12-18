@@ -150,13 +150,13 @@ namespace Yandex.API360 {
         /// <summary>
         /// Создать подразделение
         /// </summary>
-        /// <param name="newDepartment">Новое подразделение</param>
+        /// <param name="department">Новое подразделение</param>
         /// <returns></returns>
-        public async Task<Department> AddDepartment(EditDepartment newDepartment) {
-            if (newDepartment is null) {
-                throw new ArgumentNullException(nameof(newDepartment));
+        public async Task<Department> AddDepartment(BaseDepartment department) {
+            if (department is null) {
+                throw new ArgumentNullException(nameof(department));
             }
-            var response = await httpClient.PostAsJsonAsync($"{_options.URLDepartments}", newDepartment);
+            var response = await httpClient.PostAsJsonAsync($"{_options.URLDepartments}", department);
             await CheckResponse(response);
             return await response.Content.ReadFromJsonAsync<Department>();
         }
@@ -196,15 +196,7 @@ namespace Yandex.API360 {
             if (department is null) {
                 throw new ArgumentNullException(nameof(department));
             }
-            var editDepartment = new EditDepartment {
-                description = department.description,
-                externalId = department.externalId,
-                headId = department.headId,
-                label = department.label,
-                name = department.name,
-                parentId = department.parentId
-            };
-            var response = await httpClient.PatchAsJsonAsync($"{_options.URLDepartments}/{department.id}", editDepartment);
+            var response = await httpClient.PatchAsJsonAsync($"{_options.URLDepartments}/{department.id}", (BaseDepartment)department);
             await CheckResponse(response);
             return await response.Content.ReadFromJsonAsync<Department>();
         }
