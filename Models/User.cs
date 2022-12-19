@@ -6,7 +6,7 @@ namespace Yandex.API360.Models {
         /// <summary>
         /// Идентификатор сотрудника.
         /// </summary>
-        public string id { get; set; }
+        public ulong id { get; set; }
         /// <summary>
         /// Логин сотрудника
         /// </summary>

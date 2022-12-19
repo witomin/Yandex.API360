@@ -38,10 +38,7 @@ namespace Yandex.API360 {
         /// </summary>
         /// <param name="userId">Идентификатор сотрудника</param>
         /// <returns></returns>
-        public async Task<User> GetUserById(string userId) {
-            if (string.IsNullOrEmpty(userId)) {
-                throw new ArgumentNullException(nameof(userId));
-            }
+        public async Task<User> GetUserById(ulong userId) {
             var response = await httpClient.GetAsync($"{_options.URLUsers}/{userId}");
             await CheckResponse(response);
             return await response.Content.ReadFromJsonAsync<User>();
@@ -79,9 +76,9 @@ namespace Yandex.API360 {
         /// <param name="userId">Идентификатор сотрудника</param>
         /// <param name="alias">Алиас</param>
         /// <returns></returns>
-        public async Task<User> AddAliasToUser(string userId, string alias) {
-            if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(alias)) {
-                throw new ArgumentNullException(string.IsNullOrEmpty(userId) ? nameof(userId) : null, string.IsNullOrEmpty(alias) ? nameof(alias) : null);
+        public async Task<User> AddAliasToUser(ulong userId, string alias) {
+            if (string.IsNullOrEmpty(alias)) {
+                throw new ArgumentNullException(nameof(alias));
             }
             var response = await httpClient.PostAsJsonAsync($"{_options.URLUsers}/{userId}/aliases", new { alias = alias });
             await CheckResponse(response);
@@ -93,9 +90,9 @@ namespace Yandex.API360 {
         /// <param name="userId">Идентификатор сотрудника</param>
         /// <param name="alias">Алиас</param>
         /// <returns></returns>
-        public async Task<bool> DeleteAliasFromUser(string userId, string alias) {
-            if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(alias)) {
-                throw new ArgumentNullException(string.IsNullOrEmpty(userId) ? nameof(userId) : null, string.IsNullOrEmpty(alias) ? nameof(alias) : null);
+        public async Task<bool> DeleteAliasFromUser(ulong userId, string alias) {
+            if (string.IsNullOrEmpty(alias)) {
+                throw new ArgumentNullException(nameof(alias));
             }
             var response = await httpClient.DeleteAsync($"{_options.URLUsers}/{userId}/aliases/{alias}");
             await CheckResponse(response);
@@ -107,10 +104,7 @@ namespace Yandex.API360 {
         /// </summary>
         /// <param name="userId">Идентификатор сотрудника</param>
         /// <returns></returns>
-        public async Task<bool> GetStatus2FAUser(string userId) {
-            if (string.IsNullOrEmpty(userId)) {
-                throw new ArgumentNullException(nameof(userId));
-            }
+        public async Task<bool> GetStatus2FAUser(ulong userId) {
             var response = await httpClient.GetAsync($"{_options.URLUsers}/{userId}/2fa");
             await CheckResponse(response);
             var result = await response.Content.ReadFromJsonAsync<Status2FA>();
