@@ -249,6 +249,21 @@ namespace Yandex.API360 {
             var result = await response.Content.ReadFromJsonAsync<RemovedModel>();
             return result.removed;
         }
+        /// <summary>
+        /// Добавить участника в группу
+        /// </summary>
+        /// <param name="groupId">Идентификатор группы</param>
+        /// <param name="member">Участник</param>
+        /// <returns></returns>
+        public async Task<bool> AddMemberToGroup(long groupId, Member member) {
+            if (member is null) {
+                throw new ArgumentNullException(nameof(member));
+            }
+            var response = await httpClient.PostAsJsonAsync($"{_options.URLGroups}/members", member);
+            await CheckResponse(response);
+            var result = await response.Content.ReadFromJsonAsync<AddedMember>();
+            return result.added;
+        }
         #endregion
         #region Private
         /// <summary>
