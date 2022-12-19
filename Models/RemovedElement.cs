@@ -1,5 +1,5 @@
 ﻿namespace Yandex.API360.Models {
-    class RemovedModel {
+    class RemovedElement {
         /// <summary>
         /// Идентификатор подразделения.
         /// </summary>

@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace Yandex.API360.Models {
-    class GetGroupsModel {
-        public List<Group> groups { get; set; }
+    class UsersList {
+        public List<User> users { get; set; }
         /// <summary>
         /// Номер страницы ответа
         /// </summary>
@@ -22,4 +20,12 @@ namespace Yandex.API360.Models {
         /// </summary>
         public long total { get; set; }
     }
+
+
+    
+
+   
+
+    
+
 }

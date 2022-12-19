@@ -30,7 +30,7 @@ namespace Yandex.API360 {
         public async Task<List<User>> GetUsers(int page = 1, int perPage = 10) {
             var response = await httpClient.GetAsync($"{_options.URLUsers}?page={page}&perPage={perPage}");
             await CheckResponse(response);
-            var apiResponse = await response.Content.ReadFromJsonAsync<GetUsersModel>();
+            var apiResponse = await response.Content.ReadFromJsonAsync<UsersList>();
             return apiResponse.users;
         }
         /// <summary>
@@ -96,7 +96,7 @@ namespace Yandex.API360 {
             }
             var response = await httpClient.DeleteAsync($"{_options.URLUsers}/{userId}/aliases/{alias}");
             await CheckResponse(response);
-            var result = await response.Content.ReadFromJsonAsync<RemovedAliasModel>();
+            var result = await response.Content.ReadFromJsonAsync<RemovedAlias>();
             return result.removed;
         }
         /// <summary>
@@ -138,7 +138,7 @@ namespace Yandex.API360 {
             }
             var response = await httpClient.DeleteAsync($"{_options.URLDepartments}/{departmentId}/aliases/{alias}");
             await CheckResponse(response);
-            var result = await response.Content.ReadFromJsonAsync<RemovedAliasModel>();
+            var result = await response.Content.ReadFromJsonAsync<RemovedAlias>();
             return result.removed;
         }
         /// <summary>
@@ -178,7 +178,7 @@ namespace Yandex.API360 {
                 $"&orderBy={orderBy}";
             var response = await httpClient.GetAsync(url);
             await CheckResponse(response);
-            var apiResponse = await response.Content.ReadFromJsonAsync<GetDepartmentsModel>();
+            var apiResponse = await response.Content.ReadFromJsonAsync<DepartmentsList>();
             return apiResponse.departments;
         }
         /// <summary>
@@ -202,7 +202,7 @@ namespace Yandex.API360 {
         public async Task<bool> DeleteDepartment(long departmentId) {
             var response = await httpClient.DeleteAsync($"{_options.URLDepartments}/{departmentId}");
             await CheckResponse(response);
-            var result = await response.Content.ReadFromJsonAsync<RemovedModel>();
+            var result = await response.Content.ReadFromJsonAsync<RemovedElement>();
             return result.removed;
         }
         #endregion
@@ -216,7 +216,7 @@ namespace Yandex.API360 {
         public async Task<List<Group>> GetGroups(long page = 1, long perPage = 10) {
             var response = await httpClient.GetAsync($"{_options.URLGroups}?page={page}&perPage={perPage}");
             await CheckResponse(response);
-            var apiResponse = await response.Content.ReadFromJsonAsync<GetGroupsModel>();
+            var apiResponse = await response.Content.ReadFromJsonAsync<GroupsList>();
             return apiResponse.groups;
         }
         /// <summary>
@@ -240,7 +240,7 @@ namespace Yandex.API360 {
         public async Task<bool> DeleteGroup(long groupId) {
             var response = await httpClient.DeleteAsync($"{_options.URLGroups}/{groupId}");
             await CheckResponse(response);
-            var result = await response.Content.ReadFromJsonAsync<RemovedModel>();
+            var result = await response.Content.ReadFromJsonAsync<RemovedElement>();
             return result.removed;
         }
         /// <summary>

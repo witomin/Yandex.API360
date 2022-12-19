@@ -1,8 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace Yandex.API360.Models {
-    class GetDepartmentsModel {
-        public List<Department> departments { get; set; }
+    class GroupsList {
+        public List<Group> groups { get; set; }
+        /// <summary>
+        /// Номер страницы ответа
+        /// </summary>
         public long page { get; set; }
         /// <summary>
         /// Количество страниц ответа
