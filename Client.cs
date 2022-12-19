@@ -301,6 +301,37 @@ namespace Yandex.API360 {
             return await response.Content.ReadFromJsonAsync<Group>();
         }
         #endregion
+        #region Антиспам
+        /// <summary>
+        /// Получить список разрешенных IP-адресов и CIDR-подсетей.
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<string>> GetAllowList() {
+            var response = await httpClient.GetAsync($"{_options.URLAntispam}");
+            await CheckResponse(response);
+            var result = await response.Content.ReadFromJsonAsync<WhiteList>();
+            return result.allowList;
+        }
+        /// <summary>
+        /// Создать/изменить список разрешенных IP-адресов и CIDR-подсетей.
+        /// </summary>
+        /// <param name="allowlist">Список разрешенных IP-адресов и CIDR-подсетей.</param>
+        /// <returns></returns>
+        public async Task<object> SetAllowList(List<string> allowlist) {
+            var response = await httpClient.PostAsJsonAsync($"{_options.URLAntispam}", new WhiteList { allowList = allowlist });
+            await CheckResponse(response);
+            return await response.Content.ReadFromJsonAsync<object>();
+        }
+        /// <summary>
+        /// Удалить список разрешенных IP-адресов и CIDR-подсетей.
+        /// </summary>
+        /// <returns></returns>
+        public async Task<object> DeleteAllowList() {
+            var response = await httpClient.DeleteAsync($"{_options.URLAntispam}");
+            await CheckResponse(response);
+            return await response.Content.ReadFromJsonAsync<object>();
+        }
+        #endregion
         #region Private
         /// <summary>
         /// Проверить ответ API

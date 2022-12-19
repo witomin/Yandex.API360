@@ -23,9 +23,9 @@ namespace Yandex.API360 {
         }
         
         /// <summary>
-        /// URL управления белыми списками
+        /// URL управления антиспамом
         /// </summary>
-        public string URLWhiteList {
+        public string URLAntispam {
             get {
                 return $"{API360Host}/admin/v1/org/{_organizationId}/mail/antispam/allowlist/ips";
             }
