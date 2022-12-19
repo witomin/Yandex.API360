@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Yandex.API360.Models {
-    class RemovedDepartmentModel {
+﻿namespace Yandex.API360.Models {
+    class RemovedModel {
         /// <summary>
         /// Идентификатор подразделения.
         /// </summary>

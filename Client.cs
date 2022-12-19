@@ -208,7 +208,7 @@ namespace Yandex.API360 {
         public async Task<bool> DeleteDepartment(long departmentId) {
             var response = await httpClient.DeleteAsync($"{_options.URLDepartments}/{departmentId}");
             await CheckResponse(response);
-            var result = await response.Content.ReadFromJsonAsync<RemovedAliasModel>();
+            var result = await response.Content.ReadFromJsonAsync<RemovedModel>();
             return result.removed;
         }
         #endregion
@@ -237,6 +237,17 @@ namespace Yandex.API360 {
             var response = await httpClient.PostAsJsonAsync($"{_options.URLGroups}", group);
             await CheckResponse(response);
             return await response.Content.ReadFromJsonAsync<Group>();
+        }
+        /// <summary>
+        /// Удалить группу
+        /// </summary>
+        /// <param name="groupId">идентификатор группы</param>
+        /// <returns></returns>
+        public async Task<bool> DeleteGroup(long groupId) {
+            var response = await httpClient.DeleteAsync($"{_options.URLGroups}/{groupId}");
+            await CheckResponse(response);
+            var result = await response.Content.ReadFromJsonAsync<RemovedModel>();
+            return result.removed;
         }
         #endregion
         #region Private
