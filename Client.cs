@@ -253,7 +253,7 @@ namespace Yandex.API360 {
             if (member is null) {
                 throw new ArgumentNullException(nameof(member));
             }
-            var response = await httpClient.PostAsJsonAsync($"{_options.URLGroups}/members", member);
+            var response = await httpClient.PostAsJsonAsync($"{_options.URLGroups}/{groupId}/members", member);
             await CheckResponse(response);
             var result = await response.Content.ReadFromJsonAsync<AddedMember>();
             return result.added;
