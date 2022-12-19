@@ -190,7 +190,7 @@ namespace Yandex.API360 {
             if (department is null) {
                 throw new ArgumentNullException(nameof(department));
             }
-            var response = await httpClient.PatchAsJsonAsync($"{_options.URLDepartments}/{department.id}", (BaseDepartment)department);
+            var response = await httpClient.PatchAsJsonAsync<BaseDepartment>($"{_options.URLDepartments}/{department.id}", department);
             await CheckResponse(response);
             return await response.Content.ReadFromJsonAsync<Department>();
         }
@@ -287,6 +287,16 @@ namespace Yandex.API360 {
         /// <returns></returns>
         public async Task<Group> GetGroup(long groupId) {
             var response = await httpClient.GetAsync($"{_options.URLGroups}/{groupId}");
+            await CheckResponse(response);
+            return await response.Content.ReadFromJsonAsync<Group>();
+        }
+        /// <summary>
+        /// Изменить группу
+        /// </summary>
+        /// <param name="group">Группа</param>
+        /// <returns></returns>
+        public async Task<Group> EditGroup(Group group) {
+            var response = await httpClient.PatchAsJsonAsync<BaseGroup>($"{_options.URLGroups}/{group.id}", group);
             await CheckResponse(response);
             return await response.Content.ReadFromJsonAsync<Group>();
         }
