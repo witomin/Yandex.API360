@@ -270,6 +270,16 @@ namespace Yandex.API360 {
             var result = await response.Content.ReadFromJsonAsync<DeletedMember>();
             return result.deleted;
         }
+        /// <summary>
+        /// Получить список участников группы
+        /// </summary>
+        /// <param name="groupId">Идентификатор группы</param>
+        /// <returns></returns>
+        public async Task<MembersList> GetGroupMembers(long groupId) {
+            var response = await httpClient.GetAsync($"{_options.URLGroups}/{groupId}/members");
+            await CheckResponse(response);
+            return await response.Content.ReadFromJsonAsync<MembersList>();
+        }
         #endregion
         #region Private
         /// <summary>
