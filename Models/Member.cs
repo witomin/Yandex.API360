@@ -5,7 +5,7 @@ namespace Yandex.API360.Models {
         /// <summary>
         /// Тип участника
         /// </summary>
-        public MemberTypes type { get; set; }
+        public MemberTypes? type { get; set; }
         /// <summary>
         /// Идентификатор участника группы
         /// </summary>
