@@ -225,6 +225,19 @@ namespace Yandex.API360 {
             var apiResponse = await response.Content.ReadFromJsonAsync<GetGroupsModel>();
             return apiResponse.groups;
         }
+        /// <summary>
+        /// Создать группу
+        /// </summary>
+        /// <param name="group">группа</param>
+        /// <returns></returns>
+        public async Task<Group> AddGroup(BaseGroup group) {
+            if (group is null) {
+                throw new ArgumentNullException(nameof(group));
+            }
+            var response = await httpClient.PostAsJsonAsync($"{_options.URLGroups}", group);
+            await CheckResponse(response);
+            return await response.Content.ReadFromJsonAsync<Group>();
+        }
         #endregion
         #region Private
         /// <summary>
