@@ -27,9 +27,9 @@ namespace Yandex.API360 {
         /// <param name="page">Номер страницы ответа</param>
         /// <param name="perPage">Количество сотрудников на одной странице ответа</param>
         /// <returns></returns>
-        public async Task<List<User>> GetUsers(int page = 1, int perPage = 10) {
+        public async Task<List<User>> GetUsersAsync(int page = 1, int perPage = 10) {
             var response = await httpClient.GetAsync($"{_options.URLUsers}?page={page}&perPage={perPage}");
-            await CheckResponse(response);
+            await CheckResponseAsync(response);
             var apiResponse = await response.Content.ReadFromJsonAsync<UsersList>();
             return apiResponse.users;
         }
@@ -38,9 +38,9 @@ namespace Yandex.API360 {
         /// </summary>
         /// <param name="userId">Идентификатор сотрудника</param>
         /// <returns></returns>
-        public async Task<User> GetUserById(ulong userId) {
+        public async Task<User> GetUserByIdAsync(ulong userId) {
             var response = await httpClient.GetAsync($"{_options.URLUsers}/{userId}");
-            await CheckResponse(response);
+            await CheckResponseAsync(response);
             return await response.Content.ReadFromJsonAsync<User>();
         }
         /// <summary>
@@ -48,13 +48,13 @@ namespace Yandex.API360 {
         /// </summary>
         /// <param name="user">Сотрудник</param>
         /// <returns></returns>
-        public async Task<User> AddUser(User user) {
+        public async Task<User> AddUserAsync(User user) {
             if (user is null) {
                 throw new ArgumentNullException(nameof(user));
             }
             var content = JsonContent.Create(user);
             var response = await httpClient.PostAsync($"{_options.URLUsers}", content);
-            await CheckResponse(response);
+            await CheckResponseAsync(response);
             return await response.Content.ReadFromJsonAsync<User>();
         }
         /// <summary>
@@ -62,12 +62,12 @@ namespace Yandex.API360 {
         /// </summary>
         /// <param name="user">Сотрудник</param>
         /// <returns></returns>
-        public async Task<User> EditUser(User user) {
+        public async Task<User> EditUserAsync(User user) {
             if (user is null) {
                 throw new ArgumentNullException(nameof(user));
             }
             var response = await httpClient.PatchAsJsonAsync($"{_options.URLUsers}/{user.id}", user);
-            await CheckResponse(response);
+            await CheckResponseAsync(response);
             return await response.Content.ReadFromJsonAsync<User>();
         }
         /// <summary>
@@ -76,12 +76,12 @@ namespace Yandex.API360 {
         /// <param name="userId">Идентификатор сотрудника</param>
         /// <param name="alias">Алиас</param>
         /// <returns></returns>
-        public async Task<User> AddAliasToUser(ulong userId, string alias) {
+        public async Task<User> AddAliasToUserAsync(ulong userId, string alias) {
             if (string.IsNullOrEmpty(alias)) {
                 throw new ArgumentNullException(nameof(alias));
             }
             var response = await httpClient.PostAsJsonAsync($"{_options.URLUsers}/{userId}/aliases", new { alias = alias });
-            await CheckResponse(response);
+            await CheckResponseAsync(response);
             return await response.Content.ReadFromJsonAsync<User>();
         }
         /// <summary>
@@ -90,12 +90,12 @@ namespace Yandex.API360 {
         /// <param name="userId">Идентификатор сотрудника</param>
         /// <param name="alias">Алиас</param>
         /// <returns></returns>
-        public async Task<bool> DeleteAliasFromUser(ulong userId, string alias) {
+        public async Task<bool> DeleteAliasFromUserAsync(ulong userId, string alias) {
             if (string.IsNullOrEmpty(alias)) {
                 throw new ArgumentNullException(nameof(alias));
             }
             var response = await httpClient.DeleteAsync($"{_options.URLUsers}/{userId}/aliases/{alias}");
-            await CheckResponse(response);
+            await CheckResponseAsync(response);
             var result = await response.Content.ReadFromJsonAsync<RemovedAlias>();
             return result.removed;
         }
@@ -104,9 +104,9 @@ namespace Yandex.API360 {
         /// </summary>
         /// <param name="userId">Идентификатор сотрудника</param>
         /// <returns></returns>
-        public async Task<bool> GetStatus2FAUser(ulong userId) {
+        public async Task<bool> GetStatus2FAUserAsync(ulong userId) {
             var response = await httpClient.GetAsync($"{_options.URLUsers}/{userId}/2fa");
-            await CheckResponse(response);
+            await CheckResponseAsync(response);
             var result = await response.Content.ReadFromJsonAsync<Status2FA>();
             return result.has2fa;
         }
@@ -118,12 +118,12 @@ namespace Yandex.API360 {
         /// <param name="departmentId">Идентификатор подразделения</param>
         /// <param name="alias">Алиас почтовой рассылки подразделения</param>
         /// <returns></returns>
-        public async Task<User> AddAliasToDepartment(long departmentId, string alias) {
+        public async Task<User> AddAliasToDepartmentAsync(long departmentId, string alias) {
             if (string.IsNullOrEmpty(alias)) {
                 throw new ArgumentNullException(string.IsNullOrEmpty(alias) ? nameof(alias) : null);
             }
             var response = await httpClient.PostAsJsonAsync($"{_options.URLDepartments}/{departmentId}/aliases", new { alias = alias });
-            await CheckResponse(response);
+            await CheckResponseAsync(response);
             return await response.Content.ReadFromJsonAsync<User>();
         }
         /// <summary>
@@ -132,12 +132,12 @@ namespace Yandex.API360 {
         /// <param name="departmentId">Идентификатор сотрудника</param>
         /// <param name="alias">Алиас</param>
         /// <returns></returns>
-        public async Task<bool> DeleteAliasFromDepartment(long departmentId, string alias) {
+        public async Task<bool> DeleteAliasFromDepartmentAsync(long departmentId, string alias) {
             if (string.IsNullOrEmpty(alias)) {
                 throw new ArgumentNullException(string.IsNullOrEmpty(alias) ? nameof(alias) : null);
             }
             var response = await httpClient.DeleteAsync($"{_options.URLDepartments}/{departmentId}/aliases/{alias}");
-            await CheckResponse(response);
+            await CheckResponseAsync(response);
             var result = await response.Content.ReadFromJsonAsync<RemovedAlias>();
             return result.removed;
         }
@@ -146,12 +146,12 @@ namespace Yandex.API360 {
         /// </summary>
         /// <param name="department">Новое подразделение</param>
         /// <returns></returns>
-        public async Task<Department> AddDepartment(BaseDepartment department) {
+        public async Task<Department> AddDepartmentAsync(BaseDepartment department) {
             if (department is null) {
                 throw new ArgumentNullException(nameof(department));
             }
             var response = await httpClient.PostAsJsonAsync($"{_options.URLDepartments}", department);
-            await CheckResponse(response);
+            await CheckResponseAsync(response);
             return await response.Content.ReadFromJsonAsync<Department>();
         }
         /// <summary>
@@ -159,9 +159,9 @@ namespace Yandex.API360 {
         /// </summary>
         /// <param name="departmentId">Идентификатор подразделения</param>
         /// <returns></returns>
-        public async Task<Department> GetDapartmentById(long departmentId) {
+        public async Task<Department> GetDapartmentByIdAsync(long departmentId) {
             var response = await httpClient.GetAsync($"{_options.URLDepartments}/{departmentId}");
-            await CheckResponse(response);
+            await CheckResponseAsync(response);
             return await response.Content.ReadFromJsonAsync<Department>();
         }
         /// <summary>
@@ -172,12 +172,12 @@ namespace Yandex.API360 {
         /// <param name="parentId">НИдентификатор родительского подразделения. Если не указан, то выводятся все подразделения организации.</param>
         /// <param name="orderBy">Вид сортировки. id: По идентификатору.name: По названию.Значение по умолчанию: id.</param>
         /// <returns></returns>
-        public async Task<List<Department>> GetDepartments(long page = 1, long perPage = 10, long? parentId = default, DepartmentsOrderBy orderBy = DepartmentsOrderBy.id) {
+        public async Task<List<Department>> GetDepartmentsAsync(long page = 1, long perPage = 10, long? parentId = default, DepartmentsOrderBy orderBy = DepartmentsOrderBy.id) {
             string url = $"{_options.URLDepartments}?page={page}&perPage={perPage}" +
                 $"{(parentId != null ? $"&parentId={parentId}" : string.Empty)}" +
                 $"&orderBy={orderBy}";
             var response = await httpClient.GetAsync(url);
-            await CheckResponse(response);
+            await CheckResponseAsync(response);
             var apiResponse = await response.Content.ReadFromJsonAsync<DepartmentsList>();
             return apiResponse.departments;
         }
@@ -186,12 +186,12 @@ namespace Yandex.API360 {
         /// </summary>
         /// <param name="department">подразделение</param>
         /// <returns></returns>
-        public async Task<Department> EditDepartment(Department department) {
+        public async Task<Department> EditDepartmentAsync(Department department) {
             if (department is null) {
                 throw new ArgumentNullException(nameof(department));
             }
             var response = await httpClient.PatchAsJsonAsync<BaseDepartment>($"{_options.URLDepartments}/{department.id}", department);
-            await CheckResponse(response);
+            await CheckResponseAsync(response);
             return await response.Content.ReadFromJsonAsync<Department>();
         }
         /// <summary>
@@ -199,9 +199,9 @@ namespace Yandex.API360 {
         /// </summary>
         /// <param name="departmentId">Идентификатор подразделения</param>
         /// <returns></returns>
-        public async Task<bool> DeleteDepartment(long departmentId) {
+        public async Task<bool> DeleteDepartmentAsync(long departmentId) {
             var response = await httpClient.DeleteAsync($"{_options.URLDepartments}/{departmentId}");
-            await CheckResponse(response);
+            await CheckResponseAsync(response);
             var result = await response.Content.ReadFromJsonAsync<RemovedElement>();
             return result.removed;
         }
@@ -213,9 +213,9 @@ namespace Yandex.API360 {
         /// <param name="page"></param>
         /// <param name="perPage"></param>
         /// <returns></returns>
-        public async Task<List<Group>> GetGroups(long page = 1, long perPage = 10) {
+        public async Task<List<Group>> GetGroupsAsyncAsync(long page = 1, long perPage = 10) {
             var response = await httpClient.GetAsync($"{_options.URLGroups}?page={page}&perPage={perPage}");
-            await CheckResponse(response);
+            await CheckResponseAsync(response);
             var apiResponse = await response.Content.ReadFromJsonAsync<GroupsList>();
             return apiResponse.groups;
         }
@@ -224,12 +224,12 @@ namespace Yandex.API360 {
         /// </summary>
         /// <param name="group">группа</param>
         /// <returns></returns>
-        public async Task<Group> AddGroup(BaseGroup group) {
+        public async Task<Group> AddGroupAsync(BaseGroup group) {
             if (group is null) {
                 throw new ArgumentNullException(nameof(group));
             }
             var response = await httpClient.PostAsJsonAsync($"{_options.URLGroups}", group);
-            await CheckResponse(response);
+            await CheckResponseAsync(response);
             return await response.Content.ReadFromJsonAsync<Group>();
         }
         /// <summary>
@@ -237,9 +237,9 @@ namespace Yandex.API360 {
         /// </summary>
         /// <param name="groupId">идентификатор группы</param>
         /// <returns></returns>
-        public async Task<bool> DeleteGroup(long groupId) {
+        public async Task<bool> DeleteGroupAsync(long groupId) {
             var response = await httpClient.DeleteAsync($"{_options.URLGroups}/{groupId}");
-            await CheckResponse(response);
+            await CheckResponseAsync(response);
             var result = await response.Content.ReadFromJsonAsync<RemovedElement>();
             return result.removed;
         }
@@ -249,12 +249,12 @@ namespace Yandex.API360 {
         /// <param name="groupId">Идентификатор группы</param>
         /// <param name="member">Участник</param>
         /// <returns></returns>
-        public async Task<bool> AddMemberToGroup(long groupId, Member member) {
+        public async Task<bool> AddMemberToGroupAsync(long groupId, Member member) {
             if (member is null) {
                 throw new ArgumentNullException(nameof(member));
             }
             var response = await httpClient.PostAsJsonAsync($"{_options.URLGroups}/{groupId}/members", member);
-            await CheckResponse(response);
+            await CheckResponseAsync(response);
             var result = await response.Content.ReadFromJsonAsync<AddedMember>();
             return result.added;
         }
@@ -264,9 +264,9 @@ namespace Yandex.API360 {
         /// <param name="groupId">Идентификатор группы</param>
         /// <param name="member">Участник группы</param>
         /// <returns></returns>
-        public async Task<bool> DeleteMemderFromGroup(long groupId, Member member) {
+        public async Task<bool> DeleteMemderFromGroupAsync(long groupId, Member member) {
             var response = await httpClient.DeleteAsync($"{_options.URLGroups}/{groupId}/members/{member.type}/{member.id}");
-            await CheckResponse(response);
+            await CheckResponseAsync(response);
             var result = await response.Content.ReadFromJsonAsync<DeletedMember>();
             return result.deleted;
         }
@@ -275,9 +275,9 @@ namespace Yandex.API360 {
         /// </summary>
         /// <param name="groupId">Идентификатор группы</param>
         /// <returns></returns>
-        public async Task<MembersList> GetGroupMembers(long groupId) {
+        public async Task<MembersList> GetGroupMembersAsync(long groupId) {
             var response = await httpClient.GetAsync($"{_options.URLGroups}/{groupId}/members");
-            await CheckResponse(response);
+            await CheckResponseAsync(response);
             return await response.Content.ReadFromJsonAsync<MembersList>();
         }
         /// <summary>
@@ -285,9 +285,9 @@ namespace Yandex.API360 {
         /// </summary>
         /// <param name="groupId">Идентификатор группы</param>
         /// <returns></returns>
-        public async Task<Group> GetGroup(long groupId) {
+        public async Task<Group> GetGroupAsync(long groupId) {
             var response = await httpClient.GetAsync($"{_options.URLGroups}/{groupId}");
-            await CheckResponse(response);
+            await CheckResponseAsync(response);
             return await response.Content.ReadFromJsonAsync<Group>();
         }
         /// <summary>
@@ -295,9 +295,9 @@ namespace Yandex.API360 {
         /// </summary>
         /// <param name="group">Группа</param>
         /// <returns></returns>
-        public async Task<Group> EditGroup(Group group) {
+        public async Task<Group> EditGroupAsync(Group group) {
             var response = await httpClient.PatchAsJsonAsync<BaseGroup>($"{_options.URLGroups}/{group.id}", group);
-            await CheckResponse(response);
+            await CheckResponseAsync(response);
             return await response.Content.ReadFromJsonAsync<Group>();
         }
         #endregion
@@ -306,9 +306,9 @@ namespace Yandex.API360 {
         /// Получить список разрешенных IP-адресов и CIDR-подсетей.
         /// </summary>
         /// <returns></returns>
-        public async Task<List<string>> GetAllowList() {
+        public async Task<List<string>> GetAllowListAsync() {
             var response = await httpClient.GetAsync($"{_options.URLAntispam}");
-            await CheckResponse(response);
+            await CheckResponseAsync(response);
             var result = await response.Content.ReadFromJsonAsync<WhiteList>();
             return result.allowList;
         }
@@ -317,18 +317,18 @@ namespace Yandex.API360 {
         /// </summary>
         /// <param name="allowlist">Список разрешенных IP-адресов и CIDR-подсетей.</param>
         /// <returns></returns>
-        public async Task<object> SetAllowList(List<string> allowlist) {
+        public async Task<object> SetAllowListAsync(List<string> allowlist) {
             var response = await httpClient.PostAsJsonAsync($"{_options.URLAntispam}", new WhiteList { allowList = allowlist });
-            await CheckResponse(response);
+            await CheckResponseAsync(response);
             return await response.Content.ReadFromJsonAsync<object>();
         }
         /// <summary>
         /// Удалить список разрешенных IP-адресов и CIDR-подсетей.
         /// </summary>
         /// <returns></returns>
-        public async Task<object> DeleteAllowList() {
+        public async Task<object> DeleteAllowListAsync() {
             var response = await httpClient.DeleteAsync($"{_options.URLAntispam}");
-            await CheckResponse(response);
+            await CheckResponseAsync(response);
             return await response.Content.ReadFromJsonAsync<object>();
         }
         #endregion
@@ -338,7 +338,7 @@ namespace Yandex.API360 {
         /// </summary>
         /// <param name="response"></param>
         /// <returns></returns>
-        private async Task CheckResponse(HttpResponseMessage response) {
+        private async Task CheckResponseAsync(HttpResponseMessage response) {
             if (response.StatusCode != System.Net.HttpStatusCode.OK) {
                 if (response.Content is null) {
                     throw new APIRequestException("Response doesn't contain any content", response.StatusCode);
