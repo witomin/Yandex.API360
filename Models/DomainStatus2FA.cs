@@ -16,6 +16,6 @@ namespace Yandex.API360.Models {
         /// <summary>
         /// Время включения 2FA.
         /// </summary>
-        public DateTime enabledAt { get; set; }
+        public DateTime? enabledAt { get; set; }
     }
 }

@@ -348,7 +348,7 @@ namespace Yandex.API360 {
         #endregion
         #region 2FA
         /// <summary>
-        /// Получить статус 2FA
+        /// Получить статус обязательной двухфакторной аутентификации (2FA) для пользователей домена.
         /// </summary>
         /// <returns></returns>
         public async Task<DomainStatus2FA> GetStatus2faAsync() {
@@ -357,7 +357,7 @@ namespace Yandex.API360 {
             return await response.Content.ReadFromJsonAsync<DomainStatus2FA>(); 
         }
         /// <summary>
-        /// Включить 2FA
+        /// Включить обязательную двухфакторную аутентификацию (2FA) для пользователей домена.
         /// </summary>
         /// <param name="status2FA"></param>
         /// <returns></returns>
@@ -370,7 +370,7 @@ namespace Yandex.API360 {
             return await response.Content.ReadFromJsonAsync<DomainStatus2FA>();
         }
         /// <summary>
-        /// Выключить 2FA
+        /// Выключить обязательную двухфакторную аутентификацию (2FA) для пользователей домена
         /// </summary>
         /// <returns></returns>
         public async Task<DomainStatus2FA> Disable2faAsync() {
