@@ -121,7 +121,7 @@ namespace Yandex.API360 {
         public async Task<bool> GetStatus2FAUserAsync(ulong userId) {
             var response = await httpClient.GetAsync($"{_options.URLUsers}/{userId}/2fa");
             await CheckResponseAsync(response);
-            var result = await response.Content.ReadFromJsonAsync<Status2FA>();
+            var result = await response.Content.ReadFromJsonAsync<UserStatus2FA>();
             return result.has2fa;
         }
         #endregion
@@ -344,6 +344,39 @@ namespace Yandex.API360 {
             var response = await httpClient.DeleteAsync($"{_options.URLAntispam}");
             await CheckResponseAsync(response);
             return await response.Content.ReadFromJsonAsync<object>();
+        }
+        #endregion
+        #region 2FA
+        /// <summary>
+        /// Получить статус 2FA
+        /// </summary>
+        /// <returns></returns>
+        public async Task<DomainStatus2FA> GetStatus2faAsync() {
+            var response = await httpClient.GetAsync($"{_options.URL2fa}");
+            await CheckResponseAsync(response);
+            return await response.Content.ReadFromJsonAsync<DomainStatus2FA>(); 
+        }
+        /// <summary>
+        /// Включить 2FA
+        /// </summary>
+        /// <param name="status2FA"></param>
+        /// <returns></returns>
+        public async Task<DomainStatus2FA> Enable2faAsync(EnableDomainStatus2FA status2FA) {
+            if(status2FA is null) {
+                throw new ArgumentNullException(nameof(status2FA));
+            }
+            var response = await httpClient.PostAsJsonAsync($"{_options.URL2fa}", status2FA);
+            await CheckResponseAsync(response);
+            return await response.Content.ReadFromJsonAsync<DomainStatus2FA>();
+        }
+        /// <summary>
+        /// Выключить 2FA
+        /// </summary>
+        /// <returns></returns>
+        public async Task<DomainStatus2FA> Disable2faAsync() {
+            var response = await httpClient.DeleteAsync($"{_options.URL2fa}");
+            await CheckResponseAsync(response);
+            return await response.Content.ReadFromJsonAsync<DomainStatus2FA>();
         }
         #endregion
         #region Private

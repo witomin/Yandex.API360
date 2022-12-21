@@ -2,7 +2,7 @@
     /// <summary>
     /// Статус 2FA пользователя
     /// </summary>
-    class Status2FA {
+    class UserStatus2FA {
         /// <summary>
         /// Признак включения у сотрудника 2FA.
         /// </summary>
