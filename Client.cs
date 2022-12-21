@@ -22,7 +22,7 @@ namespace Yandex.API360 {
         }
         #region Сотрудники
         /// <summary>
-        /// Получить список сотрудников
+        /// Получить список сотрудников постранично
         /// </summary>
         /// <param name="page">Номер страницы ответа</param>
         /// <param name="perPage">Количество сотрудников на одной странице ответа</param>
@@ -33,6 +33,20 @@ namespace Yandex.API360 {
             var apiResponse = await response.Content.ReadFromJsonAsync<UsersList>();
             return apiResponse.users;
         }
+        /// <summary>
+        /// Получить полный списко сотрудников
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<User>> GetAllUsersAsync() {
+            var response = await httpClient.GetAsync($"{_options.URLUsers}");
+            await CheckResponseAsync(response);
+            var totalUsers = (await response.Content.ReadFromJsonAsync<UsersList>()).total;
+            response = await httpClient.GetAsync($"{_options.URLUsers}?page=1&perPage={totalUsers}");
+            await CheckResponseAsync(response);
+            var apiResponse = await response.Content.ReadFromJsonAsync<UsersList>();
+            return apiResponse.users;
+        }
+
         /// <summary>
         /// Получить сотрудника по Id
         /// </summary>
