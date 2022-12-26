@@ -179,7 +179,7 @@ namespace Yandex.API360 {
             return await response.Content.ReadFromJsonAsync<Department>();
         }
         /// <summary>
-        /// Получить список подразделений
+        /// Получить список подразделений постранично
         /// </summary>
         /// <param name="page">Номер страницы ответа</param>
         /// <param name="perPage">Количество сотрудников на одной странице ответа</param>
@@ -238,7 +238,7 @@ namespace Yandex.API360 {
         #endregion
         #region Группы
         /// <summary>
-        /// Получить список групп
+        /// Получить список групп постранично
         /// </summary>
         /// <param name="page"></param>
         /// <param name="perPage"></param>
