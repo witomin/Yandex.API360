@@ -14,11 +14,11 @@ namespace Yandex.API360.Models {
         /// </summary>
         public long pages { get; set; }
         /// <summary>
-        /// Количество сотрудников на одной странице ответа
+        /// Количество групп на одной странице ответа
         /// </summary>
         public long perPage { get; set; }
         /// <summary>
-        /// Общее количество сотрудников
+        /// Общее количество групп
         /// </summary>
         public long total { get; set; }
     }

@@ -234,6 +234,20 @@ namespace Yandex.API360 {
             return apiResponse.groups;
         }
         /// <summary>
+        /// Получить полный списко групп
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<Group>> GetAllGroupsAsync() {
+            var response = await httpClient.GetAsync($"{_options.URLGroups}");
+            await CheckResponseAsync(response);
+            var apiResponse = await response.Content.ReadFromJsonAsync<GroupsList>();
+            var totalGroups = apiResponse.total;
+            response = await httpClient.GetAsync($"{_options.URLGroups}?page={1}&perPage={totalGroups}");
+            await CheckResponseAsync(response);
+            apiResponse = await response.Content.ReadFromJsonAsync<GroupsList>();
+            return apiResponse.groups;
+        }
+        /// <summary>
         /// Создать группу
         /// </summary>
         /// <param name="group">группа</param>
