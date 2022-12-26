@@ -183,7 +183,7 @@ namespace Yandex.API360 {
         /// </summary>
         /// <param name="page">Номер страницы ответа</param>
         /// <param name="perPage">Количество сотрудников на одной странице ответа</param>
-        /// <param name="parentId">НИдентификатор родительского подразделения. Если не указан, то выводятся все подразделения организации.</param>
+        /// <param name="parentId">Идентификатор родительского подразделения. Если не указан, то выводятся все подразделения организации.</param>
         /// <param name="orderBy">Вид сортировки. id: По идентификатору.name: По названию.Значение по умолчанию: id.</param>
         /// <returns></returns>
         public async Task<List<Department>> GetDepartmentsAsync(long page = 1, long perPage = 10, long? parentId = default, DepartmentsOrderBy orderBy = DepartmentsOrderBy.id) {
@@ -193,6 +193,22 @@ namespace Yandex.API360 {
             var response = await httpClient.GetAsync(url);
             await CheckResponseAsync(response);
             var apiResponse = await response.Content.ReadFromJsonAsync<DepartmentsList>();
+            return apiResponse.departments;
+        }
+        /// <summary>
+        /// Получить полный список подразделений
+        /// </summary>
+        /// <param name="parentId">Идентификатор родительского подразделения. Если не указан, то выводятся все подразделения организации.</param>
+        /// <param name="orderBy">Вид сортировки. id: По идентификатору.name: По названию.Значение по умолчанию: id.</param>
+        /// <returns></returns>
+        public async Task<List<Department>> GetAllDepartmentsAsync(long? parentId = default, DepartmentsOrderBy orderBy = DepartmentsOrderBy.id) {
+            var response = await httpClient.GetAsync($"{_options.URLDepartments}?page=1&perPage=10{(parentId != null ? $"&parentId={parentId}" : string.Empty)}&orderBy={orderBy}");
+            await CheckResponseAsync(response);
+            var apiResponse = await response.Content.ReadFromJsonAsync<DepartmentsList>();
+            var TotalDepartments = apiResponse.total;
+            response = await httpClient.GetAsync($"{_options.URLDepartments}?page=1&perPage={TotalDepartments}{(parentId != null ? $"&parentId={parentId}" : string.Empty)}&orderBy={orderBy}");
+            await CheckResponseAsync(response);
+            apiResponse = await response.Content.ReadFromJsonAsync<DepartmentsList>();
             return apiResponse.departments;
         }
         /// <summary>
