@@ -227,7 +227,7 @@ namespace Yandex.API360 {
         /// <param name="page"></param>
         /// <param name="perPage"></param>
         /// <returns></returns>
-        public async Task<List<Group>> GetGroupsAsyncAsync(long page = 1, long perPage = 10) {
+        public async Task<List<Group>> GetGroupsAsync(long page = 1, long perPage = 10) {
             var response = await httpClient.GetAsync($"{_options.URLGroups}?page={page}&perPage={perPage}");
             await CheckResponseAsync(response);
             var apiResponse = await response.Content.ReadFromJsonAsync<GroupsList>();
