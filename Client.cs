@@ -384,7 +384,7 @@ namespace Yandex.API360 {
         public async Task<DomainStatus2FA> GetStatus2faAsync() {
             var response = await httpClient.GetAsync($"{_options.URL2fa}");
             await CheckResponseAsync(response);
-            return await response.Content.ReadFromJsonAsync<DomainStatus2FA>(); 
+            return await response.Content.ReadFromJsonAsync<DomainStatus2FA>();
         }
         /// <summary>
         /// Включить обязательную двухфакторную аутентификацию (2FA) для пользователей домена.
@@ -392,7 +392,7 @@ namespace Yandex.API360 {
         /// <param name="status2FA"></param>
         /// <returns></returns>
         public async Task<DomainStatus2FA> Enable2faAsync(EnableDomainStatus2FA status2FA) {
-            if(status2FA is null) {
+            if (status2FA is null) {
                 throw new ArgumentNullException(nameof(status2FA));
             }
             var response = await httpClient.PostAsJsonAsync($"{_options.URL2fa}", status2FA);
@@ -416,12 +416,21 @@ namespace Yandex.API360 {
         /// <param name="response"></param>
         /// <returns></returns>
         private async Task CheckResponseAsync(HttpResponseMessage response) {
+            var Codes = new List<System.Net.HttpStatusCode> {
+            System.Net.HttpStatusCode.Unauthorized,
+            System.Net.HttpStatusCode.Forbidden,
+            System.Net.HttpStatusCode.NotFound,
+            System.Net.HttpStatusCode.InternalServerError
+            };
             if (response.StatusCode != System.Net.HttpStatusCode.OK) {
                 if (response.Content is null) {
                     throw new APIRequestException("Response doesn't contain any content", response.StatusCode);
                 }
-                var failedResponse = await response.Content.ReadFromJsonAsync<FailedAPIResponse>();
-                throw new APIRequestException(response.StatusCode, failedResponse);
+                if (Codes.Contains(response.StatusCode)) {
+                    var failedResponse = await response.Content.ReadFromJsonAsync<FailedAPIResponse>();
+                    throw new APIRequestException(response.StatusCode, failedResponse);
+                }
+                throw new APIRequestException(response.ReasonPhrase, response.StatusCode);
             }
         }
         #endregion
