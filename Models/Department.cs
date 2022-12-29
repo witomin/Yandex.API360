@@ -22,7 +22,7 @@ namespace Yandex.API360.Models {
         /// <summary>
         /// Идентификатор подразделения.
         /// </summary>
-        public long id { get; set; }
+        public ulong id { get; set; }
         /// <summary>
         /// Количество сотрудников подразделения с учетом вложенных подразделений.
         /// </summary>

@@ -9,7 +9,7 @@ namespace Yandex.API360.Models {
         /// <summary>
         /// Идентификатор группы
         /// </summary>
-        public long id { get; set; }
+        public ulong id { get; set; }
         /// <summary>
         /// Тип группы
         /// </summary>

@@ -319,7 +319,7 @@ namespace Yandex.API360 {
         /// </summary>
         /// <param name="groupId">Идентификатор группы</param>
         /// <returns></returns>
-        public async Task<MembersList> GetGroupMembersAsync(long groupId) {
+        public async Task<MembersList> GetGroupMembersAsync(ulong groupId) {
             var response = await httpClient.GetAsync($"{_options.URLGroups}/{groupId}/members");
             await CheckResponseAsync(response);
             return await response.Content.ReadFromJsonAsync<MembersList>();
