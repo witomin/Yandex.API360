@@ -4,6 +4,7 @@
     /// </summary>
     public class BaseDepartment {
         private ulong? _headId;
+        private string? _externalId;
         /// <summary>
         /// Описание подразделения
         /// </summary>
@@ -11,7 +12,17 @@
         /// <summary>
         /// Произвольный внешний идентификатор подразделения
         /// </summary>
-        public string? externalId { get; set; }
+        public string? externalId {
+            get {
+                return _externalId;
+            }
+            set {
+                if (string.IsNullOrEmpty(value))
+                    _externalId = null;
+                else
+                    _externalId = value;
+            }
+        }
         /// <summary>
         /// Идентификатор сотрудника-руководителя отдела
         /// </summary>
