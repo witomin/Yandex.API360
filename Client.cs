@@ -281,7 +281,7 @@ namespace Yandex.API360 {
         /// </summary>
         /// <param name="groupId">идентификатор группы</param>
         /// <returns></returns>
-        public async Task<bool> DeleteGroupAsync(long groupId) {
+        public async Task<bool> DeleteGroupAsync(ulong groupId) {
             var response = await httpClient.DeleteAsync($"{_options.URLGroups}/{groupId}");
             await CheckResponseAsync(response);
             var result = await response.Content.ReadFromJsonAsync<RemovedElement>();
