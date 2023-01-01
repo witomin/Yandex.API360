@@ -229,7 +229,7 @@ namespace Yandex.API360 {
         /// </summary>
         /// <param name="departmentId">Идентификатор подразделения</param>
         /// <returns></returns>
-        public async Task<bool> DeleteDepartmentAsync(long departmentId) {
+        public async Task<bool> DeleteDepartmentAsync(ulong departmentId) {
             var response = await httpClient.DeleteAsync($"{_options.URLDepartments}/{departmentId}");
             await CheckResponseAsync(response);
             var result = await response.Content.ReadFromJsonAsync<RemovedElement>();
