@@ -48,7 +48,7 @@
         /// <summary>
         /// Идентификатор родительского подразделения
         /// </summary>
-        public long parentId { get; set; }
+        public ulong parentId { get; set; }
     }
 
 }
