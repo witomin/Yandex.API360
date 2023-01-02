@@ -132,7 +132,7 @@ namespace Yandex.API360 {
         /// <param name="departmentId">Идентификатор подразделения</param>
         /// <param name="alias">Алиас почтовой рассылки подразделения</param>
         /// <returns></returns>
-        public async Task<User> AddAliasToDepartmentAsync(long departmentId, string alias) {
+        public async Task<User> AddAliasToDepartmentAsync(ulong departmentId, string alias) {
             if (string.IsNullOrEmpty(alias)) {
                 throw new ArgumentNullException(string.IsNullOrEmpty(alias) ? nameof(alias) : null);
             }
@@ -146,7 +146,7 @@ namespace Yandex.API360 {
         /// <param name="departmentId">Идентификатор сотрудника</param>
         /// <param name="alias">Алиас</param>
         /// <returns></returns>
-        public async Task<bool> DeleteAliasFromDepartmentAsync(long departmentId, string alias) {
+        public async Task<bool> DeleteAliasFromDepartmentAsync(ulong departmentId, string alias) {
             if (string.IsNullOrEmpty(alias)) {
                 throw new ArgumentNullException(string.IsNullOrEmpty(alias) ? nameof(alias) : null);
             }
