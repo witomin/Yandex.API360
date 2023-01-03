@@ -76,7 +76,7 @@ namespace Yandex.API360 {
         /// </summary>
         /// <param name="user">Сотрудник</param>
         /// <returns></returns>
-        public async Task<User> EditUserAsync(AdvancedUser user) {
+        public async Task<User> EditUserAsync(UserEdit user) {
             if (user is null) {
                 throw new ArgumentNullException(nameof(user));
             }

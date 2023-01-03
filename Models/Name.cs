@@ -1,4 +1,7 @@
 ﻿namespace Yandex.API360.Models {
+    /// <summary>
+    /// ФИО сотрудника
+    /// </summary>
     public class Name {
         /// <summary>
         /// Имя сотрудника.
