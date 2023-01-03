@@ -83,7 +83,7 @@ namespace Yandex.API360.Models {
         /// <summary>
         /// Язык сотрудника
         /// </summary>
-        public Languages language { get; set; }
+        public string language { get; set; }
         /// <summary>
         /// Дата и время создания сотрудника
         /// </summary>
