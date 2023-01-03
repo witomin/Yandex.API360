@@ -1,13 +1,5 @@
 ﻿namespace Yandex.API360.Models {
-    public class Contact {
-        /// <summary>
-        /// Тип контакта
-        /// </summary>
-        public string type { get; set; }
-        /// <summary>
-        /// Значение контакта
-        /// </summary>
-        public string value { get; set; }
+    public class Contact: BaseContact {
         /// <summary>
         /// Признак основного контакта: true — основной; false — альтернативный
         /// </summary>

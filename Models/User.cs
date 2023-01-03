@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Yandex.API360.Enums;
 
 namespace Yandex.API360.Models {
     public class User {
@@ -82,7 +83,7 @@ namespace Yandex.API360.Models {
         /// <summary>
         /// Язык сотрудника
         /// </summary>
-        public string language { get; set; }
+        public Languages language { get; set; }
         /// <summary>
         /// Дата и время создания сотрудника
         /// </summary>
