@@ -96,7 +96,7 @@ namespace Yandex.API360 {
             }
             var response = await httpClient.PostAsJsonAsync($"{_options.URLUsers}/{userId}/aliases", new { alias = alias });
             await CheckResponseAsync(response);
-            return await response.Content.ReadFromJsonAsync<User>();
+            return await response.Content.ReadFromJsonAsync<User>(); // Свойство language возвращается пустой строкой, поэтому сдесь появляется исключение
         }
         /// <summary>
         /// Удалить у сотрудника алиас почтового ящика.
