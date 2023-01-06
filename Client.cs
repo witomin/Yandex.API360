@@ -62,12 +62,11 @@ namespace Yandex.API360 {
         /// </summary>
         /// <param name="user">Сотрудник</param>
         /// <returns></returns>
-        public async Task<User> AddUserAsync(User user) {
+        public async Task<User> AddUserAsync(UserAdd user) {
             if (user is null) {
                 throw new ArgumentNullException(nameof(user));
             }
-            var content = JsonContent.Create(user);
-            var response = await httpClient.PostAsync($"{_options.URLUsers}", content);
+            var response = await httpClient.PostAsJsonAsync($"{_options.URLUsers}", user);
             await CheckResponseAsync(response);
             return await response.Content.ReadFromJsonAsync<User>();
         }
