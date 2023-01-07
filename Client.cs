@@ -142,7 +142,7 @@ namespace Yandex.API360 {
         /// <summary>
         /// Удалить алиас почтовой рассылки подразделения.
         /// </summary>
-        /// <param name="departmentId">Идентификатор сотрудника</param>
+        /// <param name="departmentId">Идентификатор подразделения</param>
         /// <param name="alias">Алиас</param>
         /// <returns></returns>
         public async Task<bool> DeleteAliasFromDepartmentAsync(ulong departmentId, string alias) {
@@ -239,8 +239,8 @@ namespace Yandex.API360 {
         /// <summary>
         /// Получить список групп постранично
         /// </summary>
-        /// <param name="page"></param>
-        /// <param name="perPage"></param>
+        /// <param name="page">Номер страницы ответа</param>
+        /// <param name="perPage">Количество групп на одной странице ответа</param>
         /// <returns></returns>
         public async Task<List<Group>> GetGroupsAsync(long page = 1, long perPage = 10) {
             var response = await httpClient.GetAsync($"{_options.URLGroups}?page={page}&perPage={perPage}");
@@ -290,7 +290,7 @@ namespace Yandex.API360 {
         /// Добавить участника в группу
         /// </summary>
         /// <param name="groupId">Идентификатор группы</param>
-        /// <param name="member">Участник</param>
+        /// <param name="member">Участник группы</param>
         /// <returns></returns>
         public async Task<bool> AddMemberToGroupAsync(long groupId, Member member) {
             if (member is null) {
