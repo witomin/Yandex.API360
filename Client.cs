@@ -113,6 +113,16 @@ namespace Yandex.API360 {
             return result.removed;
         }
         /// <summary>
+        /// Удаляет контактную информацию сотрудника внесённую вручную.
+        /// </summary>
+        /// <param name="userId">Идентификатор сотрудника</param>
+        /// <returns></returns>
+        public async Task<User> DeleteContactsFromUserAsync(ulong userId) {
+            var response = await httpClient.DeleteAsync($"{_options.URLUsers}/{userId}/contacts");
+            await CheckResponseAsync(response);
+            return await response.Content.ReadFromJsonAsync<User>();
+        }
+        /// <summary>
         /// Возвращает информацию о статусе 2FA сотрудника.
         /// </summary>
         /// <param name="userId">Идентификатор сотрудника</param>
