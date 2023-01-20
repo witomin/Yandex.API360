@@ -425,7 +425,7 @@ namespace Yandex.API360 {
         /// <param name="pageSize">Количество организаций на странице. Максимальное значение — 100. По умолчанию — 10.</param>
         /// <param name="pageToken">Токен постраничной навигации.</param>
         /// <returns></returns>
-        public async Task<List<Organization>> GetOrganizations(int ? pageSize = 10, string ? pageToken = null) {
+        public async Task<List<Organization>> GetOrganizationsAsync(int ? pageSize = 10, string ? pageToken = null) {
             var response = await httpClient.GetAsync($"{_options.URLOrg}?pageSize={pageSize}{(pageToken!=null ? $"&pageToken={pageToken}" : string.Empty)}");
             await CheckResponseAsync(response);
             var organisations = await response.Content.ReadFromJsonAsync<OrganizationList>();
