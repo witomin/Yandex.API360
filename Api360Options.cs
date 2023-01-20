@@ -62,5 +62,13 @@ namespace Yandex.API360 {
                 return $"{API360Host}/security/v1/org/{_organizationId}/domain_2fa";
             }
         }
+        /// <summary>
+        /// URL управления организацией
+        /// </summary>
+        public string URLOrg {
+            get {
+                return $"{API360Host}/directory/v1/org";
+            }
+        }
     }
 }
