@@ -1,6 +1,9 @@
 ﻿using Yandex.API360.Enums;
 
 namespace Yandex.API360.Models {
+    /// <summary>
+    /// Участник группы
+    /// </summary>
     public class Member {
         /// <summary>
         /// Тип участника

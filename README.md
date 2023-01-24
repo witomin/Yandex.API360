@@ -151,7 +151,19 @@
 ### **EditGroupAsync(Group group)**
 Изменить группу
 #### *Параметры:*
-group. Группа.
++ group. Группа.
+
+### **EditManagersFromGroupAsync(ulong groupId, List<string> adminIds)**
+Изменить руководителей группы
+#### *Параметры:*
++ groupId. Идентификатор группы.
++ adminIds. Идентификаторы руководителей группы.
+
+### **EditMembersFromGroupAsync(ulong groupId, List<Member> members)**
+Изменить список участников группы
+#### *Параметры:*
++ groupId. Идентификатор группы.
++ adminIds. Участники группы.
 
 ### **GetAllowListAsync()**
 Получить список разрешенных IP-адресов и CIDR-подсетей.
