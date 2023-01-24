@@ -133,10 +133,21 @@
 + groupId. Идентификатор группы.
 + member. Участник группы.
 
-### **DeleteMemderFromGroupAsync(ulong groupId, Member member)**
+### **DeleteMemberFromGroupAsync(ulong groupId, Member member)**
+Удалить участника группы
 #### *Параметры:*
 + groupId. Идентификатор группы.
 + member. Участник группы.
+
+### **DeleteAllMembersFromGroupAsync(ulong groupId)**
+Удалить всех участнков группы
+#### *Параметры:*
++ groupId. Идентификатор группы.
+
+### **DeleteAllManagersFromGroupAsync(ulong groupId)**
+Удалить всех руководителей группы
+#### *Параметры:*
++ groupId. Идентификатор группы.
 
 ### **GetGroupMembersAsync(ulong groupId)**
 Получить список участников группы
