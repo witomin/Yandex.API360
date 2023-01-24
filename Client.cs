@@ -317,11 +317,33 @@ namespace Yandex.API360 {
         /// <param name="groupId">Идентификатор группы</param>
         /// <param name="member">Участник группы</param>
         /// <returns></returns>
-        public async Task<bool> DeleteMemderFromGroupAsync(ulong groupId, Member member) {
+        public async Task<bool> DeleteMemberFromGroupAsync(ulong groupId, Member member) {
             var response = await httpClient.DeleteAsync($"{_options.URLGroups}/{groupId}/members/{member.type}/{member.id}");
             await CheckResponseAsync(response);
             var result = await response.Content.ReadFromJsonAsync<DeletedMember>();
             return result.deleted;
+        }
+        /// <summary>
+        /// Удалить всех участнков группы
+        /// </summary>
+        /// <param name="groupId">Идентификатор группы</param>
+        /// <returns></returns>
+        public async Task<MembersList> DeleteAllMembersFromGroupAsync(ulong groupId) {
+            var response = await httpClient.DeleteAsync($"{_options.URLGroups}/{groupId}/members");
+            await CheckResponseAsync(response);
+            var result = await response.Content.ReadFromJsonAsync<MembersList>();
+            return result;
+        }
+        /// <summary>
+        /// Удалить всех руководителей группы
+        /// </summary>
+        /// <param name="groupId"></param>
+        /// <returns></returns>
+        public async Task<Group> DeleteAllManagersFromGroupAsync(ulong groupId) {
+            var response = await httpClient.DeleteAsync($"{_options.URLGroups}/{groupId}/admins");
+            await CheckResponseAsync(response);
+            var result = await response.Content.ReadFromJsonAsync<Group>();
+            return result;
         }
         /// <summary>
         /// Получить список участников группы
