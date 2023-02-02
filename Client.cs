@@ -476,6 +476,18 @@ namespace Yandex.API360 {
             return organisations.organizations;
         }
         #endregion
+        #region Обработка писем
+        /// <summary>
+        /// Получить правила обработки писем
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<Rule>> GetRulesAsync() {
+            var response = await httpClient.GetAsync(_options.URLrouting);
+            await CheckResponseAsync(response);
+            var result = await response.Content.ReadFromJsonAsync<RulesList>();
+            return result.rules;
+        }
+        #endregion
         #region Private
         /// <summary>
         /// Проверить ответ API
