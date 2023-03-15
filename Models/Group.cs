@@ -37,7 +37,7 @@ namespace Yandex.API360.Models {
         /// <summary>
         /// Идентификаторы групп, в которые входит эта группа.
         /// </summary>
-        public List<long> memberOf { get; set; }
+        public List<ulong> memberOf { get; set; }
         /// <summary>
         /// Дата и время создания группы.
         /// </summary>
