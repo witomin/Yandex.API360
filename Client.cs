@@ -27,7 +27,7 @@ namespace Yandex.API360 {
         /// <param name="page">Номер страницы ответа</param>
         /// <param name="perPage">Количество сотрудников на одной странице ответа</param>
         /// <returns></returns>
-        public async Task<List<User>> GetUsersAsync(int page = 1, int perPage = 10) {
+        public async Task<List<User>> GetUsersAsync(long page = 1, long perPage = 10) {
             var response = await httpClient.GetAsync($"{_options.URLUsers}?page={page}&perPage={perPage}");
             await CheckResponseAsync(response);
             var apiResponse = await response.Content.ReadFromJsonAsync<UsersList>();
@@ -38,13 +38,34 @@ namespace Yandex.API360 {
         /// </summary>
         /// <returns></returns>
         public async Task<List<User>> GetAllUsersAsync() {
+            var result = new List<User>();
             var response = await httpClient.GetAsync($"{_options.URLUsers}");
             await CheckResponseAsync(response);
+            //определяем общее число пользователей в организации
             var totalUsers = (await response.Content.ReadFromJsonAsync<UsersList>()).total;
             response = await httpClient.GetAsync($"{_options.URLUsers}?page=1&perPage={totalUsers}");
             await CheckResponseAsync(response);
             var apiResponse = await response.Content.ReadFromJsonAsync<UsersList>();
-            return apiResponse.users;
+            //Проверяем весь ли список получен
+            //как выяснилось 17.03.2023. API отдает максимум 1000 пользователей за 1 раз
+            //хотя в документации об этом не сказано
+            if (apiResponse.perPage == apiResponse.total) {
+                result = apiResponse.users;
+            }
+            else {
+                //если API отдало не все
+                //сохраняем, то что уже получили
+                result.AddRange(apiResponse.users);
+                //определяем кол-во страниц ответа
+                var pages = apiResponse.pages;
+                //определяем сколько максимально отдает API
+                var perPageMax = apiResponse.perPage;
+                // получаем остальные страницы начиная со 2-й
+                for(long i=2; i<= pages; i++) {
+                    result.AddRange(await GetUsersAsync(i, perPageMax));
+                }
+            }
+            return result;
         }
 
         /// <summary>
