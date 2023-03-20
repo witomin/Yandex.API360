@@ -217,14 +217,14 @@ namespace Yandex.API360 {
         /// <param name="parentId">Идентификатор родительского подразделения. Если не указан, то выводятся все подразделения организации.</param>
         /// <param name="orderBy">Вид сортировки. id: По идентификатору.name: По названию.Значение по умолчанию: id.</param>
         /// <returns></returns>
-        public async Task<List<Department>> GetDepartmentsAsync(long page = 1, long perPage = 10, long? parentId = default, DepartmentsOrderBy orderBy = DepartmentsOrderBy.id) {
+        public async Task<DepartmentsList> GetDepartmentsAsync(long page = 1, long perPage = 10, long? parentId = default, DepartmentsOrderBy orderBy = DepartmentsOrderBy.id) {
             string url = $"{_options.URLDepartments}?page={page}&perPage={perPage}" +
                 $"{(parentId != null ? $"&parentId={parentId}" : string.Empty)}" +
                 $"&orderBy={orderBy}";
             var response = await httpClient.GetAsync(url);
             await CheckResponseAsync(response);
             var apiResponse = await response.Content.ReadFromJsonAsync<DepartmentsList>();
-            return apiResponse.departments;
+            return apiResponse;
         }
         /// <summary>
         /// Получить полный список подразделений
@@ -274,11 +274,11 @@ namespace Yandex.API360 {
         /// <param name="page">Номер страницы ответа</param>
         /// <param name="perPage">Количество групп на одной странице ответа</param>
         /// <returns></returns>
-        public async Task<List<Group>> GetGroupsAsync(long page = 1, long perPage = 10) {
+        public async Task<GroupsList> GetGroupsAsync(long page = 1, long perPage = 10) {
             var response = await httpClient.GetAsync($"{_options.URLGroups}?page={page}&perPage={perPage}");
             await CheckResponseAsync(response);
             var apiResponse = await response.Content.ReadFromJsonAsync<GroupsList>();
-            return apiResponse.groups;
+            return apiResponse;
         }
         /// <summary>
         /// Получить полный списко групп
@@ -491,11 +491,11 @@ namespace Yandex.API360 {
         /// <param name="pageSize">Количество организаций на странице. Максимальное значение — 100. По умолчанию — 10.</param>
         /// <param name="pageToken">Токен постраничной навигации.</param>
         /// <returns></returns>
-        public async Task<List<Organization>> GetOrganizationsAsync(int? pageSize = 10, string? pageToken = null) {
+        public async Task<OrganizationList> GetOrganizationsAsync(int? pageSize = 10, string? pageToken = null) {
             var response = await httpClient.GetAsync($"{_options.URLOrg}?pageSize={pageSize}{(pageToken != null ? $"&pageToken={pageToken}" : string.Empty)}");
             await CheckResponseAsync(response);
             var organisations = await response.Content.ReadFromJsonAsync<OrganizationList>();
-            return organisations.organizations;
+            return organisations;
         }
         #endregion
         #region Обработка писем

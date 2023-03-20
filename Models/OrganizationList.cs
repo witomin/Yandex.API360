@@ -4,9 +4,9 @@ namespace Yandex.API360.Models {
     /// <summary>
     /// Списко организаций. Ответ API.
     /// </summary>
-    class OrganizationList {
+    public class OrganizationList {
         /// <summary>
-        /// Количество организаций на странице
+        /// Список организаций
         /// </summary>
         public List<Organization> organizations { get; set; }
         /// <summary>

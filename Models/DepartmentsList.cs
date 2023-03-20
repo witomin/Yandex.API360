@@ -1,7 +1,13 @@
 ﻿using System.Collections.Generic;
 
 namespace Yandex.API360.Models {
-    class DepartmentsList {
+    /// <summary>
+    /// Список подразделений
+    /// </summary>
+    public class DepartmentsList {
+        /// <summary>
+        /// Список подразделений
+        /// </summary>
         public List<Department> departments { get; set; }
         public long page { get; set; }
         /// <summary>

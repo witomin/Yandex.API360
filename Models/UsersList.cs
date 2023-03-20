@@ -1,7 +1,13 @@
 ﻿using System.Collections.Generic;
 
 namespace Yandex.API360.Models {
+    /// <summary>
+    /// Список пользователей
+    /// </summary>
     public class UsersList {
+        /// <summary>
+        /// Список пользователей
+        /// </summary>
         public List<User> users { get; set; }
         /// <summary>
         /// Номер страницы ответа

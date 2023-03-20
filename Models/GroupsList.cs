@@ -1,7 +1,12 @@
 ﻿using System.Collections.Generic;
-
+/// <summary>
+/// Список групп
+/// </summary>
 namespace Yandex.API360.Models {
-    class GroupsList {
+    public class GroupsList {
+        /// <summary>
+        /// Список групп
+        /// </summary>
         public List<Group> groups { get; set; }
         /// <summary>
         /// Номер страницы ответа
