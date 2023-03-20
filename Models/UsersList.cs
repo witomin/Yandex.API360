@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 
 namespace Yandex.API360.Models {
-    class UsersList {
+    public class UsersList {
         public List<User> users { get; set; }
         /// <summary>
         /// Номер страницы ответа

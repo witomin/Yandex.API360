@@ -27,11 +27,11 @@ namespace Yandex.API360 {
         /// <param name="page">Номер страницы ответа</param>
         /// <param name="perPage">Количество сотрудников на одной странице ответа</param>
         /// <returns></returns>
-        public async Task<List<User>> GetUsersAsync(long page = 1, long perPage = 10) {
+        public async Task<UsersList> GetUsersAsync(long page = 1, long perPage = 10) {
             var response = await httpClient.GetAsync($"{_options.URLUsers}?page={page}&perPage={perPage}");
             await CheckResponseAsync(response);
             var apiResponse = await response.Content.ReadFromJsonAsync<UsersList>();
-            return apiResponse.users;
+            return apiResponse;
         }
         /// <summary>
         /// Получить полный списко сотрудников
@@ -62,7 +62,8 @@ namespace Yandex.API360 {
                 var perPageMax = apiResponse.perPage;
                 // получаем остальные страницы начиная со 2-й
                 for(long i=2; i<= pages; i++) {
-                    result.AddRange(await GetUsersAsync(i, perPageMax));
+                    var usersList = await GetUsersAsync(i, perPageMax);
+                    result.AddRange(usersList.users);
                 }
             }
             return result;
