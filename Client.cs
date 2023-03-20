@@ -233,14 +233,31 @@ namespace Yandex.API360 {
         /// <param name="orderBy">Вид сортировки. id: По идентификатору.name: По названию.Значение по умолчанию: id.</param>
         /// <returns></returns>
         public async Task<List<Department>> GetAllDepartmentsAsync(long? parentId = default, DepartmentsOrderBy orderBy = DepartmentsOrderBy.id) {
-            var response = await httpClient.GetAsync($"{_options.URLDepartments}?page=1&perPage=10{(parentId != null ? $"&parentId={parentId}" : string.Empty)}&orderBy={orderBy}");
-            await CheckResponseAsync(response);
-            var apiResponse = await response.Content.ReadFromJsonAsync<DepartmentsList>();
-            var TotalDepartments = apiResponse.total;
-            response = await httpClient.GetAsync($"{_options.URLDepartments}?page=1&perPage={TotalDepartments}{(parentId != null ? $"&parentId={parentId}" : string.Empty)}&orderBy={orderBy}");
-            await CheckResponseAsync(response);
-            apiResponse = await response.Content.ReadFromJsonAsync<DepartmentsList>();
-            return apiResponse.departments;
+            var result = new List<Department>();
+            var response = await GetDepartmentsAsync(parentId: parentId, orderBy: orderBy);
+            //определяем сколько всего подразделений
+            var TotalDepartments = response.total;
+            //пытаемся получить все подразделения в одном запросе
+            response = await GetDepartmentsAsync(1, TotalDepartments, parentId, orderBy);
+            //Проверяем все ли подразделения получены
+            if (response.perPage == TotalDepartments) {
+                result = response.departments;
+            }
+            else {
+                //если API отдало не все
+                //сохраняем, то что уже получили
+                result.AddRange(response.departments);
+                //определяем кол-во страниц ответа
+                var pages = response.pages;
+                //определяем сколько максимально отдает API
+                var perPageMax = response.perPage;
+                // получаем остальные страницы начиная со 2-й
+                for (long i = 2; i <= pages; i++) {
+                    response = await GetDepartmentsAsync(i, perPageMax, parentId, orderBy);
+                    result.AddRange(response.departments);
+                }
+            }
+            return result;
         }
         /// <summary>
         /// Изменить подразделение
