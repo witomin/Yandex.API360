@@ -78,5 +78,13 @@ namespace Yandex.API360 {
                 return $"{API360Host}/admin/v1/org/{_organizationId}/mail/routing/rules";
             }
         }
+        /// <summary>
+        /// URL управления доменами
+        /// </summary>
+        public string URLdomains {
+            get {
+                return $"{API360Host}/directory/v1/org/{_organizationId}/domains";
+            }
+        }
     }
 }

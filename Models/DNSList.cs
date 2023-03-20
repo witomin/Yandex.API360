@@ -1,8 +1,11 @@
 ﻿using System.Collections.Generic;
 
 namespace Yandex.API360.Models {
-    class GroupsList {
-        public List<Group> groups { get; set; }
+    public class DNSList {
+        /// <summary>
+        /// Список DNS-записей
+        /// </summary>
+        public List<DNSRecord> records { get; set; }
         /// <summary>
         /// Номер страницы ответа
         /// </summary>
