@@ -61,7 +61,7 @@ namespace Yandex.API360 {
                 //определяем сколько максимально отдает API
                 var perPageMax = apiResponse.perPage;
                 // получаем остальные страницы начиная со 2-й
-                for(long i=2; i<= pages; i++) {
+                for (long i = 2; i <= pages; i++) {
                     var usersList = await GetUsersAsync(i, perPageMax);
                     result.AddRange(usersList.users);
                 }
@@ -496,6 +496,26 @@ namespace Yandex.API360 {
             await CheckResponseAsync(response);
             var organisations = await response.Content.ReadFromJsonAsync<OrganizationList>();
             return organisations;
+        }
+        /// <summary>
+        /// Получить полный список организаций
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<Organization>> GetAllOrganizationsAsync() {
+            var result = new List<Organization>();
+            var response = await GetOrganizationsAsync(_options.MaxCountOrgInResponse);
+            if (string.IsNullOrEmpty(response.nextPageToken)) {
+                result = response.organizations;
+            }
+            else {
+                result.AddRange(response.organizations);
+                do {
+                    response = await GetOrganizationsAsync(_options.MaxCountOrgInResponse);
+                    result.AddRange(response.organizations);
+                }
+                while (string.IsNullOrEmpty(response.nextPageToken));
+            }
+            return result;
         }
         #endregion
         #region Обработка писем

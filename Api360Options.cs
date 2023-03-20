@@ -71,6 +71,15 @@ namespace Yandex.API360 {
             }
         }
         /// <summary>
+        /// Максимальное количество организаций на странице ответ от API
+        /// </summary>
+        public int MaxCountOrgInResponse {
+            get {
+                return 100;
+            }
+        }
+
+        /// <summary>
         /// URL управления обработкой писем
         /// </summary>
         public string URLrouting {
