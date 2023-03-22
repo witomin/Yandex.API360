@@ -15,5 +15,9 @@
         /// Отчество сотрудника.
         /// </summary>
         public string middle { get; set; }
+
+        public override string ToString() {
+            return $"{last} {first} {middle}";
+        }
     }
 }

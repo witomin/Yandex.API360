@@ -12,5 +12,9 @@
         /// Признак автоматически созданного контакта: true — контакт создан автоматически; false — контакт создан вручную
         /// </summary>
         public bool synthetic { get; set; }
+
+        public override string ToString() {
+            return $"{type}:{value}";
+        }
     }
 }
