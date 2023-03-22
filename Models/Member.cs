@@ -13,5 +13,10 @@ namespace Yandex.API360.Models {
         /// Идентификатор участника группы
         /// </summary>
         public ulong id { get; set; }
+
+        public override string ToString() {
+            return $"{type}:{id}";
+        }
     }
+
 }
