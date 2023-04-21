@@ -36,7 +36,7 @@ namespace Yandex.API360.Models {
         /// <summary>
         /// Идентификатор записи.
         /// </summary>
-        public long recordId { get; set; }
+        public long? recordId { get; set; }
         /// <summary>
         /// Тег для CAA-записи.
         /// </summary>
