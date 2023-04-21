@@ -51,5 +51,15 @@ namespace Yandex.API360 {
             }
             return result;
         }
+        /// <summary>
+        /// Удалить DNS-запись для домена
+        /// </summary>
+        /// <param name="domainName">Полное доменное имя. Например example.com. Для кириллических доменов (например домен.рф) используйте кодировку Punycode.</param>
+        /// <param name="recordId">Идентификатор записи</param>
+        /// <returns></returns>
+        public async Task DeleteDNSAsync(string domainName, ulong recordId) {
+            var response = await httpClient.DeleteAsync($"{_options.URLdomains}/{domainName}/dns/{recordId}");
+            await CheckResponseAsync(response);
+        }
     }
 }
