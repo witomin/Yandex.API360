@@ -61,5 +61,20 @@ namespace Yandex.API360 {
             var response = await httpClient.DeleteAsync($"{_options.URLdomains}/{domainName}/dns/{recordId}");
             await CheckResponseAsync(response);
         }
+        /// <summary>
+        /// Добавить DNS-запись для домена
+        /// </summary>
+        /// <param name="domainName">Полное доменное имя. Например example.com. Для кириллических доменов (например домен.рф) используйте кодировку Punycode</param>
+        /// <param name="dnsRecord">DNS запись</param>
+        /// <returns></returns>
+        public async Task<DNSRecord> AddDNSAsync(string domainName, DNSRecord dnsRecord) {
+            if (dnsRecord is null) {
+                throw new ArgumentNullException(nameof(dnsRecord));
+            }
+            var response = await httpClient.PostAsJsonAsync($"{_options.URLdomains}/{domainName}/dns", dnsRecord);
+            await CheckResponseAsync(response);
+            var result = await response.Content.ReadFromJsonAsync<DNSRecord>();
+            return result;
+        }
     }
 }
