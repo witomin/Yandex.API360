@@ -29,9 +29,9 @@ namespace Yandex.API360 {
             var response = await GetDNSAsync(domainName);
             //определяем сколько всего записей
             var TotalRecords = response.total;
-            //пытаемся получить все подразделения в одном запросе
+            //пытаемся получить все записи в одном запросе
             response = await GetDNSAsync(domainName, 1, TotalRecords);
-            //Проверяем все ли подразделения получены
+            //Проверяем все ли записи получены
             if (response.perPage == TotalRecords) {
                 result = response.records;
             }
@@ -58,6 +58,9 @@ namespace Yandex.API360 {
         /// <param name="recordId">Идентификатор записи</param>
         /// <returns></returns>
         public async Task DeleteDNSAsync(string domainName, ulong recordId) {
+            if (string.IsNullOrEmpty(domainName)) {
+                throw new ArgumentNullException(nameof(domainName));
+            }
             var response = await httpClient.DeleteAsync($"{_options.URLdomains}/{domainName}/dns/{recordId}");
             await CheckResponseAsync(response);
         }
@@ -68,6 +71,9 @@ namespace Yandex.API360 {
         /// <param name="dnsRecord">DNS запись</param>
         /// <returns></returns>
         public async Task<DNSRecord> AddDNSAsync(string domainName, DNSRecord dnsRecord) {
+            if (string.IsNullOrEmpty(domainName)) {
+                throw new ArgumentNullException(nameof(domainName));
+            }
             if (dnsRecord is null) {
                 throw new ArgumentNullException(nameof(dnsRecord));
             }

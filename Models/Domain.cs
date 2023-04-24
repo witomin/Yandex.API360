@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Yandex.API360.Models {
+﻿namespace Yandex.API360.Models {
     /// <summary>
     /// Домен
     /// </summary>
