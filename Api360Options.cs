@@ -39,6 +39,14 @@ namespace Yandex.API360 {
             }
         }
         /// <summary>
+        /// URL управления сотрудниками
+        /// </summary>
+        public string URLPostSettings {
+            get {
+                return $"{API360Host}/admin/v1/org/{_organizationId}/mail";
+            }
+        }
+        /// <summary>
         /// URL управления подразделениями
         /// </summary>
         public string URLDepartments {
@@ -100,7 +108,7 @@ namespace Yandex.API360 {
         /// </summary>
         public string URLpasswords {
             get {
-                return $"{API360Host}/directory/v1/org/{_organizationId}/domain_passwords";
+                return $"{API360Host}/security/v1/org/{_organizationId}/domain_passwords";
             }
         }
     }
