@@ -17,5 +17,16 @@ namespace Yandex.API360 {
             await CheckResponseAsync(response);
             return await response.Content.ReadFromJsonAsync<Signatures>();
         }
+        /// <summary>
+        /// Установить почтовый адрес сотрудника, с которого отправляются письма по умолчанию, и настройки его подписей
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="signatures"></param>
+        /// <returns></returns>
+        public async Task<Signatures> SetUserSignaturesAsync(ulong userId, Signatures signatures) {
+            var response = await httpClient.PostAsJsonAsync($"{_options.URLPostSettings}/users/{userId}/settings/sender_info", signatures);
+            await CheckResponseAsync(response);
+            return await response.Content.ReadFromJsonAsync<Signatures>();
+        }
     }
 }
