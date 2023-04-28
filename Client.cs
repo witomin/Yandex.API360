@@ -28,14 +28,21 @@ namespace Yandex.API360 {
             System.Net.HttpStatusCode.Unauthorized,
             System.Net.HttpStatusCode.Forbidden,
             System.Net.HttpStatusCode.NotFound,
-            System.Net.HttpStatusCode.InternalServerError
+            System.Net.HttpStatusCode.InternalServerError,
+            System.Net.HttpStatusCode.BadRequest
             };
             if (response.StatusCode != System.Net.HttpStatusCode.OK) {
                 if (response.Content is null) {
                     throw new APIRequestException("Response doesn't contain any content", response.StatusCode);
                 }
                 if (Codes.Contains(response.StatusCode)) {
-                    var failedResponse = await response.Content.ReadFromJsonAsync<FailedAPIResponse>();
+                    FailedAPIResponse failedResponse = null;
+                    try {
+                        failedResponse = await response.Content.ReadFromJsonAsync<FailedAPIResponse>();
+                    }
+                    catch {
+                        throw new APIRequestException(response.ReasonPhrase, response.StatusCode);
+                    }
                     throw new APIRequestException(response.StatusCode, failedResponse);
                 }
                 throw new APIRequestException(response.ReasonPhrase, response.StatusCode);
