@@ -111,5 +111,13 @@ namespace Yandex.API360 {
                 return $"{API360Host}/security/v1/org/{_organizationId}/domain_passwords";
             }
         }
+        /// <summary>
+        /// URL настроек безопасности
+        /// </summary>
+        public string URLsecurity {
+            get {
+                return $"{API360Host}/security/v1/org/{_organizationId}";
+            }
+        }
     }
 }
