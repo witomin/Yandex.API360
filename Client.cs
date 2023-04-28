@@ -36,14 +36,19 @@ namespace Yandex.API360 {
                     throw new APIRequestException("Response doesn't contain any content", response.StatusCode);
                 }
                 if (Codes.Contains(response.StatusCode)) {
-                    FailedAPIResponse failedResponse = null;
+                    FailedAPIResponse failedResponse;
                     try {
                         failedResponse = await response.Content.ReadFromJsonAsync<FailedAPIResponse>();
                     }
                     catch {
+                        failedResponse = null;
+                    }
+                    if (failedResponse != null) {
+                        throw new APIRequestException(response.StatusCode, failedResponse);
+                    }
+                    else {
                         throw new APIRequestException(response.ReasonPhrase, response.StatusCode);
                     }
-                    throw new APIRequestException(response.StatusCode, failedResponse);
                 }
                 throw new APIRequestException(response.ReasonPhrase, response.StatusCode);
             }
