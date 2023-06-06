@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Yandex.API360.Models;
@@ -87,6 +88,36 @@ namespace Yandex.API360 {
                 throw new ArgumentNullException(nameof(user));
             }
             var response = await httpClient.PatchAsJsonAsync($"{_options.URLUsers}/{user.id}", user);
+            await CheckResponseAsync(response);
+            return await response.Content.ReadFromJsonAsync<User>();
+        }
+        /// <summary>
+        /// Изменить сотрудника
+        /// </summary>
+        /// <param name="user">Сотрудник</param>
+        /// <param name="password">пароль сотрудника</param>
+        /// <returns></returns>
+        public async Task<User> EditUserAsync(User user, string password = default) {
+            if (user is null) {
+                throw new ArgumentNullException(nameof(user));
+            }
+            var editUser = new UserEdit() {
+                id = user.id,
+                about = user.about,
+                birthday = user.birthday,
+                contacts = user.contacts.Select(x => new BaseContact { label = x.label, type = x.type, value = x.value }).ToList(),
+                departmentId = user.departmentId,
+                externalId = user.externalId,
+                gender = user.gender,
+                isAdmin = user.isAdmin,
+                isEnabled = user.isEnabled,
+                language = user.language,
+                name = user.name,
+                position = user.position,
+                timezone = user.timezone,
+                password = password
+            };
+            var response = await httpClient.PatchAsJsonAsync($"{_options.URLUsers}/{user.id}", editUser);
             await CheckResponseAsync(response);
             return await response.Content.ReadFromJsonAsync<User>();
         }

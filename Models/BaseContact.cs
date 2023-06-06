@@ -10,5 +10,9 @@ namespace Yandex.API360.Models {
         /// Значение контакта
         /// </summary>
         public string value { get; set; }
+        /// <summary>
+        /// Произвольная метка контакта
+        /// </summary>
+        public string label { get; set; }
     }
 }

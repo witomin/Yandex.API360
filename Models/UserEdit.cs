@@ -21,7 +21,7 @@ namespace Yandex.API360.Models {
         /// <summary>
         /// Идентификатор подразделения, в котором состоит сотрудник
         /// </summary>
-        public ulong departmentId { get; set; }
+        public ulong? departmentId { get; set; }
         /// <summary>
         /// ФИО сотрудника
         /// </summary>
@@ -37,7 +37,7 @@ namespace Yandex.API360.Models {
         /// <summary>
         /// Список контактов сотрудника
         /// </summary>
-        public List<BaseContact> contacts { get; set; }
+        public List<BaseContact>? contacts { get; set; }
         /// <summary>
         /// Произвольный внешний идентификатор сотрудника
         /// </summary>
@@ -45,11 +45,11 @@ namespace Yandex.API360.Models {
         /// <summary>
         /// Признак администратора организации: true — администратор; false — рядовой пользователь
         /// </summary>
-        public bool isAdmin { get; set; }
+        public bool? isAdmin { get; set; }
         /// <summary>
         /// Статус аккаунта сотрудника: true — активен; false — заблокирован
         /// </summary>
-        public bool isEnabled { get; set; }
+        public bool? isEnabled { get; set; }
         /// <summary>
         /// Часовой пояс сотрудника
         /// </summary>
