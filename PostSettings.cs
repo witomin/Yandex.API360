@@ -21,13 +21,13 @@ namespace Yandex.API360 {
         /// Установить почтовый адрес сотрудника, с которого отправляются письма по умолчанию, и настройки его подписей
         /// </summary>
         /// <param name="userId">Идентификатор пользователя</param>
-        /// <param name="signatures"></param>
+        /// <param name="UserSettings">Настройки пользователя</param>
         /// <returns></returns>
-        public async Task<UserPersonalSettings> SetUserSignaturesAsync(ulong userId, UserPersonalSettings signatures) {
-            if (signatures is null) {
-                throw new ArgumentNullException(nameof(signatures));
+        public async Task<UserPersonalSettings> SetUserPersonalSettingsAsync(ulong userId, UserPersonalSettings UserSettings) {
+            if (UserSettings is null) {
+                throw new ArgumentNullException(nameof(UserSettings));
             }
-            var response = await httpClient.PostAsJsonAsync($"{_options.URLPostSettings}/users/{userId}/settings/sender_info", signatures);
+            var response = await httpClient.PostAsJsonAsync($"{_options.URLPostSettings}/users/{userId}/settings/sender_info", UserSettings);
             await CheckResponseAsync(response);
             return await response.Content.ReadFromJsonAsync<UserPersonalSettings>();
         }
