@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-namespace Yandex.API360.Enums {
+﻿namespace Yandex.API360.Enums {
     /// <summary>
     /// Виды действий
     /// </summary>

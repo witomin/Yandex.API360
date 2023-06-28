@@ -12,10 +12,10 @@ namespace Yandex.API360 {
         /// </summary>
         /// <param name="userId">Идентификатор пользователя</param>
         /// <returns></returns>
-        public async Task<Signatures> GetUserSignaturesAsync(ulong userId) {
+        public async Task<UserPersonalSettings> GetUserPersonalSettingsAsync(ulong userId) {
             var response = await httpClient.GetAsync($"{_options.URLPostSettings}/users/{userId}/settings/sender_info");
             await CheckResponseAsync(response);
-            return await response.Content.ReadFromJsonAsync<Signatures>();
+            return await response.Content.ReadFromJsonAsync<UserPersonalSettings>();
         }
         /// <summary>
         /// Установить почтовый адрес сотрудника, с которого отправляются письма по умолчанию, и настройки его подписей
@@ -23,13 +23,13 @@ namespace Yandex.API360 {
         /// <param name="userId">Идентификатор пользователя</param>
         /// <param name="signatures"></param>
         /// <returns></returns>
-        public async Task<Signatures> SetUserSignaturesAsync(ulong userId, Signatures signatures) {
+        public async Task<UserPersonalSettings> SetUserSignaturesAsync(ulong userId, UserPersonalSettings signatures) {
             if (signatures is null) {
                 throw new ArgumentNullException(nameof(signatures));
             }
             var response = await httpClient.PostAsJsonAsync($"{_options.URLPostSettings}/users/{userId}/settings/sender_info", signatures);
             await CheckResponseAsync(response);
-            return await response.Content.ReadFromJsonAsync<Signatures>();
+            return await response.Content.ReadFromJsonAsync<UserPersonalSettings>();
         }
         /// <summary>
         /// Получить статус автоматического сбора контактов

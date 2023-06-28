@@ -4,6 +4,9 @@ namespace Yandex.API360.Enums {
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum Languages {
         ru,
-        en
+        en,
+        ua,
+        by,
+        tr
     }
 }

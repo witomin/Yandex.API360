@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using Yandex.API360.Enums;
 
 namespace Yandex.API360.Models {
-    public class Signatures {
+    public class UserPersonalSettings {
         /// <summary>
         /// Имя отправителя
         /// </summary>
