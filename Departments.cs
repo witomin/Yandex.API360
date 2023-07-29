@@ -54,7 +54,7 @@ namespace Yandex.API360 {
         /// </summary>
         /// <param name="departmentId">Идентификатор подразделения</param>
         /// <returns></returns>
-        public async Task<Department> GetDapartmentByIdAsync(long departmentId) {
+        public async Task<Department> GetDapartmentByIdAsync(ulong departmentId) {
             var response = await httpClient.GetAsync($"{_options.URLDepartments}/{departmentId}");
             await CheckResponseAsync(response);
             return await response.Content.ReadFromJsonAsync<Department>();

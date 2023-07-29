@@ -10,12 +10,19 @@ namespace Yandex.API360 {
     public partial class Client {
         Api360Options _options;
         HttpClient httpClient;
+
+        HttpClient httpClientImg;
         public Client(Api360Options options) {
             _options = options;
             httpClient = new HttpClient();
             httpClient.DefaultRequestHeaders.Accept.Clear();
             httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _options.Token);
+
+            httpClientImg = new HttpClient();
+            httpClientImg.DefaultRequestHeaders.Accept.Clear();
+            //httpClientImg.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("image/png"));
+            httpClientImg.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _options.Token);
         }
 
         /// <summary>

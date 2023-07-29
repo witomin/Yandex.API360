@@ -75,13 +75,14 @@ namespace Yandex.API360 {
         /// <param name="userId">Идентификатор пользователя</param>
         /// <param name="userRule">правило автоответа или пересылки</param>
         /// <returns></returns>
-        public async Task<UserRule> AddUserRuleAsync(ulong userId, UserRule userRule) {
+        public async Task<ulong> AddUserRuleAsync(ulong userId, UserRule userRule) {
             if (userRule is null) {
                 throw new ArgumentNullException(nameof(userRule));
             }
             var response = await httpClient.PostAsJsonAsync($"{_options.URLPostSettings}/users/{userId}/settings/user_rules", userRule);
             await CheckResponseAsync(response);
-            return await response.Content.ReadFromJsonAsync<UserRule>();
+            var result = await response.Content.ReadFromJsonAsync<UserRuleAddResponse>();
+            return result.ruleId;
         }
         /// <summary>
         /// Удалить правило автоответа или пересылки
