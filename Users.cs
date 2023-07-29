@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Yandex.API360.Models;
@@ -170,6 +173,39 @@ namespace Yandex.API360 {
             await CheckResponseAsync(response);
             var result = await response.Content.ReadFromJsonAsync<UserStatus2FA>();
             return result.has2fa;
+        }
+        /// <summary>
+        /// Загрузить портрет сотрудника
+        /// </summary>
+        /// <param name="userId">Идентификатор сотрудника</param>
+        /// <param name="imageData">Данные файла изображения</param>
+        /// <returns></returns>
+        public async Task SetUserAvatar(ulong userId, byte[] imageData) {
+            if (imageData == null || imageData.Length==0) {
+                throw new ArgumentNullException(nameof(imageData));
+            }
+            var content = new MultipartFormDataContent();
+            content.Add(new ByteArrayContent(imageData), "file", "file.png");
+            content.Headers.ContentType = new MediaTypeHeaderValue("image/png");
+            var response = await httpClientImg.PutAsync($"{_options.URLUsers}/{userId}/avatar", content);
+            await CheckResponseAsync(response);
+            _ = await response.Content.ReadFromJsonAsync<object>();
+        }
+        /// <summary>
+        /// Загрузить портрет сотрудника
+        /// </summary>
+        /// <param name="userId">Идентификатор сотрудника</param>
+        /// <param name="imageStream">Данные файла изображения</param>
+        /// <returns></returns>
+        public async Task SetUserAvatar(ulong userId, Stream imageStream) {
+            var content = new MultipartFormDataContent();
+            var fileStreamContent = new StreamContent(imageStream);
+            fileStreamContent.Headers.ContentType = new MediaTypeHeaderValue("image/png");
+            content.Add(fileStreamContent, "file", "avater.png");
+            
+            var response = await httpClientImg.PutAsync($"{_options.URLUsers}/{userId}/avatar", fileStreamContent);
+            await CheckResponseAsync(response);
+            _ = await response.Content.ReadFromJsonAsync<object>();
         }
     }
 }
