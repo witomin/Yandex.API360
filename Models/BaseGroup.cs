@@ -22,7 +22,7 @@ namespace Yandex.API360.Models {
         /// </summary>
         public string externalId { get; set; }
         /// <summary>
-        /// частники группы
+        /// Участники группы
         /// </summary>
         public List<Member> members { get; set; }
         /// <summary>
