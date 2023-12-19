@@ -6,7 +6,7 @@ namespace Yandex.API360.Models {
     /// <summary>
     /// Список событий в аудит логе Диска организации
     /// </summary>
-    public class AventList {
+    public class EventList {
         /// <summary>
         /// Список событий
         /// </summary>

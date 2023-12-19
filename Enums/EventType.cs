@@ -1,10 +1,11 @@
 ﻿using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 namespace Yandex.API360.Enums {
     /// <summary>
     /// Тип события
     /// </summary>
-    [DataContract]
+    [JsonConverter(typeof(JsonStringEnumMemberConverter))]
     public enum EventType {
         /// <summary>
         /// копирование к себе на Диск

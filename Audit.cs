@@ -19,7 +19,7 @@ namespace Yandex.API360 {
         /// <param name="includeUids">Список пользователей, действия которых должны быть включены в список событий</param>
         /// <param name="excludeUids">Список пользователей, действия которых должны быть исключены из списка событий</param>
         /// <returns></returns>
-        public async Task<AventList> GetDiskLogAsync(uint pageSize, string? pageToken = null, DateTime? beforeDate = null, DateTime? afterDate = null,
+        public async Task<EventList> GetDiskLogAsync(uint pageSize, string? pageToken = null, DateTime? beforeDate = null, DateTime? afterDate = null,
             List<ulong>? includeUids = null, List<ulong>? excludeUids = null) {
 
             var beforeDate_iso = beforeDate != null ? $"{ ((DateTime)beforeDate).ToString("yyyy-MM-ddTHH:mm:ssZ", CultureInfo.InvariantCulture)}" : string.Empty;
@@ -40,7 +40,7 @@ namespace Yandex.API360 {
             var response = await httpClient.GetAsync($"{_options.URLsecurity}/audit_log/disk?pageSize={pageSize}{(!string.IsNullOrEmpty(pageToken) ? $"&pageToken={pageToken}" : string.Empty)}{(!string.IsNullOrEmpty(beforeDate_iso) ? $"&beforeDate={beforeDate_iso}" : string.Empty)}{(!string.IsNullOrEmpty(afterDate_iso) ? $"&afterDate={afterDate_iso}" : string.Empty)}{(!string.IsNullOrEmpty(combinedIncludeUids) ? $"&{combinedIncludeUids}" : string.Empty)}{(!string.IsNullOrEmpty(combinedExcludeUids) ? $"&{combinedExcludeUids}" : string.Empty)}");
 
             await CheckResponseAsync(response);
-            return await response.Content.ReadFromJsonAsync<AventList>();
+            return await response.Content.ReadFromJsonAsync<EventList>();
         }
     }
 }
