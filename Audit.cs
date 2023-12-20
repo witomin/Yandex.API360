@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Net.Http.Json;
-using System.Text;
 using System.Threading.Tasks;
 using Yandex.API360.Models;
 
@@ -19,8 +18,8 @@ namespace Yandex.API360 {
         /// <param name="includeUids">Список пользователей, действия которых должны быть включены в список событий</param>
         /// <param name="excludeUids">Список пользователей, действия которых должны быть исключены из списка событий</param>
         /// <returns></returns>
-        public async Task<EventList> GetDiskLogAsync(uint pageSize, string? pageToken = null, DateTime? beforeDate = null, DateTime? afterDate = null,
-            List<ulong>? includeUids = null, List<ulong>? excludeUids = null) {
+        public async Task<EventList> GetDiskLogAsync(uint pageSize, string pageToken = null, DateTime? beforeDate = null, DateTime? afterDate = null,
+            List<string> includeUids = null, List<string> excludeUids = null) {
 
             var beforeDate_iso = beforeDate != null ? $"{ ((DateTime)beforeDate).ToString("yyyy-MM-ddTHH:mm:ssZ", CultureInfo.InvariantCulture)}" : string.Empty;
             var afterDate_iso = afterDate != null ? $"{ ((DateTime)afterDate).ToString("yyyy-MM-ddTHH:mm:ssZ", CultureInfo.InvariantCulture)}" : string.Empty;
