@@ -53,7 +53,7 @@ namespace Yandex.API360.Enums {
         /// <summary>
         /// очистка Корзины
         /// </summary>
-        [EnumMember(Value = "fs-trash-drop")]
+        [EnumMember(Value = "fs-trash-drop-all")]
         [Description("Очистка корзины")]
         FsTrashDropAll,
         /// <summary>
