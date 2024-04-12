@@ -119,5 +119,13 @@ namespace Yandex.API360 {
                 return $"{API360Host}/security/v1/org/{_organizationId}";
             }
         }
+        /// <summary>
+        /// URL управления доступом к почтовым ящикам
+        /// </summary>
+        public string URLMailboxDelegation {
+            get {
+                return $"{API360Host}/admin/v1/org/{_organizationId}/mail/delegated";
+            }
+        }
     }
 }
