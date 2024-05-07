@@ -11,6 +11,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>witomin</Authors>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageTags>yandex360;api;yandex;</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
