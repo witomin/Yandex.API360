@@ -2,6 +2,8 @@
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using System.Text.Json.Serialization;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Yandex.API360.Exceptions;
 
@@ -12,6 +14,11 @@ namespace Yandex.API360 {
         HttpClient httpClient;
 
         HttpClient httpClientImg;
+
+        JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions {
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+        };
+
         public Client(Api360Options options) {
             _options = options;
             httpClient = new HttpClient();
@@ -44,12 +51,7 @@ namespace Yandex.API360 {
                 }
                 if (Codes.Contains(response.StatusCode)) {
                     FailedAPIResponse failedResponse;
-                    try {
-                        failedResponse = await response.Content.ReadFromJsonAsync<FailedAPIResponse>();
-                    }
-                    catch {
-                        failedResponse = null;
-                    }
+                    failedResponse = await response.Content.ReadFromJsonAsync<FailedAPIResponse>();
                     if (failedResponse != null) {
                         throw new APIRequestException(response.StatusCode, failedResponse);
                     }

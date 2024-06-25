@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Yandex.API360.Enums;
+using System.Text.Json.Serialization;
 
 namespace Yandex.API360.Models {
     /// <summary>
@@ -58,5 +58,11 @@ namespace Yandex.API360.Models {
         /// Пароль сотрудника
         /// </summary>
         public string password { get; set; }
+        /// <summary>
+        /// Публичное имя сотрудника – имя, которое сотрудник использует в своем профиле для представления себя, оно может совпадать с реальным именем, быть псевдонимом или никнеймом.
+        /// </summary>
+        [JsonPropertyName("displayName")]
+        public string DisplayName { get; set; }
+
     }
 }

@@ -90,7 +90,7 @@ namespace Yandex.API360 {
             if (user is null) {
                 throw new ArgumentNullException(nameof(user));
             }
-            var response = await httpClient.PatchAsJsonAsync($"{_options.URLUsers}/{user.id}", user);
+            var response = await httpClient.PatchAsJsonAsync($"{_options.URLUsers}/{user.id}", user, jsonSerializerOptions);
             await CheckResponseAsync(response);
             return await response.Content.ReadFromJsonAsync<User>();
         }
@@ -120,7 +120,7 @@ namespace Yandex.API360 {
                 timezone = user.timezone,
                 password = password
             };
-            var response = await httpClient.PatchAsJsonAsync($"{_options.URLUsers}/{user.id}", editUser);
+            var response = await httpClient.PatchAsJsonAsync($"{_options.URLUsers}/{user.id}", editUser, jsonSerializerOptions);
             await CheckResponseAsync(response);
             return await response.Content.ReadFromJsonAsync<User>();
         }
@@ -174,6 +174,7 @@ namespace Yandex.API360 {
             var result = await response.Content.ReadFromJsonAsync<UserStatus2FA>();
             return result.has2fa;
         }
+        
         /// <summary>
         /// Загрузить портрет сотрудника
         /// </summary>

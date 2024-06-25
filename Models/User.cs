@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Yandex.API360.Enums;
+using System.Text.Json.Serialization;
 
 namespace Yandex.API360.Models {
     public class User {
@@ -92,5 +92,10 @@ namespace Yandex.API360.Models {
         /// Дата и время изменения сотрудника
         /// </summary>
         public DateTime updatedAt { get; set; }
+        /// <summary>
+        /// Публичное имя сотрудника – имя, которое сотрудник использует в своем профиле для представления себя, оно может совпадать с реальным именем, быть псевдонимом или никнеймом.
+        /// </summary>
+        [JsonPropertyName("displayName")]
+        public string DisplayName { get; set; }
     }
 }
