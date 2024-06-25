@@ -174,7 +174,16 @@ namespace Yandex.API360 {
             var result = await response.Content.ReadFromJsonAsync<UserStatus2FA>();
             return result.has2fa;
         }
-        
+        /// <summary>
+        /// Сбросить телефон для 2FA сотрудника 
+        /// </summary>
+        /// <param name="userId">Идентификатор сотрудника</param>
+        /// <returns></returns>
+        public async Task Clear2FAUserAsync(ulong userId) {
+            var response = await httpClient.DeleteAsync($"{_options.URLUsers}/{userId}/2fa");
+            await CheckResponseAsync(response);
+            _ = await response.Content.ReadFromJsonAsync<object>();
+        }
         /// <summary>
         /// Загрузить портрет сотрудника
         /// </summary>
