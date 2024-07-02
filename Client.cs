@@ -6,6 +6,7 @@ using System.Text.Json.Serialization;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Yandex.API360.Exceptions;
+using System.Reflection;
 
 
 namespace Yandex.API360 {
@@ -22,11 +23,13 @@ namespace Yandex.API360 {
         public Client(Api360Options options) {
             _options = options;
             httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.Add("User-Agent", $"{Assembly.GetExecutingAssembly()?.GetName()?.Name}/{Assembly.GetExecutingAssembly()?.GetName()?.Version?.ToString()}");
             httpClient.DefaultRequestHeaders.Accept.Clear();
             httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _options.Token);
 
             httpClientImg = new HttpClient();
+            httpClientImg.DefaultRequestHeaders.Add("User-Agent", $"{Assembly.GetExecutingAssembly()?.GetName()?.Name}/{Assembly.GetExecutingAssembly()?.GetName()?.Version?.ToString()}");
             httpClientImg.DefaultRequestHeaders.Accept.Clear();
             //httpClientImg.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("image/png"));
             httpClientImg.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _options.Token);
