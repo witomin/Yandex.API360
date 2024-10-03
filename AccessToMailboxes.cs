@@ -7,6 +7,7 @@ using Yandex.API360.Models;
 
 namespace Yandex.API360 {
     public partial class Client {
+        [Obsolete("Метод не поддерживается API Яндекс360 с 1 ноября 2024 г.", true)]
         /// <summary>
         ///Изменить права доступа
         ///Предоставляет или изменяет права доступа сотрудника к чужому почтовому ящику.
@@ -26,6 +27,7 @@ namespace Yandex.API360 {
             var result = await response.Content.ReadFromJsonAsync<TaskIdResponse>();
             return result.TaskId;
         }
+        [Obsolete("Метод не поддерживается API Яндекс360 с 1 ноября 2024 г.", true)]
         /// <summary>
         /// Посмотреть список сотрудников, имеющих доступ к ящику
         /// </summary>
@@ -37,6 +39,7 @@ namespace Yandex.API360 {
             var result = await response.Content.ReadFromJsonAsync<ActorList>();
             return result.Actors;
         }
+        [Obsolete("Метод не поддерживается API Яндекс360 с 1 ноября 2024 г.", true)]
         /// <summary>
         /// Посмотреть список ящиков, доступных сотруднику
         /// </summary>
@@ -48,6 +51,7 @@ namespace Yandex.API360 {
             var result = await response.Content.ReadFromJsonAsync<DelegatedMailboxList>();
             return result.DelegatedMailboxes;
         }
+        [Obsolete("Метод не поддерживается API Яндекс360 с 1 ноября 2024 г.", true)]
         /// <summary>
         /// Проверить статус задачи
         /// </summary>
@@ -64,6 +68,7 @@ namespace Yandex.API360 {
             return result.Status;
             
         }
+        [Obsolete("Метод не поддерживается API Яндекс360 с 1 ноября 2024 г.", true)]
         /// <summary>
         /// Удалить права доступа сотрудника к чужому почтовому ящику
         /// </summary>
