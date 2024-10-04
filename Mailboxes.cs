@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Yandex.API360.Models.Mailbox;
 using System.Net.Http.Json;
 
-
 namespace Yandex.API360
 {
     public partial class Client {
@@ -107,7 +106,11 @@ namespace Yandex.API360
         /// <param name="id">Идентификатор почтового ящика, права доступа к которому необходимо проверить.
         /// Для делегированных ящиков идентификатор почтового ящика совпадает с идентификатором сотрудника-владельца этого ящика</param>
         /// <returns>Возвращает список сотрудников, у которых есть права доступа к почтовому ящику</returns>
+        /// <exception cref="ArgumentException"></exception>
         public async Task<List<Actor>> GetActorsFromMailboxAsync(ulong id) {
+            if (id == 0) {
+                throw new ArgumentException(nameof(id));
+            }
             var response = await httpClient.GetAsync($"{_options.URLMailboxManagement}/actors/{id}");
             await CheckResponseAsync(response);
             var result = await response.Content.ReadFromJsonAsync<ActorListAPIResponse>();
@@ -118,7 +121,11 @@ namespace Yandex.API360
         /// </summary>
         /// <param name="id">Идентификатор сотрудника</param>
         /// <returns>Возвращает список почтовых ящиков (общих и делегированных), к которым у сотрудника есть права доступа</returns>
+        /// <exception cref="ArgumentException"></exception>
         public async Task<List<Resource>> GetMailboxesFromUserAsync(ulong id) {
+            if (id == 0) {
+                throw new ArgumentException(nameof(id));
+            }
             var response = await httpClient.GetAsync($"{_options.URLMailboxManagement}/resources/{id}");
             await CheckResponseAsync(response);
             var result = await response.Content.ReadFromJsonAsync<ResourceListAPIResponse>();
@@ -129,7 +136,11 @@ namespace Yandex.API360
         /// </summary>
         /// <param name="id">Идентификатор почтового ящика. Для делегированных ящиков идентификатор почтового ящика совпадает с идентификатором сотрудника-владельца этого ящика</param>
         /// <returns>Идентификатор почтового ящика, разрешение на делегирование которого предоставлено</returns>
+        /// <exception cref="ArgumentException"></exception>
         public async Task<ulong> DelegateMailboxAllowAsync(ulong id) {
+            if (id == 0) {
+                throw new ArgumentException(nameof(id));
+            }
             var response = await httpClient.PutAsJsonAsync($"{_options.URLMailboxManagement}/delegated", new { resourceId = $"{id}" });
             await CheckResponseAsync(response);
             var result = await response.Content.ReadFromJsonAsync<ResourceIdAPIResponse>();
@@ -140,7 +151,11 @@ namespace Yandex.API360
         /// </summary>
         /// <param name="id">Идентификатор почтового ящика. Для делегированных ящиков идентификатор почтового ящика совпадает с идентификатором сотрудника-владельца этого ящика</param>
         /// <returns>Идентификатор почтового ящика, разрешение на делегирование которого отзвать</returns>
+        /// <exception cref="ArgumentException"></exception>
         public async Task DelegateMailboxDeniedAsync(ulong id) {
+            if (id == 0) {
+                throw new ArgumentException(nameof(id));
+            }
             var response = await httpClient.DeleteAsync($"{_options.URLMailboxManagement}/delegated/{id}");
             await CheckResponseAsync(response);
         }
@@ -152,9 +167,25 @@ namespace Yandex.API360
         /// <param name="notify">Кому необходимо отправить письмо-уведомление об изменении прав доступа к ящику</param>
         /// <param name="roles">Список прав доступа</param>
         /// <returns>Возвращает идентификатор задачи, по которому можно проверить состояние ее выполнения</returns>
-        /// <exception cref="NotImplementedException"></exception>
-        public Task<string> SetMailboxRulesAsync(ulong resourceId, ulong actorId, List<object> roles, string notify = "all") {
-            throw new NotImplementedException();
+        /// <exception cref="ArgumentException"></exception>
+        /// <exception cref="ArgumentNullException"></exception>
+        public async Task<string> SetMailboxRulesAsync(ulong resourceId, ulong actorId, List<RoleType> roles, NotifyType notify = NotifyType.All) {
+            if (resourceId == 0) {
+                throw new ArgumentException(nameof(resourceId));
+            }
+            if (actorId == 0) {
+                throw new ArgumentException(nameof(actorId));
+            }
+            if (roles is  null) {
+                throw new ArgumentNullException(nameof(roles));
+            }
+            if (roles.Count==0) {
+                throw new ArgumentException(nameof(roles));
+            }
+            var response = await httpClient.PostAsJsonAsync($"{_options.URLMailboxManagement}/set/{resourceId}?actorId={actorId}&notify={notify}", new { roles = roles });
+            await CheckResponseAsync(response);
+            var result = await response.Content.ReadFromJsonAsync<TaskIdAPIResponse>();
+            return result.TaskId;
         }
         /// <summary>
         /// Проверить статус задачи на изменение прав доступа
