@@ -5,7 +5,8 @@ using Yandex.API360.Models.Mailbox;
 using System.Net.Http.Json;
 
 
-namespace Yandex.API360 {
+namespace Yandex.API360
+{
     public partial class Client {
         /// <summary>
         /// Посмотреть список делегированных ящиков постранично
@@ -13,7 +14,7 @@ namespace Yandex.API360 {
         /// /// <param name="page">Номер страницы ответа</param>
         /// <param name="perPage">Количество записей на одной странице ответа</param>
         /// <returns>Возвращает список делегированных почтовых ящиков в организации</returns>
-        public async Task<List<Resource>> GetDelegatedMailboxesAsync(long page = 1, long perPage = 10) {
+        public async Task<List<ActorListResource>> GetDelegatedMailboxesAsync(long page = 1, long perPage = 10) {
             var response = await httpClient.GetAsync($"{_options.URLMailboxManagement}/delegated?page={page}&perPage={perPage}");
             await CheckResponseAsync(response);
             var result = await response.Content.ReadFromJsonAsync<MailboxListAPIResponse>();
@@ -23,8 +24,8 @@ namespace Yandex.API360 {
         /// Получить полный список делегированных ящиков
         /// </summary>
         /// <returns></returns>
-        public async Task<List<Resource>> GetDelegatedMailboxesAsync() {
-            var result = new List<Resource>();
+        public async Task<List<ActorListResource>> GetDelegatedMailboxesAsync() {
+            var result = new List<ActorListResource>();
             var response = await httpClient.GetAsync($"{_options.URLMailboxManagement}/delegated");
             await CheckResponseAsync(response);
             //определяем общее число записей
@@ -117,9 +118,11 @@ namespace Yandex.API360 {
         /// </summary>
         /// <param name="id">Идентификатор сотрудника</param>
         /// <returns>Возвращает список почтовых ящиков (общих и делегированных), к которым у сотрудника есть права доступа</returns>
-        /// <exception cref="NotImplementedException"></exception>
-        public Task<List<object>> GetMailboxesFromUserAsync(ulong id) {
-            throw new NotImplementedException();
+        public async Task<List<Resource>> GetMailboxesFromUserAsync(ulong id) {
+            var response = await httpClient.GetAsync($"{_options.URLMailboxManagement}/resources/{id}");
+            await CheckResponseAsync(response);
+            var result = await response.Content.ReadFromJsonAsync<ResourceListAPIResponse>();
+            return result.Resources;
         }
         /// <summary>
         /// Разрешить делегирование ящика
