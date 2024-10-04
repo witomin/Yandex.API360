@@ -1,8 +1,10 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 
 namespace Yandex.API360.Enums {
+    [Obsolete("Не поддерживается API Яндекс360 с 1 ноября 2024 г."/*, true*/)]
     /// <summary>
     /// Тип прав на доступ к почтовому ящику
     /// </summary>

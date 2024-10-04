@@ -1,16 +1,57 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Yandex.API360.Models.Mailbox;
+using System.Net.Http.Json;
+
 
 namespace Yandex.API360 {
     public partial class Client {
         /// <summary>
-        /// Посмотреть список делегированных ящиков
+        /// Посмотреть список делегированных ящиков постранично
         /// </summary>
+        /// /// <param name="page">Номер страницы ответа</param>
+        /// <param name="perPage">Количество записей на одной странице ответа</param>
         /// <returns>Возвращает список делегированных почтовых ящиков в организации</returns>
         /// <exception cref="NotImplementedException"></exception>
-        public async Task<List<object>> GetDelegatedMailboxesAsync() {
-            throw new NotImplementedException();
+        public async Task<List<Resource>> GetDelegatedMailboxesAsync(long page = 1, long perPage = 10) {
+            var response = await httpClient.GetAsync($"{_options.URLMailboxManagement}/delegated?page={page}&perPage={perPage}");
+            await CheckResponseAsync(response);
+            var result = await response.Content.ReadFromJsonAsync<MailboxListAPIResponse>();
+            return result.Resources;
+        }
+        /// <summary>
+        /// Получить полный список делегированных ящиков
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<Resource>> GetAllDelegatedMailboxesAsync() {
+            var result = new List<Resource>();
+            var response = await httpClient.GetAsync($"{_options.URLMailboxManagement}/delegated");
+            await CheckResponseAsync(response);
+            //определяем общее число записей
+            var totalRecords = (await response.Content.ReadFromJsonAsync<MailboxListAPIResponse>()).Total;
+            response = await httpClient.GetAsync($"{_options.URLMailboxManagement}/delegated?page=1&perPage={totalRecords}");
+            await CheckResponseAsync(response);
+            var apiResponse = await response.Content.ReadFromJsonAsync<MailboxListAPIResponse>();
+            //Проверяем весь ли список получен
+            if (apiResponse.PerPage == apiResponse.Total) {
+                result = apiResponse.Resources;
+            }
+            else {
+                //если API отдало не все
+                //сохраняем, то что уже получили
+                result.AddRange(apiResponse.Resources);
+                //определяем кол-во страниц ответа
+                var pages = Math.Ceiling((double)apiResponse.Total / apiResponse.PerPage);
+                //определяем сколько максимально отдает API
+                var perPageMax = apiResponse.PerPage;
+                // получаем остальные страницы начиная со 2-й
+                for (long i = 2; i <= pages; i++) {
+                    var recordList = await GetDelegatedMailboxesAsync(i, perPageMax);
+                    result.AddRange(recordList);
+                }
+            }
+            return result;
         }
         /// <summary>
         /// Посмотреть список общих ящиков
@@ -63,11 +104,15 @@ namespace Yandex.API360 {
         /// <summary>
         /// Посмотреть список сотрудников, имеющих доступ к ящику
         /// </summary>
-        /// <param name="id">Идентификатор почтового ящика, права доступа к которому необходимо проверить</param>
+        /// <param name="id">Идентификатор почтового ящика, права доступа к которому необходимо проверить.
+        /// Для делегированных ящиков идентификатор почтового ящика совпадает с идентификатором сотрудника-владельца этого ящика</param>
         /// <returns>Возвращает список сотрудников, у которых есть права доступа к почтовому ящику</returns>
         /// <exception cref="NotImplementedException"></exception>
-        public Task<List<object>> GetActorsFromMailboxAsync(ulong id) {
-            throw new NotImplementedException();
+        public async Task<List<Actor>> GetActorsFromMailboxAsync(ulong id) {
+            var response = await httpClient.GetAsync($"{_options.URLMailboxManagement}/actors/{id}");
+            await CheckResponseAsync(response);
+            var result = await response.Content.ReadFromJsonAsync<ActorListAPIResponse>();
+            return result.Actors;
         }
         /// <summary>
         /// Посмотреть список ящиков, доступных сотруднику

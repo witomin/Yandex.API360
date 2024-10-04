@@ -23,7 +23,7 @@ namespace Yandex.API360 {
             return apiResponse;
         }
         /// <summary>
-        /// Получить полный списко сотрудников
+        /// Получить полный список сотрудников
         /// </summary>
         /// <returns></returns>
         public async Task<List<User>> GetAllUsersAsync() {
