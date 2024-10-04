@@ -13,7 +13,6 @@ namespace Yandex.API360 {
         /// /// <param name="page">Номер страницы ответа</param>
         /// <param name="perPage">Количество записей на одной странице ответа</param>
         /// <returns>Возвращает список делегированных почтовых ящиков в организации</returns>
-        /// <exception cref="NotImplementedException"></exception>
         public async Task<List<Resource>> GetDelegatedMailboxesAsync(long page = 1, long perPage = 10) {
             var response = await httpClient.GetAsync($"{_options.URLMailboxManagement}/delegated?page={page}&perPage={perPage}");
             await CheckResponseAsync(response);
@@ -24,7 +23,7 @@ namespace Yandex.API360 {
         /// Получить полный список делегированных ящиков
         /// </summary>
         /// <returns></returns>
-        public async Task<List<Resource>> GetAllDelegatedMailboxesAsync() {
+        public async Task<List<Resource>> GetDelegatedMailboxesAsync() {
             var result = new List<Resource>();
             var response = await httpClient.GetAsync($"{_options.URLMailboxManagement}/delegated");
             await CheckResponseAsync(response);
@@ -107,7 +106,6 @@ namespace Yandex.API360 {
         /// <param name="id">Идентификатор почтового ящика, права доступа к которому необходимо проверить.
         /// Для делегированных ящиков идентификатор почтового ящика совпадает с идентификатором сотрудника-владельца этого ящика</param>
         /// <returns>Возвращает список сотрудников, у которых есть права доступа к почтовому ящику</returns>
-        /// <exception cref="NotImplementedException"></exception>
         public async Task<List<Actor>> GetActorsFromMailboxAsync(ulong id) {
             var response = await httpClient.GetAsync($"{_options.URLMailboxManagement}/actors/{id}");
             await CheckResponseAsync(response);
@@ -128,18 +126,20 @@ namespace Yandex.API360 {
         /// </summary>
         /// <param name="id">Идентификатор почтового ящика. Для делегированных ящиков идентификатор почтового ящика совпадает с идентификатором сотрудника-владельца этого ящика</param>
         /// <returns>Идентификатор почтового ящика, разрешение на делегирование которого предоставлено</returns>
-        /// <exception cref="NotImplementedException"></exception>
-        public Task<ulong> DelegateMailboxAllowAsync(ulong id) {
-            throw new NotImplementedException();
+        public async Task<ulong> DelegateMailboxAllowAsync(ulong id) {
+            var response = await httpClient.PutAsJsonAsync($"{_options.URLMailboxManagement}/delegated", new { resourceId = $"{id}" });
+            await CheckResponseAsync(response);
+            var result = await response.Content.ReadFromJsonAsync<ResourceIdAPIResponse>();
+            return result.ResourceId;
         }
         /// <summary>
         /// Запретить делегирование ящика
         /// </summary>
         /// <param name="id">Идентификатор почтового ящика. Для делегированных ящиков идентификатор почтового ящика совпадает с идентификатором сотрудника-владельца этого ящика</param>
         /// <returns>Идентификатор почтового ящика, разрешение на делегирование которого отзвать</returns>
-        /// <exception cref="NotImplementedException"></exception>
-        public Task<ulong> DelegateMailboxDeniedAsync(ulong id) {
-            throw new NotImplementedException();
+        public async Task DelegateMailboxDeniedAsync(ulong id) {
+            var response = await httpClient.DeleteAsync($"{_options.URLMailboxManagement}/delegated/{id}");
+            await CheckResponseAsync(response);
         }
         /// <summary>
         /// Изменить права доступа к ящику. Предоставляет или изменяет права доступа сотрудника к делегированному или общему почтовому ящику. Чтобы ящик другого сотрудника стал делегированным и к нему можно было получить доступ, сначала предоставьте разрешение на его делегирование.
