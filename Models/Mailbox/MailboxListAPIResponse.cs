@@ -10,7 +10,7 @@ namespace Yandex.API360.Models.Mailbox {
         /// Список почтовых ящиков, к которым сотруднику открыт доступ.
         /// </summary>
         [JsonPropertyName("resources")]
-        public List<ActorListResource> Resources { get; set; }
+        public List<ResourceShort> Resources { get; set; }
         /// <summary>
         /// Номер страницы ответа
         /// </summary>

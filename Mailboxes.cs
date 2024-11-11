@@ -10,10 +10,10 @@ namespace Yandex.API360
         /// <summary>
         /// Посмотреть список делегированных ящиков постранично
         /// </summary>
-        /// /// <param name="page">Номер страницы ответа</param>
+        /// <param name="page">Номер страницы ответа</param>
         /// <param name="perPage">Количество записей на одной странице ответа</param>
         /// <returns>Возвращает список делегированных почтовых ящиков в организации</returns>
-        public async Task<List<ActorListResource>> GetDelegatedMailboxesAsync(long page = 1, long perPage = 10) {
+        public async Task<List<ResourceShort>> GetDelegatedMailboxesAsync(long page = 1, long perPage = 10) {
             var response = await httpClient.GetAsync($"{_options.URLMailboxManagement}/delegated?page={page}&perPage={perPage}");
             await CheckResponseAsync(response);
             var result = await response.Content.ReadFromJsonAsync<MailboxListAPIResponse>();
@@ -23,8 +23,8 @@ namespace Yandex.API360
         /// Получить полный список делегированных ящиков
         /// </summary>
         /// <returns></returns>
-        public async Task<List<ActorListResource>> GetDelegatedMailboxesAsync() {
-            var result = new List<ActorListResource>();
+        public async Task<List<ResourceShort>> GetDelegatedMailboxesAsync() {
+            var result = new List<ResourceShort>();
             var response = await httpClient.GetAsync($"{_options.URLMailboxManagement}/delegated");
             await CheckResponseAsync(response);
             //определяем общее число записей
@@ -56,9 +56,14 @@ namespace Yandex.API360
         /// Посмотреть список общих ящиков
         /// </summary>
         /// <returns>Возвращает список общих почтовых ящиков в организации</returns>
+        /// <param name="page">Номер страницы ответа</param>
+        /// <param name="perPage">Количество записей на одной странице ответа</param>
         /// <exception cref="NotImplementedException"></exception>
-        public async Task<List<object>> GetMailboxesAsync() {
-            throw new NotImplementedException();
+        public async Task<List<ResourceShort>> GetMailboxesAsync(long page = 1, long perPage = 10) {
+            var response = await httpClient.GetAsync($"{_options.URLMailboxManagement}/delegated?page={page}&perPage={perPage}");
+            await CheckResponseAsync(response);
+            var result = await response.Content.ReadFromJsonAsync<MailboxListAPIResponse>();
+            return result.Resources;
         }
         /// <summary>
         /// Создать общий ящик

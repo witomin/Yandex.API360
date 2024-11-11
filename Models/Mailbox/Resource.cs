@@ -2,6 +2,9 @@
 using System.Text.Json.Serialization;
 
 namespace Yandex.API360.Models.Mailbox {
+    /// <summary>
+    /// Запись об общем ящике
+    /// </summary>
     public class Resource {
         /// <summary>
         /// Идентификатор почтового ящика

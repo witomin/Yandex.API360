@@ -1,7 +1,10 @@
 ﻿using System.Text.Json.Serialization;
 
 namespace Yandex.API360.Models.Mailbox {
-    public class ActorListResource {
+    /// <summary>
+    /// Короткая запись об общем ящике
+    /// </summary>
+    public class ResourceShort {
         /// <summary>
         /// Количество сотрудников, которые имеют доступ к ящику.
         /// </summary>
