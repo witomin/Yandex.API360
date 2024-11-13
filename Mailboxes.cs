@@ -60,7 +60,7 @@ namespace Yandex.API360
         /// <param name="perPage">Количество записей на одной странице ответа</param>
         /// <exception cref="NotImplementedException"></exception>
         public async Task<List<ResourceShort>> GetMailboxesAsync(long page = 1, long perPage = 10) {
-            var response = await httpClient.GetAsync($"{_options.URLMailboxManagement}/delegated?page={page}&perPage={perPage}");
+            var response = await httpClient.GetAsync($"{_options.URLMailboxManagement}/shared?page={page}&perPage={perPage}");
             await CheckResponseAsync(response);
             var result = await response.Content.ReadFromJsonAsync<MailboxListAPIResponse>();
             return result.Resources;
@@ -82,8 +82,10 @@ namespace Yandex.API360
         /// <param name="id">Идентификатор общего почтового ящика</param>
         /// <returns>Информация об общем ящике</returns>
         /// <exception cref="NotImplementedException"></exception>
-        public async Task<object> GetMailboxInfoAsync(ulong id) {
-            throw new NotImplementedException();
+        public async Task<MailboxInfo> GetMailboxInfoAsync(ulong id) {
+            var response = await httpClient.GetAsync($"{_options.URLMailboxManagement}/shared/{id}");
+            await CheckResponseAsync(response);
+            return await response.Content.ReadFromJsonAsync<MailboxInfo>();
         }
         /// <summary>
         /// Изменить данные общего ящика
