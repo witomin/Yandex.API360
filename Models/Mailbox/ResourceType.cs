@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 namespace Yandex.API360.Models.Mailbox {
+    [JsonConverter(typeof(JsonStringEnumMemberConverter))]
     public enum ResourceType {
         /// <summary>
         /// Общий
