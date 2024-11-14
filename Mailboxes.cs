@@ -74,7 +74,19 @@ namespace Yandex.API360
         /// <returns>Идентификатор созданного общего почтового ящика</returns>
         /// <exception cref="NotImplementedException"></exception>
         public async Task<ulong> AddMailboxAsync(string email, string name, string description) {
-            throw new NotImplementedException();
+            if (string.IsNullOrEmpty(email)) {
+                throw new ArgumentException(nameof(email));
+            }
+            if (string.IsNullOrEmpty(name)) {
+                throw new ArgumentException(nameof(name));
+            }
+            if (string.IsNullOrEmpty(description)) {
+                throw new ArgumentException(nameof(description));
+            }
+            var response = await httpClient.PutAsJsonAsync($"{_options.URLMailboxManagement}/shared", new {email, name, description});
+            await CheckResponseAsync(response);
+            var result = await response.Content.ReadFromJsonAsync<ResourceIdAPIResponse>();
+            return result.ResourceId;
         }
         /// <summary>
         /// Посмотреть информацию об общем ящике
