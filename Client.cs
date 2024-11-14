@@ -46,7 +46,8 @@ namespace Yandex.API360 {
             System.Net.HttpStatusCode.Forbidden,
             System.Net.HttpStatusCode.NotFound,
             System.Net.HttpStatusCode.InternalServerError,
-            System.Net.HttpStatusCode.BadRequest
+            System.Net.HttpStatusCode.BadRequest,
+            System.Net.HttpStatusCode.Conflict
             };
             if (response.StatusCode != System.Net.HttpStatusCode.OK) {
                 if (response.Content is null) {
