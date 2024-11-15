@@ -4,8 +4,7 @@ using System.Threading.Tasks;
 using Yandex.API360.Models.Mailbox;
 using System.Net.Http.Json;
 
-namespace Yandex.API360
-{
+namespace Yandex.API360 {
     public partial class Client {
         /// <summary>
         /// Посмотреть список делегированных ящиков постранично
@@ -83,7 +82,7 @@ namespace Yandex.API360
             if (string.IsNullOrEmpty(description)) {
                 throw new ArgumentException(nameof(description));
             }
-            var response = await httpClient.PutAsJsonAsync($"{_options.URLMailboxManagement}/shared", new {email, name, description});
+            var response = await httpClient.PutAsJsonAsync($"{_options.URLMailboxManagement}/shared", new { email, name, description });
             await CheckResponseAsync(response);
             var result = await response.Content.ReadFromJsonAsync<ResourceIdAPIResponse>();
             return result.ResourceId;
@@ -117,7 +116,11 @@ namespace Yandex.API360
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
         public async Task DeleteMailboxAsync(ulong id) {
-            throw new NotImplementedException();
+            if (id == 0) {
+                throw new ArgumentException(nameof(id));
+            }
+            var response = await httpClient.DeleteAsync($"{_options.URLMailboxManagement}/shared/{id}");
+            await CheckResponseAsync(response);
         }
         /// <summary>
         /// Посмотреть список сотрудников, имеющих доступ к ящику
@@ -195,13 +198,13 @@ namespace Yandex.API360
             if (actorId == 0) {
                 throw new ArgumentException(nameof(actorId));
             }
-            if (roles is  null) {
+            if (roles is null) {
                 throw new ArgumentNullException(nameof(roles));
             }
-            if (roles.Count==0) {
+            if (roles.Count == 0) {
                 throw new ArgumentException(nameof(roles));
             }
-            var response = await httpClient.PostAsJsonAsync($"{_options.URLMailboxManagement}/set/{resourceId}?actorId={actorId}&notify={notify}", new { roles = roles });
+            var response = await httpClient.PostAsJsonAsync($"{_options.URLMailboxManagement}/set/{resourceId}?actorId={actorId}&notify={notify}", new { roles });
             await CheckResponseAsync(response);
             var result = await response.Content.ReadFromJsonAsync<TaskIdAPIResponse>();
             return result.TaskId;
