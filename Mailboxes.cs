@@ -71,7 +71,7 @@ namespace Yandex.API360 {
         /// <param name="name">Имя общего ящика</param>
         /// <param name="description">Описание</param>
         /// <returns>Идентификатор созданного общего почтового ящика</returns>
-        /// <exception cref="NotImplementedException"></exception>
+        /// <exception cref="ArgumentException"></exception>
         public async Task<ulong> AddMailboxAsync(string email, string name, string description) {
             if (string.IsNullOrEmpty(email)) {
                 throw new ArgumentException(nameof(email));
