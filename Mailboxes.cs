@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Yandex.API360.Models.Mailbox;
 using System.Net.Http.Json;
 using Yandex.API360.Exceptions;
+using Yandex.API360.Models;
 
 namespace Yandex.API360 {
     public partial class Client {
@@ -108,6 +109,9 @@ namespace Yandex.API360 {
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
         public async Task<ulong> SetMailboxInfoAsync(ulong id, string name, string description) {
+            if (id == 0) {
+                throw new ArgumentException(nameof(id));
+            }
             var response = await httpClient.PutAsJsonAsync($"{_options.URLMailboxManagement}/shared/{id}", new { name, description });
             await CheckResponseAsync(response);
             var result = await response.Content.ReadFromJsonAsync<ResourceIdAPIResponse>();
@@ -219,8 +223,14 @@ namespace Yandex.API360 {
         /// <param name="id">Идентификатор задачи на управление правами доступа. Возвращается в ответе на запрос на изменение или на удаление прав доступа к почтовому ящику.</param>
         /// <returns>Возвращает статус задачи на управление правами доступа к делегированному ящику</returns>
         /// <exception cref="NotImplementedException"></exception>
-        public Task<string> GetStatusMailboxTaskAsync(ulong id) {
-            throw new NotImplementedException();
+        public async  Task<Enums.TaskStatus> GetStatusMailboxTaskAsync(string taskId) {
+            if (string.IsNullOrEmpty(taskId)) {
+                throw new ArgumentNullException(nameof(taskId));
+            }
+            var response = await httpClient.GetAsync($"{_options.URLMailboxManagement}/tasks/{taskId}");
+            await CheckResponseAsync(response);
+            var result = await response.Content.ReadFromJsonAsync<TaskStatusResponse>();
+            return result.Status;
         }
     }
 }
