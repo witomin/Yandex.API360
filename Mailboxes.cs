@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Yandex.API360.Models.Mailbox;
 using System.Net.Http.Json;
+using Yandex.API360.Exceptions;
 
 namespace Yandex.API360 {
     public partial class Client {
@@ -107,7 +108,10 @@ namespace Yandex.API360 {
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
         public async Task<ulong> SetMailboxInfoAsync(ulong id, string name, string description) {
-            throw new NotImplementedException();
+            var response = await httpClient.PutAsJsonAsync($"{_options.URLMailboxManagement}/shared/{id}", new { name, description });
+            await CheckResponseAsync(response);
+            var result = await response.Content.ReadFromJsonAsync<ResourceIdAPIResponse>();
+            return result.ResourceId;
         }
         /// <summary>
         /// Удалить общий ящик
