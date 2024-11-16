@@ -3,6 +3,9 @@
 [![package](https://img.shields.io/nuget/vpre/Yandex.API360.svg?label=Yandex.API360&style=flat-square)](https://www.nuget.org/packages/Yandex.API360)
 [![Bot API Version](https://img.shields.io/badge/Яндекс%20API-Март,%202024-f36caf.svg?style=flat-square)](https://yandex.ru/dev/api360/doc/concepts/versions.html#march-2024)
 
+[![NuGet Version](https://img.shields.io/nuget/v/Yandex.API360.svg?style=flat)](https://www.nuget.org/packages/Yandex.API360/)
+[![NuGet](https://img.shields.io/nuget/dt/Yandex.API360.svg)](https://www.nuget.org/packages/Yandex.API360) 
+
 ## Описание:
 
 Главный класс библиотеки **Yandex.API360.Client**. В нем находятся все методы REST API Яндекс 360 для бизнеса. 
