@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using Yandex.API360.Models.Mailbox;
 using System.Net.Http.Json;
-using Yandex.API360.Exceptions;
+using System.Threading.Tasks;
 using Yandex.API360.Models;
+using Yandex.API360.Models.Mailbox;
 
 namespace Yandex.API360 {
-    public partial class Client {
+    public class MailboxesClient : APIClient, IMailboxesClient {
+        public MailboxesClient(Api360Options options):base(options) { }
         /// <summary>
         /// Посмотреть список делегированных ящиков постранично
         /// </summary>
@@ -74,7 +74,7 @@ namespace Yandex.API360 {
         /// <param name="description">Описание</param>
         /// <returns>Идентификатор созданного общего почтового ящика</returns>
         /// <exception cref="ArgumentException"></exception>
-        public async Task<ulong> AddMailboxAsync(string email, string name, string description) {
+        public async Task<ulong> AddAsync(string email, string name, string description) {
             if (string.IsNullOrEmpty(email)) {
                 throw new ArgumentException(nameof(email));
             }
@@ -95,7 +95,7 @@ namespace Yandex.API360 {
         /// <param name="id">Идентификатор общего почтового ящика</param>
         /// <returns>Информация об общем ящике</returns>
         /// <exception cref="NotImplementedException"></exception>
-        public async Task<MailboxInfo> GetMailboxInfoAsync(ulong id) {
+        public async Task<MailboxInfo> GetInfoAsync(ulong id) {
             var response = await httpClient.GetAsync($"{_options.URLMailboxManagement}/shared/{id}");
             await CheckResponseAsync(response);
             return await response.Content.ReadFromJsonAsync<MailboxInfo>();
@@ -108,7 +108,7 @@ namespace Yandex.API360 {
         /// <param name="description">Описание</param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public async Task<ulong> SetMailboxInfoAsync(ulong id, string name, string description) {
+        public async Task<ulong> SetInfoAsync(ulong id, string name, string description) {
             if (id == 0) {
                 throw new ArgumentException(nameof(id));
             }
@@ -123,7 +123,7 @@ namespace Yandex.API360 {
         /// <param name="id">Идентификатор общего почтового ящика</param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public async Task DeleteMailboxAsync(ulong id) {
+        public async Task DeleteAsync(ulong id) {
             if (id == 0) {
                 throw new ArgumentException(nameof(id));
             }
@@ -137,7 +137,7 @@ namespace Yandex.API360 {
         /// Для делегированных ящиков идентификатор почтового ящика совпадает с идентификатором сотрудника-владельца этого ящика</param>
         /// <returns>Возвращает список сотрудников, у которых есть права доступа к почтовому ящику</returns>
         /// <exception cref="ArgumentException"></exception>
-        public async Task<List<Actor>> GetActorsFromMailboxAsync(ulong id) {
+        public async Task<List<Models.Mailbox.Actor>> GetActorsAsync(ulong id) {
             if (id == 0) {
                 throw new ArgumentException(nameof(id));
             }

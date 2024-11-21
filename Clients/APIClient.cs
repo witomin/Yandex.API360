@@ -2,37 +2,28 @@
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using System.Text.Json.Serialization;
+using System.Reflection;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Yandex.API360.Exceptions;
-using System.Reflection;
-
 
 namespace Yandex.API360 {
-    public partial class Client {
-        Api360Options _options;
-        HttpClient httpClient;
-
-        HttpClient httpClientImg;
-
+    public abstract class APIClient {
+        internal Api360Options _options;
+        internal HttpClient httpClient;
+        
         JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions {
             DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
         };
 
-        public Client(Api360Options options) {
+        protected APIClient(Api360Options options) {
             _options = options;
             httpClient = new HttpClient();
             httpClient.DefaultRequestHeaders.Add("User-Agent", $"{Assembly.GetExecutingAssembly()?.GetName()?.Name}/{Assembly.GetExecutingAssembly()?.GetName()?.Version?.ToString()}");
             httpClient.DefaultRequestHeaders.Accept.Clear();
             httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("OAuth", _options.Token);
-
-            httpClientImg = new HttpClient();
-            httpClientImg.DefaultRequestHeaders.Add("User-Agent", $"{Assembly.GetExecutingAssembly()?.GetName()?.Name}/{Assembly.GetExecutingAssembly()?.GetName()?.Version?.ToString()}");
-            httpClientImg.DefaultRequestHeaders.Accept.Clear();
-            //httpClientImg.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("image/png"));
-            httpClientImg.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("OAuth", _options.Token);
         }
 
         /// <summary>
@@ -40,7 +31,7 @@ namespace Yandex.API360 {
         /// </summary>
         /// <param name="response"></param>
         /// <returns></returns>
-        private async Task CheckResponseAsync(HttpResponseMessage response) {
+        internal async Task CheckResponseAsync(HttpResponseMessage response) {
             var Codes = new List<System.Net.HttpStatusCode> {
             System.Net.HttpStatusCode.Unauthorized,
             System.Net.HttpStatusCode.Forbidden,
@@ -68,7 +59,3 @@ namespace Yandex.API360 {
         }
     }
 }
-
-
-
-
