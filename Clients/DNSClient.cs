@@ -5,25 +5,16 @@ using System.Threading.Tasks;
 using Yandex.API360.Models;
 
 namespace Yandex.API360 {
-    public partial class Client {
-        /// <summary>
-        /// Получить DNS записи домена постранично
-        /// </summary>
-        /// <param name="domainName">Полное доменное имя. Например example.com. Для кириллических доменов (например домен.рф) используйте кодировку Punycode.</param>
-        /// <param name="page">Номер страницы ответа. Значение по умолчанию — 1.</param>
-        /// <param name="perPage">Количество сотрудников на одной странице ответа. Значение по умолчанию — 50.</param>
-        /// <returns></returns>
+    public class DNSClient :APIClient, IDNSClient {
+        public DNSClient(Api360Options options) : base(options) { } 
+
         public async Task<DNSList> GetDNSAsync(string domainName, long page = 1, long perPage = 10) {
             var response = await httpClient.GetAsync($"{_options.URLdomains}/{domainName}/dns?page={page}&perPage={perPage}");
             await CheckResponseAsync(response);
             var result = await response.Content.ReadFromJsonAsync<DNSList>();
             return result;
         }
-        /// <summary>
-        /// Получить все DNS записи домена
-        /// </summary>
-        /// <param name="domainName">Полное доменное имя. Например example.com. Для кириллических доменов (например домен.рф) используйте кодировку Punycode.</param>
-        /// <returns></returns>
+
         public async Task<List<DNSRecord>> GetAllDNSAsync(string domainName) {
             var result = new List<DNSRecord>();
             var response = await GetDNSAsync(domainName);
@@ -51,12 +42,7 @@ namespace Yandex.API360 {
             }
             return result;
         }
-        /// <summary>
-        /// Удалить DNS-запись для домена
-        /// </summary>
-        /// <param name="domainName">Полное доменное имя. Например example.com. Для кириллических доменов (например домен.рф) используйте кодировку Punycode.</param>
-        /// <param name="recordId">Идентификатор записи</param>
-        /// <returns></returns>
+
         public async Task DeleteDNSAsync(string domainName, ulong recordId) {
             if (string.IsNullOrEmpty(domainName)) {
                 throw new ArgumentNullException(nameof(domainName));
@@ -64,12 +50,7 @@ namespace Yandex.API360 {
             var response = await httpClient.DeleteAsync($"{_options.URLdomains}/{domainName}/dns/{recordId}");
             await CheckResponseAsync(response);
         }
-        /// <summary>
-        /// Добавить DNS-запись для домена
-        /// </summary>
-        /// <param name="domainName">Полное доменное имя. Например example.com. Для кириллических доменов (например домен.рф) используйте кодировку Punycode</param>
-        /// <param name="dnsRecord">DNS запись</param>
-        /// <returns></returns>
+
         public async Task<DNSRecord> AddDNSAsync(string domainName, DNSRecord dnsRecord) {
             if (string.IsNullOrEmpty(domainName)) {
                 throw new ArgumentNullException(nameof(domainName));
@@ -82,12 +63,7 @@ namespace Yandex.API360 {
             var result = await response.Content.ReadFromJsonAsync<DNSRecord>();
             return result;
         }
-        /// <summary>
-        /// Редактировать DNS-запись для домена
-        /// </summary>
-        /// <param name="domainName">Полное доменное имя. Например example.com. Для кириллических доменов (например домен.рф) используйте кодировку Punycode.</param>
-        /// <param name="dnsRecord">Идентификатор записи</param>
-        /// <returns></returns>
+
         public async Task<DNSRecord> EditDNSAsync(string domainName, DNSRecord dnsRecord) {
             if (dnsRecord is null) {
                 throw new ArgumentNullException(nameof(dnsRecord));

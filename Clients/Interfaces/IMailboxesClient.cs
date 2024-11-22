@@ -94,13 +94,13 @@ namespace Yandex.API360 {
         /// <param name="roles">Список прав доступа</param>
         /// <returns>Возвращает идентификатор задачи, по которому можно проверить состояние ее выполнения</returns>
         /// <exception cref="ArgumentException"></exception>
-        public Task<string> SetMailboxRulesAsync(ulong resourceId, ulong actorId, List<RoleType> roles, NotifyType notify = NotifyType.All);
+        public Task<string> SetRulesAsync(ulong resourceId, ulong actorId, List<RoleType> roles, NotifyType notify = NotifyType.All);
         /// <summary>
         /// Проверить статус задачи на изменение прав доступа
         /// </summary>
         /// <param name="id">Идентификатор задачи на управление правами доступа. Возвращается в ответе на запрос на изменение или на удаление прав доступа к почтовому ящику.</param>
         /// <returns>Возвращает статус задачи на управление правами доступа к делегированному ящику</returns>
         /// <exception cref="NotImplementedException"></exception>
-        public Task<Enums.TaskStatus> GetStatusMailboxTaskAsync(string taskId);
+        public Task<Enums.TaskStatus> GetTaskStatusAsync(string taskId);
     }
 }

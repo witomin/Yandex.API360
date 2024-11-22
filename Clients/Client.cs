@@ -1,79 +1,35 @@
-﻿using System.Collections.Generic;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Net.Http.Json;
-using System.Text.Json.Serialization;
-using System.Text.Json;
-using System.Threading.Tasks;
-using Yandex.API360.Exceptions;
-using System.Reflection;
-
-
+﻿
 namespace Yandex.API360 {
-    public partial class Client: IYandex360APIClient {
-        Api360Options _options;
-        HttpClient httpClient;
-        HttpClient httpClientImg;
-
-        JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions {
-            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
-        };
-
-
-
-        public Client(Api360Options options) {
-            _options = options;
-            httpClient = new HttpClient();
-            httpClient.DefaultRequestHeaders.Add("User-Agent", $"{Assembly.GetExecutingAssembly()?.GetName()?.Name}/{Assembly.GetExecutingAssembly()?.GetName()?.Version?.ToString()}");
-            httpClient.DefaultRequestHeaders.Accept.Clear();
-            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("OAuth", _options.Token);
-
-            httpClientImg = new HttpClient();
-            httpClientImg.DefaultRequestHeaders.Add("User-Agent", $"{Assembly.GetExecutingAssembly()?.GetName()?.Name}/{Assembly.GetExecutingAssembly()?.GetName()?.Version?.ToString()}");
-            httpClientImg.DefaultRequestHeaders.Accept.Clear();
-            //httpClientImg.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("image/png"));
-            httpClientImg.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("OAuth", _options.Token);
-
-
+    public partial class Client : APIClient, IYandex360APIClient {
+        public Client(Api360Options options) : base(options) {
             Mailboxes = new MailboxesClient(_options);
+            TwoFA = new TwoFAClient(_options);
+            Antispam = new AntispamClient(_options);
+            Audit = new AuditClient(_options);
+            AuthSettings = new AuthSettingsClient(_options);
+            Departments = new DepartmentsClient(_options);
+            DNS = new DNSClient(_options);
+            Domains = new DomainsClient(_options);
+            Groups = new GroupsClient(_options);
+            Organization = new OrganizationsClient(_options);
+            PasswordManagement =new PasswordManagementClient(_options);
+            PostSettings = new PostSettingsClient(_options);
+            Routing = new RoutingClient(_options);
         }
-
 
         public IMailboxesClient Mailboxes { get; }
-
-
-        /// <summary>
-        /// Проверить ответ API
-        /// </summary>
-        /// <param name="response"></param>
-        /// <returns></returns>
-        private async Task CheckResponseAsync(HttpResponseMessage response) {
-            var Codes = new List<System.Net.HttpStatusCode> {
-            System.Net.HttpStatusCode.Unauthorized,
-            System.Net.HttpStatusCode.Forbidden,
-            System.Net.HttpStatusCode.NotFound,
-            System.Net.HttpStatusCode.InternalServerError,
-            System.Net.HttpStatusCode.BadRequest,
-            System.Net.HttpStatusCode.Conflict
-            };
-            if (response.StatusCode != System.Net.HttpStatusCode.OK) {
-                if (response.Content is null) {
-                    throw new APIRequestException("Response doesn't contain any content", response.StatusCode);
-                }
-                if (Codes.Contains(response.StatusCode)) {
-                    FailedAPIResponse failedResponse;
-                    failedResponse = await response.Content.ReadFromJsonAsync<FailedAPIResponse>();
-                    if (failedResponse != null) {
-                        throw new APIRequestException(response.StatusCode, failedResponse);
-                    }
-                    else {
-                        throw new APIRequestException(response.ReasonPhrase, response.StatusCode);
-                    }
-                }
-                throw new APIRequestException(response.ReasonPhrase, response.StatusCode);
-            }
-        }
+        public I2FAClient TwoFA { get; }
+        public IAntispamClient Antispam { get; }
+        public IAuditClient Audit { get; }
+        public IAuthSettingsClient AuthSettings { get; }
+        public IDepartmentsClient Departments { get; }
+        public IDNSClient DNS { get; }
+        public IDomainsClient Domains { get; }
+        public IGroupsClient Groups { get; }
+        public IOrganizationClient Organization { get; }
+        public IPasswordManagementClient PasswordManagement { get; }
+        public IPostSettingsClient PostSettings { get; }
+        public  IRoutingClient Routing { get; }
     }
 }
 

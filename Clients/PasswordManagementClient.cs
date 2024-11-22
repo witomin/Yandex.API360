@@ -4,22 +4,16 @@ using System.Threading.Tasks;
 using Yandex.API360.Models;
 
 namespace Yandex.API360 {
-    public partial class Client {
-        /// <summary>
-        /// Получить параметры паролей организации
-        /// </summary>
-        /// <returns></returns>
+    public class PasswordManagementClient :APIClient, IPasswordManagementClient {
+        public PasswordManagementClient(Api360Options options) : base(options) { }
+
         public async Task<PasswordParameters> GetPasswordParametersAsync() {
             var response = await httpClient.GetAsync(_options.URLpasswords);
             await CheckResponseAsync(response);
             var result = await response.Content.ReadFromJsonAsync<PasswordParameters>();
             return result;
         }
-        /// <summary>
-        /// Изменить параметры паролей организации
-        /// </summary>
-        /// <param name="parameters"></param>
-        /// <returns></returns>
+
         public async Task<PasswordParameters> EditPasswordParametersAsync(PasswordParameters parameters) {
             if (parameters is null) {
                 throw new ArgumentNullException(nameof(parameters));

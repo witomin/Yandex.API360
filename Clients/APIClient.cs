@@ -13,7 +13,7 @@ namespace Yandex.API360 {
         internal Api360Options _options;
         internal HttpClient httpClient;
         
-        JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions {
+        internal JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions {
             DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
         };
 

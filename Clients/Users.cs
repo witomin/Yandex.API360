@@ -197,7 +197,7 @@ namespace Yandex.API360 {
             var content = new MultipartFormDataContent();
             content.Add(new ByteArrayContent(imageData), "file", "file.png");
             content.Headers.ContentType = new MediaTypeHeaderValue("image/png");
-            var response = await httpClientImg.PutAsync($"{_options.URLUsers}/{userId}/avatar", content);
+            var response = await httpClient.PutAsync($"{_options.URLUsers}/{userId}/avatar", content);
             await CheckResponseAsync(response);
             _ = await response.Content.ReadFromJsonAsync<object>();
         }
@@ -213,7 +213,7 @@ namespace Yandex.API360 {
             fileStreamContent.Headers.ContentType = new MediaTypeHeaderValue("image/png");
             content.Add(fileStreamContent, "file", "avater.png");
             
-            var response = await httpClientImg.PutAsync($"{_options.URLUsers}/{userId}/avatar", fileStreamContent);
+            var response = await httpClient.PutAsync($"{_options.URLUsers}/{userId}/avatar", fileStreamContent);
             await CheckResponseAsync(response);
             _ = await response.Content.ReadFromJsonAsync<object>();
         }
