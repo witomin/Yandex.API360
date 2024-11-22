@@ -7,23 +7,23 @@ namespace Yandex.API360 {
     public class OrganizationsClient :APIClient, IOrganizationClient{
         public OrganizationsClient(Api360Options options) : base(options) { }
 
-        public async Task<OrganizationList> GetOrganizationsAsync(int? pageSize = 10, string? pageToken = null) {
+        public async Task<OrganizationList> GetListAsync(int? pageSize = 10, string? pageToken = null) {
             var response = await httpClient.GetAsync($"{_options.URLOrg}?pageSize={pageSize}{(pageToken != null ? $"&pageToken={pageToken}" : string.Empty)}");
             await CheckResponseAsync(response);
             var organisations = await response.Content.ReadFromJsonAsync<OrganizationList>();
             return organisations;
         }
 
-        public async Task<List<Organization>> GetAllOrganizationsAsync() {
+        public async Task<List<Organization>> GetListAllAsync() {
             var result = new List<Organization>();
-            var response = await GetOrganizationsAsync(_options.MaxCountOrgInResponse);
+            var response = await GetListAsync(_options.MaxCountOrgInResponse);
             if (string.IsNullOrEmpty(response.nextPageToken)) {
                 result = response.organizations;
             }
             else {
                 result.AddRange(response.organizations);
                 do {
-                    response = await GetOrganizationsAsync(_options.MaxCountOrgInResponse);
+                    response = await GetListAsync(_options.MaxCountOrgInResponse);
                     result.AddRange(response.organizations);
                 }
                 while (string.IsNullOrEmpty(response.nextPageToken));

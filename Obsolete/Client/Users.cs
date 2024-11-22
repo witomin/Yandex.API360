@@ -9,17 +9,26 @@ using System.Threading.Tasks;
 using Yandex.API360.Models;
 
 namespace Yandex.API360 {
-    public class UsersClient : APIClient, IUsersClient {
-        public UsersClient(Api360Options options) : base(options) { }
-
-        public async Task<UsersList> GetListAsync(long page = 1, long perPage = 10) {
+    public partial class Client {
+        [Obsolete("Используйте методы Client.Users"/*, true*/)]
+        /// <summary>
+        /// Получить список сотрудников постранично
+        /// </summary>
+        /// <param name="page">Номер страницы ответа</param>
+        /// <param name="perPage">Количество сотрудников на одной странице ответа</param>
+        /// <returns></returns>
+        public async Task<UsersList> GetUsersAsync(long page = 1, long perPage = 10) {
             var response = await httpClient.GetAsync($"{_options.URLUsers}?page={page}&perPage={perPage}");
             await CheckResponseAsync(response);
             var apiResponse = await response.Content.ReadFromJsonAsync<UsersList>();
             return apiResponse;
         }
-
-        public async Task<List<User>> GetListAllAsync() {
+        [Obsolete("Используйте методы Client.Users"/*, true*/)]
+        /// <summary>
+        /// Получить полный список сотрудников
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<User>> GetAllUsersAsync() {
             var result = new List<User>();
             var response = await httpClient.GetAsync($"{_options.URLUsers}");
             await CheckResponseAsync(response);
@@ -44,21 +53,30 @@ namespace Yandex.API360 {
                 var perPageMax = apiResponse.perPage;
                 // получаем остальные страницы начиная со 2-й
                 for (long i = 2; i <= pages; i++) {
-                    var usersList = await GetListAsync(i, perPageMax);
+                    var usersList = await GetUsersAsync(i, perPageMax);
                     result.AddRange(usersList.users);
                 }
             }
             return result;
         }
-
-
-        public async Task<User> GetByIdAsync(ulong userId) {
+        [Obsolete("Используйте методы Client.Users"/*, true*/)]
+        /// <summary>
+        /// Получить сотрудника по Id
+        /// </summary>
+        /// <param name="userId">Идентификатор сотрудника</param>
+        /// <returns></returns>
+        public async Task<User> GetUserByIdAsync(ulong userId) {
             var response = await httpClient.GetAsync($"{_options.URLUsers}/{userId}");
             await CheckResponseAsync(response);
             return await response.Content.ReadFromJsonAsync<User>();
         }
-
-        public async Task<User> AddAsync(UserAdd user) {
+        [Obsolete("Используйте методы Client.Users"/*, true*/)]
+        /// <summary>
+        /// Добавить сотрудника
+        /// </summary>
+        /// <param name="user">Сотрудник</param>
+        /// <returns></returns>
+        public async Task<User> AddUserAsync(UserAdd user) {
             if (user is null) {
                 throw new ArgumentNullException(nameof(user));
             }
@@ -66,8 +84,13 @@ namespace Yandex.API360 {
             await CheckResponseAsync(response);
             return await response.Content.ReadFromJsonAsync<User>();
         }
-
-        public async Task<User> EditAsync(UserEdit user) {
+        [Obsolete("Используйте методы Client.Users"/*, true*/)]
+        /// <summary>
+        /// Изменить сотрудника
+        /// </summary>
+        /// <param name="user">Сотрудник</param>
+        /// <returns></returns>
+        public async Task<User> EditUserAsync(UserEdit user) {
             if (user is null) {
                 throw new ArgumentNullException(nameof(user));
             }
@@ -75,8 +98,14 @@ namespace Yandex.API360 {
             await CheckResponseAsync(response);
             return await response.Content.ReadFromJsonAsync<User>();
         }
-
-        public async Task<User> EditAsync(User user, string password = default) {
+        [Obsolete("Используйте методы Client.Users"/*, true*/)]
+        /// <summary>
+        /// Изменить сотрудника
+        /// </summary>
+        /// <param name="user">Сотрудник</param>
+        /// <param name="password">пароль сотрудника</param>
+        /// <returns></returns>
+        public async Task<User> EditUserAsync(User user, string password = default) {
             if (user is null) {
                 throw new ArgumentNullException(nameof(user));
             }
@@ -100,8 +129,14 @@ namespace Yandex.API360 {
             await CheckResponseAsync(response);
             return await response.Content.ReadFromJsonAsync<User>();
         }
-
-        public async Task<User> AddAliasAsync(ulong userId, string alias) {
+        [Obsolete("Используйте методы Client.Users"/*, true*/)]
+        /// <summary>
+        /// Добавить сотруднику алиас почтового ящика
+        /// </summary>
+        /// <param name="userId">Идентификатор сотрудника</param>
+        /// <param name="alias">Алиас</param>
+        /// <returns></returns>
+        public async Task<User> AddAliasToUserAsync(ulong userId, string alias) {
             if (string.IsNullOrEmpty(alias)) {
                 throw new ArgumentNullException(nameof(alias));
             }
@@ -109,8 +144,14 @@ namespace Yandex.API360 {
             await CheckResponseAsync(response);
             return await response.Content.ReadFromJsonAsync<User>();
         }
-
-        public async Task<bool> DeleteAliasAsync(ulong userId, string alias) {
+        [Obsolete("Используйте методы Client.Users"/*, true*/)]
+        /// <summary>
+        /// Удалить у сотрудника алиас почтового ящика.
+        /// </summary>
+        /// <param name="userId">Идентификатор сотрудника</param>
+        /// <param name="alias">Алиас</param>
+        /// <returns></returns>
+        public async Task<bool> DeleteAliasFromUserAsync(ulong userId, string alias) {
             if (string.IsNullOrEmpty(alias)) {
                 throw new ArgumentNullException(nameof(alias));
             }
@@ -119,28 +160,49 @@ namespace Yandex.API360 {
             var result = await response.Content.ReadFromJsonAsync<RemovedAlias>();
             return result.removed;
         }
-
-        public async Task<User> DeleteContactsAsync(ulong userId) {
+        [Obsolete("Используйте методы Client.Users"/*, true*/)]
+        /// <summary>
+        /// Удаляет контактную информацию сотрудника внесённую вручную.
+        /// </summary>
+        /// <param name="userId">Идентификатор сотрудника</param>
+        /// <returns></returns>
+        public async Task<User> DeleteContactsFromUserAsync(ulong userId) {
             var response = await httpClient.DeleteAsync($"{_options.URLUsers}/{userId}/contacts");
             await CheckResponseAsync(response);
             return await response.Content.ReadFromJsonAsync<User>();
         }
-
-        public async Task<bool> GetStatus2FAAsync(ulong userId) {
+        [Obsolete("Используйте методы Client.Users"/*, true*/)]
+        /// <summary>
+        /// Возвращает информацию о статусе 2FA сотрудника.
+        /// </summary>
+        /// <param name="userId">Идентификатор сотрудника</param>
+        /// <returns></returns>
+        public async Task<bool> GetStatus2FAUserAsync(ulong userId) {
             var response = await httpClient.GetAsync($"{_options.URLUsers}/{userId}/2fa");
             await CheckResponseAsync(response);
             var result = await response.Content.ReadFromJsonAsync<UserStatus2FA>();
             return result.has2fa;
         }
-
-        public async Task Clear2FAAsync(ulong userId) {
+        [Obsolete("Используйте методы Client.Users"/*, true*/)]
+        /// <summary>
+        /// Сбросить телефон для 2FA сотрудника 
+        /// </summary>
+        /// <param name="userId">Идентификатор сотрудника</param>
+        /// <returns></returns>
+        public async Task Clear2FAUserAsync(ulong userId) {
             var response = await httpClient.DeleteAsync($"{_options.URLUsers}/{userId}/2fa");
             await CheckResponseAsync(response);
             _ = await response.Content.ReadFromJsonAsync<object>();
         }
-
-        public async Task SetAvatar(ulong userId, byte[] imageData) {
-            if (imageData == null || imageData.Length == 0) {
+        [Obsolete("Используйте методы Client.Users"/*, true*/)]
+        /// <summary>
+        /// Загрузить портрет сотрудника
+        /// </summary>
+        /// <param name="userId">Идентификатор сотрудника</param>
+        /// <param name="imageData">Данные файла изображения</param>
+        /// <returns></returns>
+        public async Task SetUserAvatar(ulong userId, byte[] imageData) {
+            if (imageData == null || imageData.Length==0) {
                 throw new ArgumentNullException(nameof(imageData));
             }
             var content = new MultipartFormDataContent();
@@ -150,13 +212,19 @@ namespace Yandex.API360 {
             await CheckResponseAsync(response);
             _ = await response.Content.ReadFromJsonAsync<object>();
         }
-
-        public async Task SetAvatar(ulong userId, Stream imageStream) {
+        [Obsolete("Используйте методы Client.Users"/*, true*/)]
+        /// <summary>
+        /// Загрузить портрет сотрудника
+        /// </summary>
+        /// <param name="userId">Идентификатор сотрудника</param>
+        /// <param name="imageStream">Данные файла изображения</param>
+        /// <returns></returns>
+        public async Task SetUserAvatar(ulong userId, Stream imageStream) {
             var content = new MultipartFormDataContent();
             var fileStreamContent = new StreamContent(imageStream);
             fileStreamContent.Headers.ContentType = new MediaTypeHeaderValue("image/png");
             content.Add(fileStreamContent, "file", "avater.png");
-
+            
             var response = await httpClient.PutAsync($"{_options.URLUsers}/{userId}/avatar", fileStreamContent);
             await CheckResponseAsync(response);
             _ = await response.Content.ReadFromJsonAsync<object>();

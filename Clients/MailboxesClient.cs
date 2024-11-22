@@ -43,7 +43,7 @@ namespace Yandex.API360 {
             }
             return result;
         }
-        public async Task<List<ResourceShort>> GetMailboxesAsync(long page = 1, long perPage = 10) {
+        public async Task<List<ResourceShort>> GetListAsync(long page = 1, long perPage = 10) {
             var response = await httpClient.GetAsync($"{_options.URLMailboxManagement}/shared?page={page}&perPage={perPage}");
             await CheckResponseAsync(response);
             var result = await response.Content.ReadFromJsonAsync<MailboxListAPIResponse>();
@@ -110,7 +110,7 @@ namespace Yandex.API360 {
             return result.Resources;
         }
 
-        public async Task<ulong> DelegateMailboxAllowAsync(ulong id) {
+        public async Task<ulong> DelegateAllowAsync(ulong id) {
             if (id == 0) {
                 throw new ArgumentException(nameof(id));
             }
@@ -120,7 +120,7 @@ namespace Yandex.API360 {
             return result.ResourceId;
         }
 
-        public async Task DelegateMailboxDeniedAsync(ulong id) {
+        public async Task DelegateDeniedAsync(ulong id) {
             if (id == 0) {
                 throw new ArgumentException(nameof(id));
             }

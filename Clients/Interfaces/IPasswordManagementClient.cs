@@ -7,12 +7,12 @@ namespace Yandex.API360{
         /// Получить параметры паролей организации
         /// </summary>
         /// <returns></returns>
-        public Task<PasswordParameters> GetPasswordParametersAsync();
+        public Task<PasswordParameters> GetParametersAsync();
         /// <summary>
         /// Изменить параметры паролей организации
         /// </summary>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public Task<PasswordParameters> EditPasswordParametersAsync(PasswordParameters parameters);
+        public Task<PasswordParameters> SetParametersAsync(PasswordParameters parameters);
     }
 }

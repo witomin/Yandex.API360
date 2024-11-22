@@ -13,7 +13,7 @@ namespace Yandex.API360 {
         /// <param name="page">Номер страницы ответа. Значение по умолчанию — 1.</param>
         /// <param name="perPage">Количество доменов на одной странице ответа. Значение по умолчанию — 10.</param>
         /// <returns></returns>
-        public Task<DomainList> GetDomainsAsync(long page = 1, long perPage = 10);
+        public Task<DomainList> GetListAsync(long page = 1, long perPage = 10);
         /// <summary>
         /// Получить полный список доменов
         /// </summary>
@@ -24,18 +24,18 @@ namespace Yandex.API360 {
         /// </summary>
         /// <param name="domainName">Полное имя домена</param>
         /// <returns></returns>
-        public Task<Domain> AddDomainAsync(string domainName);
+        public Task<Domain> AddAsync(string domainName);
         /// <summary>
         /// Удалить домен. Вы можете удалить любой домен, кроме технического.
         /// </summary>
         /// <param name="domainName">Полное имя домена</param>
         /// <returns></returns>
-        public Task DeleteDomainAsync(string domainName);
+        public Task DeleteAsync(string domainName);
         /// <summary>
         /// Получить статус подключения домена
         /// </summary>
         /// <param name="domainName">Полное имя домена. Например example.com. Для кириллических доменов (например домен.рф) используйте кодировку Punycode.</param>
         /// <returns></returns>
-        public Task<DomainConnectStatus> GetDomainStatusAsync(string domainName);
+        public Task<DomainConnectStatus> GetStatusAsync(string domainName);
     }
 }

@@ -43,7 +43,7 @@ namespace Yandex.API360 {
             return await response.Content.ReadFromJsonAsync<Department>();
         }
 
-        public async Task<DepartmentsList> GetAsync(long page = 1, long perPage = 10, long? parentId = default, DepartmentsOrderBy orderBy = DepartmentsOrderBy.id) {
+        public async Task<DepartmentsList> GetListAsync(long page = 1, long perPage = 10, long? parentId = default, DepartmentsOrderBy orderBy = DepartmentsOrderBy.id) {
             string url = $"{_options.URLDepartments}?page={page}&perPage={perPage}" +
                 $"{(parentId != null ? $"&parentId={parentId}" : string.Empty)}" +
                 $"&orderBy={orderBy}";
@@ -53,13 +53,13 @@ namespace Yandex.API360 {
             return apiResponse;
         }
 
-        public async Task<List<Department>> GetAllAsync(long? parentId = default, DepartmentsOrderBy orderBy = DepartmentsOrderBy.id) {
+        public async Task<List<Department>> GetListAllAsync(long? parentId = default, DepartmentsOrderBy orderBy = DepartmentsOrderBy.id) {
             var result = new List<Department>();
-            var response = await GetAsync(parentId: parentId, orderBy: orderBy);
+            var response = await GetListAsync(parentId: parentId, orderBy: orderBy);
             //определяем сколько всего подразделений
             var TotalDepartments = response.total;
             //пытаемся получить все подразделения в одном запросе
-            response = await GetAsync(1, TotalDepartments, parentId, orderBy);
+            response = await GetListAsync(1, TotalDepartments, parentId, orderBy);
             //Проверяем все ли подразделения получены
             if (response.perPage == TotalDepartments) {
                 result = response.departments;
@@ -74,7 +74,7 @@ namespace Yandex.API360 {
                 var perPageMax = response.perPage;
                 // получаем остальные страницы начиная со 2-й
                 for (long i = 2; i <= pages; i++) {
-                    response = await GetAsync(i, perPageMax, parentId, orderBy);
+                    response = await GetListAsync(i, perPageMax, parentId, orderBy);
                     result.AddRange(response.departments);
                 }
             }

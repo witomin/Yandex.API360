@@ -7,13 +7,13 @@ namespace Yandex.API360 {
     public class PostSettingsClient: APIClient, IPostSettingsClient {
         public PostSettingsClient (Api360Options options) : base(options) { }
 
-        public async Task<UserPersonalSettings> GetUserPersonalSettingsAsync(ulong userId) {
+        public async Task<UserPersonalSettings> GetAsync(ulong userId) {
             var response = await httpClient.GetAsync($"{_options.URLPostSettings}/users/{userId}/settings/sender_info");
             await CheckResponseAsync(response);
             return await response.Content.ReadFromJsonAsync<UserPersonalSettings>();
         }
 
-        public async Task<UserPersonalSettings> SetUserPersonalSettingsAsync(ulong userId, UserPersonalSettings UserSettings) {
+        public async Task<UserPersonalSettings> SetAsync(ulong userId, UserPersonalSettings UserSettings) {
             if (UserSettings is null) {
                 throw new ArgumentNullException(nameof(UserSettings));
             }

@@ -52,5 +52,9 @@
         /// Управление правилами обработки писем
         /// </summary>
         IRoutingClient Routing { get; }
+        /// <summary>
+        /// Управление пользователями
+        /// </summary>
+        IUsersClient Users { get; }
     }
 }

@@ -42,7 +42,7 @@ namespace Yandex.API360 {
         /// <param name="parentId">Идентификатор родительского подразделения. Если не указан, то выводятся все подразделения организации.</param>
         /// <param name="orderBy">Вид сортировки. id: По идентификатору.name: По названию.Значение по умолчанию: id.</param>
         /// <returns></returns>
-        public Task<DepartmentsList> GetAsync(long page = 1, long perPage = 10, long? parentId = default, DepartmentsOrderBy orderBy = DepartmentsOrderBy.id);
+        public Task<DepartmentsList> GetListAsync(long page = 1, long perPage = 10, long? parentId = default, DepartmentsOrderBy orderBy = DepartmentsOrderBy.id);
 
         /// <summary>
         /// Получить полный список подразделений
@@ -50,7 +50,7 @@ namespace Yandex.API360 {
         /// <param name="parentId">Идентификатор родительского подразделения. Если не указан, то выводятся все подразделения организации.</param>
         /// <param name="orderBy">Вид сортировки. id: По идентификатору.name: По названию.Значение по умолчанию: id.</param>
         /// <returns></returns>
-        public Task<List<Department>> GetAllAsync(long? parentId = default, DepartmentsOrderBy orderBy = DepartmentsOrderBy.id);
+        public Task<List<Department>> GetListAllAsync(long? parentId = default, DepartmentsOrderBy orderBy = DepartmentsOrderBy.id);
         /// <summary>
         /// Изменить подразделение
         /// </summary>

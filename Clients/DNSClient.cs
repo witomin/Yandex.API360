@@ -8,7 +8,7 @@ namespace Yandex.API360 {
     public class DNSClient :APIClient, IDNSClient {
         public DNSClient(Api360Options options) : base(options) { } 
 
-        public async Task<DNSList> GetDNSAsync(string domainName, long page = 1, long perPage = 10) {
+        public async Task<DNSList> GetListAsync(string domainName, long page = 1, long perPage = 10) {
             var response = await httpClient.GetAsync($"{_options.URLdomains}/{domainName}/dns?page={page}&perPage={perPage}");
             await CheckResponseAsync(response);
             var result = await response.Content.ReadFromJsonAsync<DNSList>();
@@ -17,11 +17,11 @@ namespace Yandex.API360 {
 
         public async Task<List<DNSRecord>> GetAllDNSAsync(string domainName) {
             var result = new List<DNSRecord>();
-            var response = await GetDNSAsync(domainName);
+            var response = await GetListAsync(domainName);
             //определяем сколько всего записей
             var TotalRecords = response.total;
             //пытаемся получить все записи в одном запросе
-            response = await GetDNSAsync(domainName, 1, TotalRecords);
+            response = await GetListAsync(domainName, 1, TotalRecords);
             //Проверяем все ли записи получены
             if (response.perPage == TotalRecords) {
                 result = response.records;
@@ -36,14 +36,14 @@ namespace Yandex.API360 {
                 var perPageMax = response.perPage;
                 // получаем остальные страницы начиная со 2-й
                 for (long i = 2; i <= pages; i++) {
-                    response = await GetDNSAsync(domainName, i, perPageMax);
+                    response = await GetListAsync(domainName, i, perPageMax);
                     result.AddRange(response.records);
                 }
             }
             return result;
         }
 
-        public async Task DeleteDNSAsync(string domainName, ulong recordId) {
+        public async Task DeleteAsync(string domainName, ulong recordId) {
             if (string.IsNullOrEmpty(domainName)) {
                 throw new ArgumentNullException(nameof(domainName));
             }
@@ -51,7 +51,7 @@ namespace Yandex.API360 {
             await CheckResponseAsync(response);
         }
 
-        public async Task<DNSRecord> AddDNSAsync(string domainName, DNSRecord dnsRecord) {
+        public async Task<DNSRecord> AddAsync(string domainName, DNSRecord dnsRecord) {
             if (string.IsNullOrEmpty(domainName)) {
                 throw new ArgumentNullException(nameof(domainName));
             }
@@ -64,7 +64,7 @@ namespace Yandex.API360 {
             return result;
         }
 
-        public async Task<DNSRecord> EditDNSAsync(string domainName, DNSRecord dnsRecord) {
+        public async Task<DNSRecord> EditAsync(string domainName, DNSRecord dnsRecord) {
             if (dnsRecord is null) {
                 throw new ArgumentNullException(nameof(dnsRecord));
             }

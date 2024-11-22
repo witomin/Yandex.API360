@@ -10,17 +10,17 @@ namespace Yandex.API360 {
         /// Получить статус обязательной двухфакторной аутентификации (2FA) для пользователей домена.
         /// </summary>
         /// <returns></returns>
-        public Task<DomainStatus2FA> GetStatus2faAsync();
+        public Task<DomainStatus2FA> GetStatusAsync();
         /// <summary>
         /// Включить обязательную двухфакторную аутентификацию (2FA) для пользователей домена.
         /// </summary>
         /// <param name="status2FA"></param>
         /// <returns></returns>
-        public Task<DomainStatus2FA> Enable2faAsync(EnableDomainStatus2FA status2FA);
+        public Task<DomainStatus2FA> EnableAsync(EnableDomainStatus2FA status2FA);
         /// <summary>
         /// Выключить обязательную двухфакторную аутентификацию (2FA) для пользователей домена
         /// </summary>
         /// <returns></returns>
-        public Task<DomainStatus2FA> Disable2faAsync();
+        public Task<DomainStatus2FA> DisableAsync();
     }
 }

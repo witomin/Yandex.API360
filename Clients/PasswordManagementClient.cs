@@ -7,14 +7,14 @@ namespace Yandex.API360 {
     public class PasswordManagementClient :APIClient, IPasswordManagementClient {
         public PasswordManagementClient(Api360Options options) : base(options) { }
 
-        public async Task<PasswordParameters> GetPasswordParametersAsync() {
+        public async Task<PasswordParameters> GetParametersAsync() {
             var response = await httpClient.GetAsync(_options.URLpasswords);
             await CheckResponseAsync(response);
             var result = await response.Content.ReadFromJsonAsync<PasswordParameters>();
             return result;
         }
 
-        public async Task<PasswordParameters> EditPasswordParametersAsync(PasswordParameters parameters) {
+        public async Task<PasswordParameters> SetParametersAsync(PasswordParameters parameters) {
             if (parameters is null) {
                 throw new ArgumentNullException(nameof(parameters));
             }

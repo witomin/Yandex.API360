@@ -26,7 +26,7 @@ namespace Yandex.API360 {
         /// <returns>Возвращает список общих почтовых ящиков в организации</returns>
         /// <param name="page">Номер страницы ответа</param>
         /// <param name="perPage">Количество записей на одной странице ответа</param>
-        public Task<List<ResourceShort>> GetMailboxesAsync(long page = 1, long perPage = 10);
+        public Task<List<ResourceShort>> GetListAsync(long page = 1, long perPage = 10);
         /// <summary>
         /// Создать общий ящик
         /// </summary>
@@ -77,14 +77,14 @@ namespace Yandex.API360 {
         /// <param name="id">Идентификатор почтового ящика. Для делегированных ящиков идентификатор почтового ящика совпадает с идентификатором сотрудника-владельца этого ящика</param>
         /// <returns>Идентификатор почтового ящика, разрешение на делегирование которого предоставлено</returns>
         /// <exception cref="ArgumentException"></exception>
-        public Task<ulong> DelegateMailboxAllowAsync(ulong id);
+        public Task<ulong> DelegateAllowAsync(ulong id);
         /// <summary>
         /// Запретить делегирование ящика
         /// </summary>
         /// <param name="id">Идентификатор почтового ящика. Для делегированных ящиков идентификатор почтового ящика совпадает с идентификатором сотрудника-владельца этого ящика</param>
         /// <returns>Идентификатор почтового ящика, разрешение на делегирование которого отзвать</returns>
         /// <exception cref="ArgumentException"></exception>
-        public Task DelegateMailboxDeniedAsync(ulong id);
+        public Task DelegateDeniedAsync(ulong id);
         /// <summary>
         /// Изменить права доступа к ящику. Предоставляет или изменяет права доступа сотрудника к делегированному или общему почтовому ящику. Чтобы ящик другого сотрудника стал делегированным и к нему можно было получить доступ, сначала предоставьте разрешение на его делегирование.
         /// </summary>

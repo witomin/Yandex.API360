@@ -15,6 +15,7 @@ namespace Yandex.API360 {
             PasswordManagement =new PasswordManagementClient(_options);
             PostSettings = new PostSettingsClient(_options);
             Routing = new RoutingClient(_options);
+            Users=new UsersClient(_options);
         }
 
         public IMailboxesClient Mailboxes { get; }
@@ -30,6 +31,7 @@ namespace Yandex.API360 {
         public IPasswordManagementClient PasswordManagement { get; }
         public IPostSettingsClient PostSettings { get; }
         public  IRoutingClient Routing { get; }
+        public IUsersClient Users { get; }
     }
 }
 
