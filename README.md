@@ -2,7 +2,7 @@
 
 [![NuGet Version](https://img.shields.io/nuget/vpre/Yandex.API360.svg?label=Yandex.API360&style=flat-square)](https://www.nuget.org/packages/Yandex.API360)
 [![NuGet](https://img.shields.io/nuget/dt/Yandex.API360.svg)](https://www.nuget.org/packages/Yandex.API360) 
-[![API Version](https://img.shields.io/badge/Яндекс%20API-Сентябрь,%202024-f36caf.svg?style=flat-square)](https://yandex.ru/dev/api360/doc/concepts/versions.html#march-2024)
+[![API Version](https://img.shields.io/badge/Яндекс%20API-Сентябрь,%202024-f36caf.svg?style=flat-square)](https://yandex.ru/dev/api360/doc/ru/versions#september-2024)
 
 ## Описание:
 
