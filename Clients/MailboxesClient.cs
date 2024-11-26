@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Http.Json;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Yandex.API360.Models;
 using Yandex.API360.Models.Mailbox;
@@ -136,12 +137,9 @@ namespace Yandex.API360 {
                 throw new ArgumentException(nameof(actorId));
             }
             if (roles is null) {
-                throw new ArgumentNullException(nameof(roles));
+                roles = new List<RoleType>();
             }
-            if (roles.Count == 0) {
-                throw new ArgumentException(nameof(roles));
-            }
-            var response = await httpClient.PostAsJsonAsync($"{_options.URLMailboxManagement}/set/{resourceId}?actorId={actorId}&notify={notify}", new { roles });
+            var response = await httpClient.PostAsJsonAsync($"{_options.URLMailboxManagement}/set/{resourceId}?actorId={actorId}{(notify == NotifyType.All ? string.Empty : $"&notify={JsonSerializer.Serialize(notify).Trim('"')}")}", new {roles });
             await CheckResponseAsync(response);
             var result = await response.Content.ReadFromJsonAsync<TaskIdAPIResponse>();
             return result.TaskId;
