@@ -26,10 +26,12 @@
 
 Для начала работы нужно создать новый экземпляр класса через конструктор, принимающий параметр типа **Yandex.API360.Api360Options**. После этого можно бутет вызывать все методы.
 
+    ```csharp
     public Client(Api360Options options)
 
 Конструктор Yandex.API360.Api360Options принимает параметры organizationId и token
     
+    ```csharp
     public Api360Options(string organizationId, string token, string? baseUrl = default)
 
 + organizationId - Задает идентификатор организации в Яндекс 360 для бизнеса.
@@ -37,5 +39,6 @@
 
 ## Пример:
 
+    ```csharp
     var APIClient = new Yandex.API360.Client(new Yandex.API360.Api360Options("OrganizationId", "Token"));
     var AllUsers = await APIClient.Users.GetListAllAsync();

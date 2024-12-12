@@ -57,5 +57,25 @@ namespace Yandex.API360 {
                 throw new APIRequestException(response.ReasonPhrase, response.StatusCode);
             }
         }
+
+        internal async Task<TEntity>Get<TEntity>(string requestUri) {
+            var response = await httpClient.GetAsync(requestUri);
+            await CheckResponseAsync(response);
+            return await response.Content.ReadFromJsonAsync<TEntity>();
+        }
+        internal async Task<TEntity> PutAsJson<TEntity>(string requestUri, object value) {
+            var response = await httpClient.PutAsJsonAsync(requestUri, value);
+            await CheckResponseAsync(response);
+            return await response.Content.ReadFromJsonAsync<TEntity>();
+        }
+        internal async Task Delete(string requestUri) {
+            var response = await httpClient.DeleteAsync(requestUri);
+            await CheckResponseAsync(response);
+        }
+        internal async Task<TEntity> PostAsJson<TEntity>(string requestUri, object value) {
+            var response = await httpClient.PostAsJsonAsync(requestUri, value);
+            await CheckResponseAsync(response);
+            return await response.Content.ReadFromJsonAsync<TEntity>();
+        }
     }
 }
