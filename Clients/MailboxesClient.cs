@@ -51,7 +51,7 @@ namespace Yandex.API360 {
             if (string.IsNullOrEmpty(description)) {
                 throw new ArgumentException(nameof(description));
             }
-            var result = await PutAsJson<ResourceIdAPIResponse>($"{_options.URLMailboxManagement}/shared", new { email, name, description });
+            var result = await Put<ResourceIdAPIResponse>($"{_options.URLMailboxManagement}/shared", new { email, name, description });
             return result.ResourceId;
         }
 
@@ -67,7 +67,7 @@ namespace Yandex.API360 {
                 throw new ArgumentException(nameof(id));
             }
 
-            var result = await PutAsJson<ResourceIdAPIResponse>($"{_options.URLMailboxManagement}/shared/{id}", new { name, description });
+            var result = await Put<ResourceIdAPIResponse>($"{_options.URLMailboxManagement}/shared/{id}", new { name, description });
             return result.ResourceId;
         }
 
@@ -98,7 +98,7 @@ namespace Yandex.API360 {
             if (id == 0) {
                 throw new ArgumentException(nameof(id));
             }
-            var result = await PutAsJson<ResourceIdAPIResponse>($"{_options.URLMailboxManagement}/delegated", new { resourceId = $"{id}" });
+            var result = await Put<ResourceIdAPIResponse>($"{_options.URLMailboxManagement}/delegated", new { resourceId = $"{id}" });
             return result.ResourceId;
         }
 
@@ -119,7 +119,7 @@ namespace Yandex.API360 {
             if (roles is null) {
                 roles = new List<RoleType>();
             }
-            var result = await PostAsJson<TaskIdAPIResponse>($"{_options.URLMailboxManagement}/set/{resourceId}?actorId={actorId}{(notify == NotifyType.All ? string.Empty : $"&notify={JsonSerializer.Serialize(notify).Trim('"')}")}", new { roles });
+            var result = await Post<TaskIdAPIResponse>($"{_options.URLMailboxManagement}/set/{resourceId}?actorId={actorId}{(notify == NotifyType.All ? string.Empty : $"&notify={JsonSerializer.Serialize(notify).Trim('"')}")}", new { roles });
             return result.TaskId;
         }
 

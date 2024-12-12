@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Yandex.API360.Models;
 
@@ -28,10 +27,7 @@ namespace Yandex.API360 {
                 combinedExcludeUids = string.Join("&", excludeUids_str.ToArray());
             }
 
-            var response = await httpClient.GetAsync($"{_options.URLsecurity}/audit_log/disk?pageSize={pageSize}{(!string.IsNullOrEmpty(pageToken) ? $"&pageToken={pageToken}" : string.Empty)}{(!string.IsNullOrEmpty(beforeDate_iso) ? $"&beforeDate={beforeDate_iso}" : string.Empty)}{(!string.IsNullOrEmpty(afterDate_iso) ? $"&afterDate={afterDate_iso}" : string.Empty)}{(!string.IsNullOrEmpty(combinedIncludeUids) ? $"&{combinedIncludeUids}" : string.Empty)}{(!string.IsNullOrEmpty(combinedExcludeUids) ? $"&{combinedExcludeUids}" : string.Empty)}");
-
-            await CheckResponseAsync(response);
-            return await response.Content.ReadFromJsonAsync<EventList>();
+            return await Get<EventList>($"{_options.URLsecurity}/audit_log/disk?pageSize={pageSize}{(!string.IsNullOrEmpty(pageToken) ? $"&pageToken={pageToken}" : string.Empty)}{(!string.IsNullOrEmpty(beforeDate_iso) ? $"&beforeDate={beforeDate_iso}" : string.Empty)}{(!string.IsNullOrEmpty(afterDate_iso) ? $"&afterDate={afterDate_iso}" : string.Empty)}{(!string.IsNullOrEmpty(combinedIncludeUids) ? $"&{combinedIncludeUids}" : string.Empty)}{(!string.IsNullOrEmpty(combinedExcludeUids) ? $"&{combinedExcludeUids}" : string.Empty)}");
         }
     }
 }

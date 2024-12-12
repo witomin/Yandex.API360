@@ -12,7 +12,7 @@ namespace Yandex.API360 {
     public abstract class APIClient {
         internal Api360Options _options;
         internal HttpClient httpClient;
-        
+
         internal JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions {
             DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
         };
@@ -58,12 +58,12 @@ namespace Yandex.API360 {
             }
         }
 
-        internal async Task<TEntity>Get<TEntity>(string requestUri) {
+        internal async Task<TEntity> Get<TEntity>(string requestUri) {
             var response = await httpClient.GetAsync(requestUri);
             await CheckResponseAsync(response);
             return await response.Content.ReadFromJsonAsync<TEntity>();
         }
-        internal async Task<TEntity> PutAsJson<TEntity>(string requestUri, object value) {
+        internal async Task<TEntity> Put<TEntity>(string requestUri, object value) {
             var response = await httpClient.PutAsJsonAsync(requestUri, value);
             await CheckResponseAsync(response);
             return await response.Content.ReadFromJsonAsync<TEntity>();
@@ -72,8 +72,18 @@ namespace Yandex.API360 {
             var response = await httpClient.DeleteAsync(requestUri);
             await CheckResponseAsync(response);
         }
-        internal async Task<TEntity> PostAsJson<TEntity>(string requestUri, object value) {
+        internal async Task<TEntity> Delete<TEntity>(string requestUri) {
+            var response = await httpClient.DeleteAsync(requestUri);
+            await CheckResponseAsync(response);
+            return await response.Content.ReadFromJsonAsync<TEntity>();
+        }
+        internal async Task<TEntity> Post<TEntity>(string requestUri, object value) {
             var response = await httpClient.PostAsJsonAsync(requestUri, value);
+            await CheckResponseAsync(response);
+            return await response.Content.ReadFromJsonAsync<TEntity>();
+        }
+        internal async Task<TEntity> Patch<TEntity>(string requestUri, object value, JsonSerializerOptions? options = default) {
+            var response = await httpClient.PatchAsJsonAsync(requestUri, value, options);
             await CheckResponseAsync(response);
             return await response.Content.ReadFromJsonAsync<TEntity>();
         }

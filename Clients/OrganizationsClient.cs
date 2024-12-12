@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Yandex.API360.Models;
 
@@ -8,10 +7,7 @@ namespace Yandex.API360 {
         public OrganizationsClient(Api360Options options) : base(options) { }
 
         public async Task<OrganizationList> GetListAsync(int? pageSize = 10, string? pageToken = null) {
-            var response = await httpClient.GetAsync($"{_options.URLOrg}?pageSize={pageSize}{(pageToken != null ? $"&pageToken={pageToken}" : string.Empty)}");
-            await CheckResponseAsync(response);
-            var organisations = await response.Content.ReadFromJsonAsync<OrganizationList>();
-            return organisations;
+            return await Get<OrganizationList>($"{_options.URLOrg}?pageSize={pageSize}{(pageToken != null ? $"&pageToken={pageToken}" : string.Empty)}");
         }
 
         public async Task<List<Organization>> GetListAllAsync() {

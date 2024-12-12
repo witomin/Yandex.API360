@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Yandex.API360.Models;
 
@@ -9,10 +8,7 @@ namespace Yandex.API360 {
         public DomainsClient(Api360Options options) : base(options) { }
 
         public async Task<DomainList> GetListAsync(long page = 1, long perPage = 10) {
-            var response = await httpClient.GetAsync($"{_options.URLdomains}?page={page}&perPage={perPage}");
-            await CheckResponseAsync(response);
-            var result = await response.Content.ReadFromJsonAsync<DomainList>();
-            return result;
+            return await Get<DomainList>($"{_options.URLdomains}?page={page}&perPage={perPage}");
         }
 
         public async Task<List<Domain>> GetAllDomainsAsync() {
@@ -47,25 +43,18 @@ namespace Yandex.API360 {
             if (string.IsNullOrEmpty(domainName)) {
                 throw new ArgumentNullException(nameof(domainName));
             }
-            var response = await httpClient.PostAsJsonAsync($"{_options.URLdomains}", domainName);
-            await CheckResponseAsync(response);
-            var result = await response.Content.ReadFromJsonAsync<Domain>();
-            return result;
+            return await Post<Domain>($"{_options.URLdomains}", domainName);
         }
 
         public async Task DeleteAsync(string domainName) {
             if (string.IsNullOrEmpty(domainName)) {
                 throw new ArgumentNullException(nameof(domainName));
             }
-            var response = await httpClient.DeleteAsync($"{_options.URLdomains}/{domainName}");
-            await CheckResponseAsync(response);
+            await Delete($"{_options.URLdomains}/{domainName}");
         }
 
         public async Task<DomainConnectStatus> GetStatusAsync(string domainName) {
-            var response = await httpClient.GetAsync($"{_options.URLdomains}/{domainName}/status");
-            await CheckResponseAsync(response);
-            var result = await response.Content.ReadFromJsonAsync<DomainConnectStatus>();
-            return result;
+            return await Get<DomainConnectStatus>($"{_options.URLdomains}/{domainName}/status");
         }
     }
 }

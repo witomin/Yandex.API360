@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Yandex.API360.Models;
 
@@ -8,54 +7,41 @@ namespace Yandex.API360 {
         public PostSettingsClient (Api360Options options) : base(options) { }
 
         public async Task<UserPersonalSettings> GetAsync(ulong userId) {
-            var response = await httpClient.GetAsync($"{_options.URLPostSettings}/users/{userId}/settings/sender_info");
-            await CheckResponseAsync(response);
-            return await response.Content.ReadFromJsonAsync<UserPersonalSettings>();
+            return await Get<UserPersonalSettings>($"{_options.URLPostSettings}/users/{userId}/settings/sender_info");
         }
 
         public async Task<UserPersonalSettings> SetAsync(ulong userId, UserPersonalSettings UserSettings) {
             if (UserSettings is null) {
                 throw new ArgumentNullException(nameof(UserSettings));
             }
-            var response = await httpClient.PostAsJsonAsync($"{_options.URLPostSettings}/users/{userId}/settings/sender_info", UserSettings);
-            await CheckResponseAsync(response);
-            return await response.Content.ReadFromJsonAsync<UserPersonalSettings>();
+            return await Post<UserPersonalSettings>($"{_options.URLPostSettings}/users/{userId}/settings/sender_info", UserSettings);
         }
 
         public async Task<CollectAddressStatus> GetСollectAddressesAsync(ulong userId) {
-            var response = await httpClient.GetAsync($"{_options.URLPostSettings}/users/{userId}/settings/address_book");
-            await CheckResponseAsync(response);
-            return await response.Content.ReadFromJsonAsync<CollectAddressStatus>();
+            return await Get<CollectAddressStatus>($"{_options.URLPostSettings}/users/{userId}/settings/address_book");
         }
 
         public async Task<CollectAddressStatus> SetСollectAddressesAsync(ulong userId, CollectAddressStatus collectAddresses) {
             if (collectAddresses is null) {
                 throw new ArgumentNullException(nameof(collectAddresses));
             }
-            var response = await httpClient.PostAsJsonAsync($"{_options.URLPostSettings}/users/{userId}/settings/address_book", collectAddresses);
-            await CheckResponseAsync(response);
-            return await response.Content.ReadFromJsonAsync<CollectAddressStatus>();
+            return await Post<CollectAddressStatus>($"{_options.URLPostSettings}/users/{userId}/settings/address_book", collectAddresses);
         }
 
         public async Task<UserRulesList> GetUserRulesAsync(ulong userId) {
-            var response = await httpClient.GetAsync($"{_options.URLPostSettings}/users/{userId}/settings/user_rules");
-            await CheckResponseAsync(response);
-            return await response.Content.ReadFromJsonAsync<UserRulesList>();
+            return await Get<UserRulesList>($"{_options.URLPostSettings}/users/{userId}/settings/user_rules");
         }
 
         public async Task<ulong> AddUserRuleAsync(ulong userId, UserRule userRule) {
             if (userRule is null) {
                 throw new ArgumentNullException(nameof(userRule));
             }
-            var response = await httpClient.PostAsJsonAsync($"{_options.URLPostSettings}/users/{userId}/settings/user_rules", userRule);
-            await CheckResponseAsync(response);
-            var result = await response.Content.ReadFromJsonAsync<UserRuleAddResponse>();
+            var result = await Post<UserRuleAddResponse>($"{_options.URLPostSettings}/users/{userId}/settings/user_rules", userRule);
             return result.ruleId;
         }
 
         public async Task DeleteUserRuleAsync(ulong userId, ulong ruleId) {
-            var response = await httpClient.DeleteAsync($"{_options.URLPostSettings}/users/{userId}/settings/user_rules/{ruleId}");
-            await CheckResponseAsync(response);
+            await Delete($"{_options.URLPostSettings}/users/{userId}/settings/user_rules/{ruleId}");
         }
     }
 }

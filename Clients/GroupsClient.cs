@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Yandex.API360.Models;
 
@@ -9,20 +8,13 @@ namespace Yandex.API360 {
         public GroupsClient(Api360Options options) : base(options) { }
 
         public async Task<GroupsList> GetListAsync(long page = 1, long perPage = 10) {
-            var response = await httpClient.GetAsync($"{_options.URLGroups}?page={page}&perPage={perPage}");
-            await CheckResponseAsync(response);
-            var apiResponse = await response.Content.ReadFromJsonAsync<GroupsList>();
-            return apiResponse;
+            return await Get<GroupsList>($"{_options.URLGroups}?page={page}&perPage={perPage}");
         }
 
         public async Task<List<Group>> GetListAllAsync() {
-            var response = await httpClient.GetAsync($"{_options.URLGroups}");
-            await CheckResponseAsync(response);
-            var apiResponse = await response.Content.ReadFromJsonAsync<GroupsList>();
+            var apiResponse = await Get<GroupsList>($"{_options.URLGroups}");
             var totalGroups = apiResponse.total;
-            response = await httpClient.GetAsync($"{_options.URLGroups}?page={1}&perPage={totalGroups}");
-            await CheckResponseAsync(response);
-            apiResponse = await response.Content.ReadFromJsonAsync<GroupsList>();
+            apiResponse = await Get<GroupsList>($"{_options.URLGroups}?page={1}&perPage={totalGroups}");
             return apiResponse.groups;
         }
 
@@ -30,15 +22,11 @@ namespace Yandex.API360 {
             if (group is null) {
                 throw new ArgumentNullException(nameof(group));
             }
-            var response = await httpClient.PostAsJsonAsync($"{_options.URLGroups}", group);
-            await CheckResponseAsync(response);
-            return await response.Content.ReadFromJsonAsync<Group>();
+            return await Post<Group>($"{_options.URLGroups}", group);
         }
 
         public async Task<bool> DeleteAsync(ulong groupId) {
-            var response = await httpClient.DeleteAsync($"{_options.URLGroups}/{groupId}");
-            await CheckResponseAsync(response);
-            var result = await response.Content.ReadFromJsonAsync<RemovedElement>();
+            var result = await Delete<RemovedElement>($"{_options.URLGroups}/{groupId}");
             return result.removed;
         }
 
@@ -46,61 +34,43 @@ namespace Yandex.API360 {
             if (member is null) {
                 throw new ArgumentNullException(nameof(member));
             }
-            var response = await httpClient.PostAsJsonAsync($"{_options.URLGroups}/{groupId}/members", member);
-            await CheckResponseAsync(response);
-            var result = await response.Content.ReadFromJsonAsync<AddedMember>();
+            var result = await Post<AddedMember>($"{_options.URLGroups}/{groupId}/members", member);
             return result.added;
         }
 
         public async Task<bool> DeleteMemberAsync(ulong groupId, Member member) {
-            var response = await httpClient.DeleteAsync($"{_options.URLGroups}/{groupId}/members/{member.type}/{member.id}");
-            await CheckResponseAsync(response);
-            var result = await response.Content.ReadFromJsonAsync<DeletedMember>();
+            var result = await Delete<DeletedMember>($"{_options.URLGroups}/{groupId}/members/{member.type}/{member.id}");
             return result.deleted;
         }
 
         public async Task<MembersList> DeleteAllMembersAsync(ulong groupId) {
-            var response = await httpClient.DeleteAsync($"{_options.URLGroups}/{groupId}/members");
-            await CheckResponseAsync(response);
-            var result = await response.Content.ReadFromJsonAsync<MembersList>();
+            var result = await Delete<MembersList>($"{_options.URLGroups}/{groupId}/members");
             return result;
         }
 
         public async Task<Group> DeleteAllManagersAsync(ulong groupId) {
-            var response = await httpClient.DeleteAsync($"{_options.URLGroups}/{groupId}/admins");
-            await CheckResponseAsync(response);
-            var result = await response.Content.ReadFromJsonAsync<Group>();
+            var result = await Delete<Group>($"{_options.URLGroups}/{groupId}/admins");
             return result;
         }
 
         public async Task<MembersList> GetMembersAsync(ulong groupId) {
-            var response = await httpClient.GetAsync($"{_options.URLGroups}/{groupId}/members");
-            await CheckResponseAsync(response);
-            return await response.Content.ReadFromJsonAsync<MembersList>();
+            return await Get<MembersList>($"{_options.URLGroups}/{groupId}/members");
         }
 
         public async Task<Group> GetByIdAsync(ulong groupId) {
-            var response = await httpClient.GetAsync($"{_options.URLGroups}/{groupId}");
-            await CheckResponseAsync(response);
-            return await response.Content.ReadFromJsonAsync<Group>();
+            return await Get<Group>($"{_options.URLGroups}/{groupId}");
         }
 
         public async Task<Group> EditAsync(Group group) {
-            var response = await httpClient.PatchAsJsonAsync<BaseGroup>($"{_options.URLGroups}/{group.id}", group);
-            await CheckResponseAsync(response);
-            return await response.Content.ReadFromJsonAsync<Group>();
+            return await Patch<Group>($"{_options.URLGroups}/{group.id}", group as BaseGroup);
         }
 
         public async Task<Group> EditManagersAsync(ulong groupId, List<string> adminIds) {
-            var response = await httpClient.PutAsJsonAsync($"{_options.URLGroups}/{groupId}/admins", new { adminIds = adminIds });
-            await CheckResponseAsync(response);
-            return await response.Content.ReadFromJsonAsync<Group>();
+            return await Put<Group>($"{_options.URLGroups}/{groupId}/admins", new { adminIds });
         }
 
         public async Task<Group> EditMembersAsync(ulong groupId, List<Member> members) {
-            var response = await httpClient.PutAsJsonAsync($"{_options.URLGroups}/{groupId}/members", new { members = members });
-            await CheckResponseAsync(response);
-            return await response.Content.ReadFromJsonAsync<Group>();
+            return await Put<Group>($"{_options.URLGroups}/{groupId}/members", new { members });
         }
     }
 }

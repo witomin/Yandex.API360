@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Yandex.API360.Models;
 
@@ -9,10 +8,7 @@ namespace Yandex.API360 {
         public DNSClient(Api360Options options) : base(options) { } 
 
         public async Task<DNSList> GetListAsync(string domainName, long page = 1, long perPage = 10) {
-            var response = await httpClient.GetAsync($"{_options.URLdomains}/{domainName}/dns?page={page}&perPage={perPage}");
-            await CheckResponseAsync(response);
-            var result = await response.Content.ReadFromJsonAsync<DNSList>();
-            return result;
+            return await Get<DNSList>($"{_options.URLdomains}/{domainName}/dns?page={page}&perPage={perPage}");
         }
 
         public async Task<List<DNSRecord>> GetAllDNSAsync(string domainName) {
@@ -47,8 +43,7 @@ namespace Yandex.API360 {
             if (string.IsNullOrEmpty(domainName)) {
                 throw new ArgumentNullException(nameof(domainName));
             }
-            var response = await httpClient.DeleteAsync($"{_options.URLdomains}/{domainName}/dns/{recordId}");
-            await CheckResponseAsync(response);
+            await Delete($"{_options.URLdomains}/{domainName}/dns/{recordId}");
         }
 
         public async Task<DNSRecord> AddAsync(string domainName, DNSRecord dnsRecord) {
@@ -58,10 +53,7 @@ namespace Yandex.API360 {
             if (dnsRecord is null) {
                 throw new ArgumentNullException(nameof(dnsRecord));
             }
-            var response = await httpClient.PostAsJsonAsync($"{_options.URLdomains}/{domainName}/dns", dnsRecord);
-            await CheckResponseAsync(response);
-            var result = await response.Content.ReadFromJsonAsync<DNSRecord>();
-            return result;
+            return await Post<DNSRecord>($"{_options.URLdomains}/{domainName}/dns", dnsRecord);
         }
 
         public async Task<DNSRecord> EditAsync(string domainName, DNSRecord dnsRecord) {
@@ -71,10 +63,7 @@ namespace Yandex.API360 {
             if (dnsRecord.recordId is null) {
                 throw new ArgumentNullException(nameof(dnsRecord.recordId));
             }
-            var response = await httpClient.PostAsJsonAsync($"{_options.URLdomains}/{domainName}/dns/{dnsRecord.recordId}", dnsRecord);
-            await CheckResponseAsync(response);
-            var result = await response.Content.ReadFromJsonAsync<DNSRecord>();
-            return result;
+            return await Post<DNSRecord>($"{_options.URLdomains}/{domainName}/dns/{dnsRecord.recordId}", dnsRecord);
         }
     }
 }

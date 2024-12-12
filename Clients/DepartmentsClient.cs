@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Yandex.API360.Enums;
 using Yandex.API360.Models;
@@ -13,18 +12,14 @@ namespace Yandex.API360 {
             if (string.IsNullOrEmpty(alias)) {
                 throw new ArgumentNullException(string.IsNullOrEmpty(alias) ? nameof(alias) : null);
             }
-            var response = await httpClient.PostAsJsonAsync($"{_options.URLDepartments}/{departmentId}/aliases", new { alias = alias });
-            await CheckResponseAsync(response);
-            return await response.Content.ReadFromJsonAsync<User>();
+            return await Post<User>($"{_options.URLDepartments}/{departmentId}/aliases", new { alias });
         }
 
         public async Task<bool> DeleteAliasAsync(ulong departmentId, string alias) {
             if (string.IsNullOrEmpty(alias)) {
                 throw new ArgumentNullException(string.IsNullOrEmpty(alias) ? nameof(alias) : null);
             }
-            var response = await httpClient.DeleteAsync($"{_options.URLDepartments}/{departmentId}/aliases/{alias}");
-            await CheckResponseAsync(response);
-            var result = await response.Content.ReadFromJsonAsync<RemovedAlias>();
+            var result = await Delete<RemovedAlias>($"{_options.URLDepartments}/{departmentId}/aliases/{alias}");
             return result.removed;
         }
 
@@ -32,25 +27,18 @@ namespace Yandex.API360 {
             if (department is null) {
                 throw new ArgumentNullException(nameof(department));
             }
-            var response = await httpClient.PostAsJsonAsync($"{_options.URLDepartments}", department);
-            await CheckResponseAsync(response);
-            return await response.Content.ReadFromJsonAsync<Department>();
+            return await Post<Department>($"{_options.URLDepartments}", department);
         }
 
         public async Task<Department> GetByIdAsync(ulong departmentId) {
-            var response = await httpClient.GetAsync($"{_options.URLDepartments}/{departmentId}");
-            await CheckResponseAsync(response);
-            return await response.Content.ReadFromJsonAsync<Department>();
+            return await Get<Department>($"{_options.URLDepartments}/{departmentId}");
         }
 
         public async Task<DepartmentsList> GetListAsync(long page = 1, long perPage = 10, long? parentId = default, DepartmentsOrderBy orderBy = DepartmentsOrderBy.id) {
             string url = $"{_options.URLDepartments}?page={page}&perPage={perPage}" +
                 $"{(parentId != null ? $"&parentId={parentId}" : string.Empty)}" +
                 $"&orderBy={orderBy}";
-            var response = await httpClient.GetAsync(url);
-            await CheckResponseAsync(response);
-            var apiResponse = await response.Content.ReadFromJsonAsync<DepartmentsList>();
-            return apiResponse;
+            return await Get<DepartmentsList>(url);
         }
 
         public async Task<List<Department>> GetListAllAsync(long? parentId = default, DepartmentsOrderBy orderBy = DepartmentsOrderBy.id) {
@@ -85,15 +73,11 @@ namespace Yandex.API360 {
             if (department is null) {
                 throw new ArgumentNullException(nameof(department));
             }
-            var response = await httpClient.PatchAsJsonAsync<BaseDepartment>($"{_options.URLDepartments}/{department.id}", department);
-            await CheckResponseAsync(response);
-            return await response.Content.ReadFromJsonAsync<Department>();
+            return await Patch<Department>($"{_options.URLDepartments}/{department.id}", department);
         }
 
         public async Task<bool> DeleteAsync(ulong departmentId) {
-            var response = await httpClient.DeleteAsync($"{_options.URLDepartments}/{departmentId}");
-            await CheckResponseAsync(response);
-            var result = await response.Content.ReadFromJsonAsync<RemovedElement>();
+            var result = await Delete<RemovedElement>($"{_options.URLDepartments}/{departmentId}");
             return result.removed;
         }
     }
