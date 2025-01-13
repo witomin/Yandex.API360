@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Threading.Tasks;
 using Yandex.API360.Models;
 
 namespace Yandex.API360 {
     public class TwoFAClient: APIClient, I2FAClient {
-        public TwoFAClient(Api360Options options):base(options) { }
+        public TwoFAClient(Api360Options options, ILogger<APIClient>? logger = default) :base(options, logger) { }
         public async Task<DomainStatus2FA> GetStatusAsync() {
             return await Get<DomainStatus2FA>($"{_options.URL2fa}");
         }

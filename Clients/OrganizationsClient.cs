@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Yandex.API360.Models;
 
 namespace Yandex.API360 {
     public class OrganizationsClient :APIClient, IOrganizationClient{
-        public OrganizationsClient(Api360Options options) : base(options) { }
+        public OrganizationsClient(Api360Options options, ILogger<APIClient>? logger = default) : base(options, logger) { }
 
         public async Task<OrganizationList> GetListAsync(int? pageSize = 10, string? pageToken = null) {
             return await Get<OrganizationList>($"{_options.URLOrg}?pageSize={pageSize}{(pageToken != null ? $"&pageToken={pageToken}" : string.Empty)}");

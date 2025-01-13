@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Yandex.API360.Models;
 
 namespace Yandex.API360 {
     public class AntispamClient: APIClient, IAntispamClient {
-        public AntispamClient(Api360Options options) : base(options) { }
+        public AntispamClient(Api360Options options, ILogger<APIClient>? logger = default) : base(options, logger) { }
 
         public async Task<List<string>> GetAllowListAsync() {
             var result = await Get<WhiteList>($"{_options.URLAntispam}");

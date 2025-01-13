@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Yandex.API360.Models;
 
 namespace Yandex.API360 {
     public class DomainsClient : APIClient, IDomainsClient{
-        public DomainsClient(Api360Options options) : base(options) { }
+        public DomainsClient(Api360Options options, ILogger<APIClient>? logger = default) : base(options, logger) { }
 
         public async Task<DomainList> GetListAsync(long page = 1, long perPage = 10) {
             return await Get<DomainList>($"{_options.URLdomains}?page={page}&perPage={perPage}");

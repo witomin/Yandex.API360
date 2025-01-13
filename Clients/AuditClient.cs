@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -7,7 +8,7 @@ using Yandex.API360.Models;
 
 namespace Yandex.API360 {
     public class AuditClient: APIClient, IAuditClient {
-        public AuditClient(Api360Options options) : base(options) { }
+        public AuditClient(Api360Options options, ILogger<APIClient>? logger = default) : base(options, logger) { }
         
         public async Task<EventList> GetDiskLogAsync(uint pageSize, string pageToken = null, DateTime? beforeDate = null, DateTime? afterDate = null,
             List<string> includeUids = null, List<string> excludeUids = null) {

@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Yandex.API360.Models;
 
 namespace Yandex.API360 {
     public class DNSClient :APIClient, IDNSClient {
-        public DNSClient(Api360Options options) : base(options) { } 
+        public DNSClient(Api360Options options, ILogger<APIClient>? logger = default) : base(options, logger) { } 
 
         public async Task<DNSList> GetListAsync(string domainName, long page = 1, long perPage = 10) {
             return await Get<DNSList>($"{_options.URLdomains}/{domainName}/dns?page={page}&perPage={perPage}");

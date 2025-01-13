@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,7 +10,7 @@ using Yandex.API360.Models;
 
 namespace Yandex.API360 {
     public class UsersClient : APIClient, IUsersClient {
-        public UsersClient(Api360Options options) : base(options) { }
+        public UsersClient(Api360Options options, ILogger<APIClient>? logger = default) : base(options, logger) { }
 
         public async Task<UsersList> GetListAsync(long page = 1, long perPage = 10) {
             return await Get<UsersList>($"{_options.URLUsers}?page={page}&perPage={perPage}");

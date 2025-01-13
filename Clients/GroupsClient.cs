@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Yandex.API360.Models;
 
 namespace Yandex.API360 {
     public class GroupsClient : APIClient, IGroupsClient {
-        public GroupsClient(Api360Options options) : base(options) { }
+        public GroupsClient(Api360Options options, ILogger<APIClient>? logger = default) : base(options, logger) { }
 
         public async Task<GroupsList> GetListAsync(long page = 1, long perPage = 10) {
             return await Get<GroupsList>($"{_options.URLGroups}?page={page}&perPage={perPage}");

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -7,7 +8,7 @@ using Yandex.API360.Models.Mailbox;
 
 namespace Yandex.API360 {
     public class MailboxesClient : APIClient, IMailboxesClient {
-        public MailboxesClient(Api360Options options) : base(options) { }
+        public MailboxesClient(Api360Options options, ILogger<APIClient>? logger = default) : base(options, logger) { }
         public async Task<List<ResourceShort>> GetDelegatedMailboxesAsync(long page = 1, long perPage = 10) {
             var result = await Get<MailboxListAPIResponse>($"{_options.URLMailboxManagement}/delegated?page={page}&perPage={perPage}");
             return result.Resources;

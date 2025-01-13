@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Threading.Tasks;
 using Yandex.API360.Models;
 
 namespace Yandex.API360 {
     public class PostSettingsClient: APIClient, IPostSettingsClient {
-        public PostSettingsClient (Api360Options options) : base(options) { }
+        public PostSettingsClient (Api360Options options, ILogger<APIClient>? logger = default) : base(options, logger) { }
 
         public async Task<UserPersonalSettings> GetAsync(ulong userId) {
             return await Get<UserPersonalSettings>($"{_options.URLPostSettings}/users/{userId}/settings/sender_info");

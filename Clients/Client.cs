@@ -1,21 +1,23 @@
 ﻿
+using Microsoft.Extensions.Logging;
+
 namespace Yandex.API360 {
     public partial class Client : APIClient, IYandex360APIClient {
-        public Client(Api360Options options) : base(options) {
-            Mailboxes = new MailboxesClient(_options);
-            TwoFA = new TwoFAClient(_options);
-            Antispam = new AntispamClient(_options);
-            Audit = new AuditClient(_options);
-            AuthSettings = new AuthSettingsClient(_options);
-            Departments = new DepartmentsClient(_options);
-            DNS = new DNSClient(_options);
-            Domains = new DomainsClient(_options);
-            Groups = new GroupsClient(_options);
-            Organization = new OrganizationsClient(_options);
-            PasswordManagement =new PasswordManagementClient(_options);
-            PostSettings = new PostSettingsClient(_options);
-            Routing = new RoutingClient(_options);
-            Users=new UsersClient(_options);
+        public Client(Api360Options options, ILogger<APIClient>? logger = default) : base(options, logger) {
+            Mailboxes = new MailboxesClient(_options, _logger);
+            TwoFA = new TwoFAClient(_options, _logger);
+            Antispam = new AntispamClient(_options, _logger);
+            Audit = new AuditClient(_options, _logger);
+            AuthSettings = new AuthSettingsClient(_options, _logger);
+            Departments = new DepartmentsClient(_options, _logger);
+            DNS = new DNSClient(_options, _logger);
+            Domains = new DomainsClient(_options, _logger);
+            Groups = new GroupsClient(_options, _logger);
+            Organization = new OrganizationsClient(_options, _logger);
+            PasswordManagement =new PasswordManagementClient(_options, _logger);
+            PostSettings = new PostSettingsClient(_options, _logger);
+            Routing = new RoutingClient(_options, _logger);
+            Users=new UsersClient(_options, _logger);
         }
 
         public IMailboxesClient Mailboxes { get; }

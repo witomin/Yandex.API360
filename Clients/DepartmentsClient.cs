@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Yandex.API360.Enums;
@@ -6,7 +7,7 @@ using Yandex.API360.Models;
 
 namespace Yandex.API360 {
     public class DepartmentsClient :APIClient, IDepartmentsClient {
-        public DepartmentsClient (Api360Options options) : base (options) { }   
+        public DepartmentsClient (Api360Options options, ILogger<APIClient>? logger = default) : base (options, logger) { }   
 
         public async Task<User> AddAliasAsync(ulong departmentId, string alias) {
             if (string.IsNullOrEmpty(alias)) {

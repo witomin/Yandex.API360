@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <Version>0.14.1</Version>
+    <Version>0.15.0</Version>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/witomin/Yandex.API360</PackageProjectUrl>
     <RepositoryUrl>https://github.com/witomin/Yandex.API360</RepositoryUrl>
@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <PackageReference Include="Macross.Json.Extensions" Version="3.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.1" />
     <PackageReference Include="System.Net.Http.Json" Version="8.0.1" />
   </ItemGroup>
 
