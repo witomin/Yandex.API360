@@ -69,39 +69,69 @@ namespace Yandex.API360 {
 
         internal async Task<TEntity> Get<TEntity>(string requestUri) {
             var response = await httpClient.GetAsync(requestUri);
-            _logger?.LogInformation("HTTP response: " + JsonSerializer.Serialize(response, logSerializeOptions));
             await CheckResponseAsync(response);
-            return await response.Content.ReadFromJsonAsync<TEntity>(); 
+            _logger?.LogInformation(JsonSerializer.Serialize(
+                new {
+                    response.RequestMessage.RequestUri,
+                    response.RequestMessage.Method,
+                    response.RequestMessage.Headers
+                }, logSerializeOptions));
+            return await response.Content.ReadFromJsonAsync<TEntity>();
         }
-        internal async Task<TEntity> Put<TEntity>(string requestUri, object value) {
-            var response = await httpClient.PutAsJsonAsync(requestUri, value);
-            _logger?.LogInformation("HTTP response: " + JsonSerializer.Serialize(response, logSerializeOptions));
-            _logger?.LogInformation("HTTP response data: " + JsonSerializer.Serialize(value, logSerializeOptions));
+        internal async Task<TEntity> Put<TEntity>(string requestUri, object body) {
+            var response = await httpClient.PutAsJsonAsync(requestUri, body);
+            _logger?.LogInformation(JsonSerializer.Serialize(
+                new {
+                    response.RequestMessage.RequestUri,
+                    response.RequestMessage.Method,
+                    response.RequestMessage.Headers,
+                    Body = body
+                }, logSerializeOptions));
             await CheckResponseAsync(response);
             return await response.Content.ReadFromJsonAsync<TEntity>();
         }
         internal async Task Delete(string requestUri) {
             var response = await httpClient.DeleteAsync(requestUri);
-            _logger?.LogInformation("HTTP response: " + JsonSerializer.Serialize(response, logSerializeOptions));
+            _logger?.LogInformation(JsonSerializer.Serialize(
+                new {
+                    response.RequestMessage.RequestUri,
+                    response.RequestMessage.Method,
+                    response.RequestMessage.Headers
+                }, logSerializeOptions));
             await CheckResponseAsync(response);
         }
         internal async Task<TEntity> Delete<TEntity>(string requestUri) {
             var response = await httpClient.DeleteAsync(requestUri);
-            _logger?.LogInformation("HTTP response: " + JsonSerializer.Serialize(response, logSerializeOptions));
+            _logger?.LogInformation(JsonSerializer.Serialize(
+                new {
+                    response.RequestMessage.RequestUri,
+                    response.RequestMessage.Method,
+                    response.RequestMessage.Headers
+                }, logSerializeOptions));
             await CheckResponseAsync(response);
             return await response.Content.ReadFromJsonAsync<TEntity>();
         }
-        internal async Task<TEntity> Post<TEntity>(string requestUri, object value) {
-            var response = await httpClient.PostAsJsonAsync(requestUri, value);
-            _logger?.LogInformation("HTTP response: " + JsonSerializer.Serialize(response, logSerializeOptions));
-            _logger?.LogInformation("HTTP response data: " + JsonSerializer.Serialize(value, logSerializeOptions));
+        internal async Task<TEntity> Post<TEntity>(string requestUri, object body) {
+            var response = await httpClient.PostAsJsonAsync(requestUri, body);
+            _logger?.LogInformation(JsonSerializer.Serialize(
+                new {
+                    response.RequestMessage.RequestUri,
+                    response.RequestMessage.Method,
+                    response.RequestMessage.Headers,
+                    Body = body
+                }, logSerializeOptions));
             await CheckResponseAsync(response);
             return await response.Content.ReadFromJsonAsync<TEntity>();
         }
-        internal async Task<TEntity> Patch<TEntity>(string requestUri, object value, JsonSerializerOptions? options = default) {
-            var response = await httpClient.PatchAsJsonAsync(requestUri, value, options);
-            _logger?.LogInformation("HTTP response: " + JsonSerializer.Serialize(response, logSerializeOptions));
-            _logger?.LogInformation("HTTP response data: " + JsonSerializer.Serialize(value, logSerializeOptions));
+        internal async Task<TEntity> Patch<TEntity>(string requestUri, object body, JsonSerializerOptions? options = default) {
+            var response = await httpClient.PatchAsJsonAsync(requestUri, body, options);
+            _logger?.LogInformation(JsonSerializer.Serialize(
+                new {
+                    response.RequestMessage.RequestUri,
+                    response.RequestMessage.Method,
+                    response.RequestMessage.Headers,
+                    Body = body
+                }, logSerializeOptions));
             await CheckResponseAsync(response);
             return await response.Content.ReadFromJsonAsync<TEntity>();
         }
