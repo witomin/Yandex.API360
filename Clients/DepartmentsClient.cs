@@ -44,13 +44,10 @@ namespace Yandex.API360 {
 
         public async Task<List<Department>> GetListAllAsync(long? parentId = default, DepartmentsOrderBy orderBy = DepartmentsOrderBy.id) {
             var result = new List<Department>();
-            var response = await GetListAsync(parentId: parentId, orderBy: orderBy);
-            //определяем сколько всего подразделений
-            var TotalDepartments = response.total;
             //пытаемся получить все подразделения в одном запросе
-            response = await GetListAsync(1, TotalDepartments, parentId, orderBy);
+            var response = await GetListAsync(1, _options.MaxResponseCount, parentId, orderBy);
             //Проверяем все ли подразделения получены
-            if (response.perPage == TotalDepartments) {
+            if (response.perPage == response.total) {
                 result = response.departments;
             }
             else {
@@ -59,11 +56,9 @@ namespace Yandex.API360 {
                 result.AddRange(response.departments);
                 //определяем кол-во страниц ответа
                 var pages = response.pages;
-                //определяем сколько максимально отдает API
-                var perPageMax = response.perPage;
                 // получаем остальные страницы начиная со 2-й
                 for (long i = 2; i <= pages; i++) {
-                    response = await GetListAsync(i, perPageMax, parentId, orderBy);
+                    response = await GetListAsync(i, _options.MaxResponseCount, parentId, orderBy);
                     result.AddRange(response.departments);
                 }
             }

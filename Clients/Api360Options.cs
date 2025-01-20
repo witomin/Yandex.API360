@@ -3,137 +3,155 @@
 namespace Yandex.API360 {
     public class Api360Options {
         /// <summary>
-        /// Базовый хост API
-        /// </summary>
-        const string BaseUrl = "https://api360.yandex.net";
-        /// <summary>
         /// ID организации
         /// </summary>
-        readonly string _organizationId;
+        private string _organizationId { get; }
         /// <summary>
         /// Токен авторизации
         /// </summary>
-        public string Token { get; }
-        readonly string API360Host;
-
-        public Api360Options(string organizationId, string token, string? baseUrl = default) {
+        internal string Token { get; }
+        /// <summary>
+        /// Базовый URL для обращения к API
+        /// </summary>
+        private string BaseUrl { get; } = "https://api360.yandex.net";
+        /// <summary>
+        /// Опции клиента API
+        /// </summary>
+        /// <param name="organizationId">Идентификатор организации</param>
+        /// <param name="token">Токен для доступа к API</param>
+        /// <param name="baseUrl">Базовый URL для обращения к API</param>
+        /// <param name="maxResponseCount">Максимальное количество сущностей, которое может запрашиватья у API за 1 раз</param>
+        /// <exception cref="ArgumentNullException"></exception>
+        public Api360Options(string organizationId, string token, string? baseUrl = default, int? maxResponseCount = default) {
             _organizationId = string.IsNullOrEmpty(organizationId) ? throw new ArgumentNullException(nameof(organizationId)) : organizationId;
             Token = string.IsNullOrEmpty(token) ? throw new ArgumentNullException(nameof(token)) : token;
-            API360Host = string.IsNullOrEmpty(baseUrl) ? BaseUrl : baseUrl;
+            if (string.IsNullOrEmpty(baseUrl)) {
+                BaseUrl = baseUrl;
+            }
+            if (maxResponseCount.HasValue) {
+                MaxResponseCount = (int)maxResponseCount;
+            }
         }
-        
+
         /// <summary>
         /// URL управления антиспамом
         /// </summary>
-        public string URLAntispam {
+        internal string URLAntispam {
             get {
-                return $"{API360Host}/admin/v1/org/{_organizationId}/mail/antispam/allowlist/ips";
+                return $"{BaseUrl}/admin/v1/org/{_organizationId}/mail/antispam/allowlist/ips";
             }
         }
         /// <summary>
         /// URL управления сотрудниками
         /// </summary>
-        public string URLUsers {
+        internal string URLUsers {
             get {
-                return $"{API360Host}/directory/v1/org/{_organizationId}/users";
+                return $"{BaseUrl}/directory/v1/org/{_organizationId}/users";
             }
         }
         /// <summary>
         /// URL управления сотрудниками
         /// </summary>
-        public string URLPostSettings {
+        internal string URLPostSettings {
             get {
-                return $"{API360Host}/admin/v1/org/{_organizationId}/mail";
+                return $"{BaseUrl}/admin/v1/org/{_organizationId}/mail";
             }
         }
         /// <summary>
         /// URL управления подразделениями
         /// </summary>
-        public string URLDepartments {
+        internal string URLDepartments {
             get {
-                return $"{API360Host}/directory/v1/org/{_organizationId}/departments";
+                return $"{BaseUrl}/directory/v1/org/{_organizationId}/departments";
             }
         }
         /// <summary>
         /// URL управления группами
         /// </summary>
-        public string URLGroups {
+        internal string URLGroups {
             get {
-                return $"{API360Host}/directory/v1/org/{_organizationId}/groups";
+                return $"{BaseUrl}/directory/v1/org/{_organizationId}/groups";
             }
         }
         /// <summary>
         /// URL 2FA
         /// </summary>
-        public string URL2fa {
+        internal string URL2fa {
             get {
-                return $"{API360Host}/security/v1/org/{_organizationId}/domain_2fa";
+                return $"{BaseUrl}/security/v1/org/{_organizationId}/domain_2fa";
             }
         }
         /// <summary>
         /// URL управления организацией
         /// </summary>
-        public string URLOrg {
+        internal string URLOrg {
             get {
-                return $"{API360Host}/directory/v1/org";
+                return $"{BaseUrl}/directory/v1/org";
             }
         }
         /// <summary>
         /// Максимальное количество организаций на странице ответ от API
         /// </summary>
-        public int MaxCountOrgInResponse {
+        internal int MaxCountOrgInResponse {
             get {
                 return 100;
             }
         }
 
         /// <summary>
+        /// Максимальное количество сущностей в ответе API за 1 раз.
+        /// Как выяснилось 17.03.2023, API отдает максимум 1000 пользователей за 1 раз.
+        /// В документации такой информации нет, выяснено опытным путем.
+        /// </summary>
+        internal int MaxResponseCount { get; } = 1000;
+
+        /// <summary>
         /// URL управления обработкой писем
         /// </summary>
-        public string URLrouting {
+        internal string URLrouting {
             get {
-                return $"{API360Host}/admin/v1/org/{_organizationId}/mail/routing/rules";
+                return $"{BaseUrl}/admin/v1/org/{_organizationId}/mail/routing/rules";
             }
         }
         /// <summary>
         /// URL управления доменами
         /// </summary>
-        public string URLdomains {
+        internal string URLdomains {
             get {
-                return $"{API360Host}/directory/v1/org/{_organizationId}/domains";
+                return $"{BaseUrl}/directory/v1/org/{_organizationId}/domains";
             }
         }
         /// <summary>
         /// URL управления параметрами паролей
         /// </summary>
-        public string URLpasswords {
+        internal string URLpasswords {
             get {
-                return $"{API360Host}/security/v1/org/{_organizationId}/domain_passwords";
+                return $"{BaseUrl}/security/v1/org/{_organizationId}/domain_passwords";
             }
         }
         /// <summary>
         /// URL настроек безопасности
         /// </summary>
-        public string URLsecurity {
+        internal string URLsecurity {
             get {
-                return $"{API360Host}/security/v1/org/{_organizationId}";
+                return $"{BaseUrl}/security/v1/org/{_organizationId}";
             }
         }
         [Obsolete("Не поддерживается API Яндекс360 с 1 ноября 2024 г."/*, true*/)]
         /// <summary>
         /// URL управления доступом к почтовым ящикам
         /// </summary>
-        public string URLMailboxDelegation {
+        internal string URLMailboxDelegation {
             get {
-                return $"{API360Host}/admin/v1/org/{_organizationId}/mail/delegated";
+                return $"{BaseUrl}/admin/v1/org/{_organizationId}/mail/delegated";
             }
         }
         /// <summary>
         /// URL управления общими и делегированными почтовыми ящиками
         /// </summary>
-        public string URLMailboxManagement {
+        internal string URLMailboxManagement {
             get {
-                return $"{API360Host}/admin/v1/org/{_organizationId}/mailboxes";
+                return $"{BaseUrl}/admin/v1/org/{_organizationId}/mailboxes";
             }
         }
     }

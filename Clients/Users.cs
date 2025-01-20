@@ -18,12 +18,9 @@ namespace Yandex.API360 {
 
         public async Task<List<User>> GetListAllAsync() {
             var result = new List<User>();
-            //определяем общее число пользователей в организации
-            var totalUsers = (await Get<UsersList>($"{_options.URLUsers}")).total;
-            var apiResponse = await Get<UsersList>($"{_options.URLUsers}?page=1&perPage={totalUsers}");
+            //пытаемся получить всех пользователей в одном запросе
+            var apiResponse = await Get<UsersList>($"{_options.URLUsers}?page=1&perPage={_options.MaxResponseCount}");
             //Проверяем весь ли список получен
-            //как выяснилось 17.03.2023. API отдает максимум 1000 пользователей за 1 раз
-            //хотя в документации об этом не сказано
             if (apiResponse.perPage == apiResponse.total) {
                 result = apiResponse.users;
             }
@@ -33,11 +30,9 @@ namespace Yandex.API360 {
                 result.AddRange(apiResponse.users);
                 //определяем кол-во страниц ответа
                 var pages = apiResponse.pages;
-                //определяем сколько максимально отдает API
-                var perPageMax = apiResponse.perPage;
                 // получаем остальные страницы начиная со 2-й
                 for (long i = 2; i <= pages; i++) {
-                    var usersList = await GetListAsync(i, perPageMax);
+                    var usersList = await GetListAsync(i, _options.MaxResponseCount);
                     result.AddRange(usersList.users);
                 }
             }
