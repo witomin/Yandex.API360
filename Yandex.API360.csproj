@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <Version>0.15.1</Version>
+    <Version>0.15.2</Version>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/witomin/Yandex.API360</PackageProjectUrl>
     <RepositoryUrl>https://github.com/witomin/Yandex.API360</RepositoryUrl>

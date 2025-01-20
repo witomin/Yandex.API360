@@ -25,7 +25,7 @@ namespace Yandex.API360 {
         public Api360Options(string organizationId, string token, string? baseUrl = default, int? maxResponseCount = default) {
             _organizationId = string.IsNullOrEmpty(organizationId) ? throw new ArgumentNullException(nameof(organizationId)) : organizationId;
             Token = string.IsNullOrEmpty(token) ? throw new ArgumentNullException(nameof(token)) : token;
-            if (string.IsNullOrEmpty(baseUrl)) {
+            if (!string.IsNullOrEmpty(baseUrl)) {
                 BaseUrl = baseUrl;
             }
             if (maxResponseCount.HasValue) {
