@@ -19,22 +19,15 @@ namespace Yandex.API360 {
         public async Task<List<User>> GetListAllAsync() {
             var result = new List<User>();
             //пытаемся получить всех пользователей в одном запросе
-            var apiResponse = await Get<UsersList>($"{_options.URLUsers}?page=1&perPage={_options.MaxResponseCount}");
-            //Проверяем весь ли список получен
-            if (apiResponse.perPage == apiResponse.total) {
-                result = apiResponse.users;
-            }
-            else {
-                //если API отдало не все
-                //сохраняем, то что уже получили
-                result.AddRange(apiResponse.users);
-                //определяем кол-во страниц ответа
-                var pages = apiResponse.pages;
-                // получаем остальные страницы начиная со 2-й
-                for (long i = 2; i <= pages; i++) {
-                    var usersList = await GetListAsync(i, _options.MaxResponseCount);
-                    result.AddRange(usersList.users);
-                }
+            var apiResponse = await GetListAsync(1, _options.MaxResponseCount);
+            //сохраняем, то что уже получили
+            result.AddRange(apiResponse.users);
+            //определяем кол-во страниц ответа
+            var pages = apiResponse.pages;
+            // получаем остальные страницы начиная со 2-й
+            for (long i = 2; i <= pages; i++) {
+                var usersList = await GetListAsync(i, _options.MaxResponseCount);
+                result.AddRange(usersList.users);
             }
             return result;
         }
