@@ -13,10 +13,15 @@ namespace Yandex.API360 {
         }
 
         public async Task<List<Group>> GetListAllAsync() {
-            var apiResponse = await Get<GroupsList>($"{_options.URLGroups}");
-            var totalGroups = apiResponse.total;
-            apiResponse = await Get<GroupsList>($"{_options.URLGroups}?page={1}&perPage={totalGroups}");
-            return apiResponse.groups;
+            var result = new List<Group>();
+            var response = await GetListAsync(1, _options.MaxResponseCount);
+            result.AddRange(response.groups);
+            var pages = response.pages;
+            for (long i = 2; i <= pages; i++) {
+                response = await GetListAsync(i, _options.MaxResponseCount);
+                result.AddRange(response.groups);
+            }
+            return result;
         }
 
         public async Task<Group> AddAsync(BaseGroup group) {
