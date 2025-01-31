@@ -39,12 +39,32 @@ namespace Yandex.API360 {
         /// <returns></returns>
         public Task<bool> AddMemberAsync(long groupId, Member member);
         /// <summary>
+        /// Добавить участников в группу
+        /// </summary>
+        /// <param name="groupId">Идентификатор группы</param>
+        /// <param name="departmentIds">Идентификаторы подразделений</param>
+        /// <param name="userIds">Идентификаторы сотрудников</param>
+        /// <param name="groupIds">Идентификаторы групп</param>
+        /// <param name="externalContactIds">Идентификаторы внешних контактов</param>
+        /// <returns></returns>
+        public Task<bool> AddMembersAsync(long groupId, List<ulong>? departmentIds=default, List<ulong>? userIds=default, List<ulong>? groupIds = default, List<ulong>? externalContactIds = default);
+        /// <summary>
         /// Удалить участника группы
         /// </summary>
         /// <param name="groupId">Идентификатор группы</param>
         /// <param name="member">Участник группы</param>
         /// <returns></returns>
         public Task<bool> DeleteMemberAsync(ulong groupId, Member member);
+        /// <summary>
+        /// Удалить участников из группы
+        /// </summary>
+        /// <param name="groupId">Идентификатор группы</param>
+        /// <param name="departmentIds">Идентификаторы подразделений</param>
+        /// <param name="userIds">Идентификаторы сотрудников</param>
+        /// <param name="groupIds">Идентификаторы групп</param>
+        /// <param name="externalContactIds">Идентификаторы внешних контактов</param>
+        /// <returns></returns>
+        public Task<bool> DeleteMembersAsync(long groupId, List<ulong>? departmentIds = default, List<ulong>? userIds = default, List<ulong>? groupIds = default, List<ulong>? externalContactIds = default);
         /// <summary>
         /// Удалить всех участнков группы
         /// </summary>
@@ -63,6 +83,12 @@ namespace Yandex.API360 {
         /// <param name="groupId">Идентификатор группы</param>
         /// <returns></returns>
         public Task<MembersList> GetMembersAsync(ulong groupId);
+        /// <summary>
+        /// Получить список участников группы
+        /// </summary>
+        /// <param name="groupId">Идентификатор группы</param>
+        /// <returns></returns>
+        public Task<MembersList2> GetMembers2Async(ulong groupId);
         /// <summary>
         /// Получить группу
         /// </summary>

@@ -5,6 +5,8 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text.Json.Serialization;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Yandex.API360.Models;
 
@@ -48,7 +50,7 @@ namespace Yandex.API360 {
             if (user is null) {
                 throw new ArgumentNullException(nameof(user));
             }
-            return await Patch<User>($"{_options.URLUsers}/{user.id}", user, jsonSerializerOptions);
+            return await Patch<User>($"{_options.URLUsers}/{user.id}", user, new JsonSerializerOptions { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull });
         }
 
         public async Task<User> EditAsync(User user, string password = default) {
@@ -71,7 +73,7 @@ namespace Yandex.API360 {
                 timezone = user.timezone,
                 password = password
             };
-            return await Patch<User>($"{_options.URLUsers}/{user.id}", editUser, jsonSerializerOptions);
+            return await Patch<User>($"{_options.URLUsers}/{user.id}", editUser, new JsonSerializerOptions { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull });
         }
 
         public async Task<User> AddAliasAsync(ulong userId, string alias) {

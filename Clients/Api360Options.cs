@@ -154,5 +154,13 @@ namespace Yandex.API360 {
                 return $"{BaseUrl}/admin/v1/org/{_organizationId}/mailboxes";
             }
         }
+        /// <summary>
+        /// URL управления группами 2
+        /// </summary>
+        internal string URLGroups2 {
+            get {
+                return $"{BaseUrl}/directory/v2/org/{_organizationId}/groups";
+            }
+        }
     }
 }

@@ -1,24 +1,19 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Reflection;
+using System.Text.Encodings.Web;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Yandex.API360.Exceptions;
-using Microsoft.Extensions.Logging;
-using System.Text.Encodings.Web;
 
 namespace Yandex.API360 {
     public abstract class APIClient {
         internal Api360Options _options;
         internal HttpClient httpClient;
         internal ILogger<APIClient>? _logger;
-
-        internal JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions {
-            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
-        };
 
         private JsonSerializerOptions logSerializeOptions = new JsonSerializerOptions {
             Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
@@ -78,8 +73,8 @@ namespace Yandex.API360 {
                 }, logSerializeOptions));
             return await response.Content.ReadFromJsonAsync<TEntity>();
         }
-        internal async Task<TEntity> Put<TEntity>(string requestUri, object body) {
-            var response = await httpClient.PutAsJsonAsync(requestUri, body);
+        internal async Task<TEntity> Put<TEntity>(string requestUri, object body, JsonSerializerOptions? options = default) {
+            var response = await httpClient.PutAsJsonAsync(requestUri, body, options);
             _logger?.LogInformation(JsonSerializer.Serialize(
                 new {
                     response.RequestMessage.RequestUri,
@@ -111,8 +106,8 @@ namespace Yandex.API360 {
             await CheckResponseAsync(response);
             return await response.Content.ReadFromJsonAsync<TEntity>();
         }
-        internal async Task<TEntity> Post<TEntity>(string requestUri, object body) {
-            var response = await httpClient.PostAsJsonAsync(requestUri, body);
+        internal async Task<TEntity> Post<TEntity>(string requestUri, object body, JsonSerializerOptions? options = default) {
+            var response = await httpClient.PostAsJsonAsync(requestUri, body, options);
             _logger?.LogInformation(JsonSerializer.Serialize(
                 new {
                     response.RequestMessage.RequestUri,

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Yandex.API360.Models;
 
@@ -77,6 +78,24 @@ namespace Yandex.API360 {
 
         public async Task<Group> EditMembersAsync(ulong groupId, List<Member> members) {
             return await Put<Group>($"{_options.URLGroups}/{groupId}/members", new { members });
+        }
+
+        public async Task<MembersList2> GetMembers2Async(ulong groupId) {
+            return await Get<MembersList2>($"{_options.URLGroups2}/{groupId}/members");
+        }
+
+        public async Task<bool> AddMembersAsync(long groupId, List<ulong> departmentIds = null, List<ulong> userIds = null, List<ulong> groupIds = null, List<ulong> externalContactIds = null) {
+            var resuls = await Patch<object>($"{_options.URLGroups2}/{groupId}/members/add",
+                new { departmentIds, externalContactIds, groupIds },
+                new System.Text.Json.JsonSerializerOptions { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull });
+            return resuls is { };
+        }
+
+        public async Task<bool> DeleteMembersAsync(long groupId, List<ulong> departmentIds = null, List<ulong> userIds = null, List<ulong> groupIds = null, List<ulong> externalContactIds = null) {
+            var resuls = await Patch<object>($"{_options.URLGroups2}/{groupId}/members/delete",
+                new { departmentIds, externalContactIds, groupIds },
+                new System.Text.Json.JsonSerializerOptions { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull });
+            return resuls is { };
         }
     }
 }

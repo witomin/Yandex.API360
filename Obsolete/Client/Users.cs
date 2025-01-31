@@ -5,6 +5,8 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using System.Text.Json.Serialization;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Yandex.API360.Models;
 
@@ -94,7 +96,7 @@ namespace Yandex.API360 {
             if (user is null) {
                 throw new ArgumentNullException(nameof(user));
             }
-            var response = await httpClient.PatchAsJsonAsync($"{_options.URLUsers}/{user.id}", user, jsonSerializerOptions);
+            var response = await httpClient.PatchAsJsonAsync($"{_options.URLUsers}/{user.id}", user, new JsonSerializerOptions { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull });
             await CheckResponseAsync(response);
             return await response.Content.ReadFromJsonAsync<User>();
         }
@@ -125,7 +127,7 @@ namespace Yandex.API360 {
                 timezone = user.timezone,
                 password = password
             };
-            var response = await httpClient.PatchAsJsonAsync($"{_options.URLUsers}/{user.id}", editUser, jsonSerializerOptions);
+            var response = await httpClient.PatchAsJsonAsync($"{_options.URLUsers}/{user.id}", editUser, new JsonSerializerOptions { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull });
             await CheckResponseAsync(response);
             return await response.Content.ReadFromJsonAsync<User>();
         }
