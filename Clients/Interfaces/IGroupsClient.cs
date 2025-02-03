@@ -47,7 +47,14 @@ namespace Yandex.API360 {
         /// <param name="groupIds">Идентификаторы групп</param>
         /// <param name="externalContactIds">Идентификаторы внешних контактов</param>
         /// <returns></returns>
-        public Task<bool> AddMembersAsync(long groupId, List<ulong>? departmentIds=default, List<ulong>? userIds=default, List<ulong>? groupIds = default, List<ulong>? externalContactIds = default);
+        public Task<bool> AddMembersAsync(ulong groupId, List<ulong>? departmentIds=default, List<ulong>? userIds=default, List<ulong>? groupIds = default, List<ulong>? externalContactIds = default);
+        /// <summary>
+        /// Добавить участников в группу
+        /// </summary>
+        /// <param name="groupId">Идентификатор группы</param>
+        /// <param name="members">Участники группы</param>
+        /// <returns></returns>
+        public Task<bool> AddMembersAsync(ulong groupId, List<Member> members);
         /// <summary>
         /// Удалить участника группы
         /// </summary>

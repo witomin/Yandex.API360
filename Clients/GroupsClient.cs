@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Yandex.API360.Models;
@@ -84,18 +85,30 @@ namespace Yandex.API360 {
             return await Get<MembersList2>($"{_options.URLGroups2}/{groupId}/members");
         }
 
-        public async Task<bool> AddMembersAsync(long groupId, List<ulong> departmentIds = null, List<ulong> userIds = null, List<ulong> groupIds = null, List<ulong> externalContactIds = null) {
+        public async Task<bool> AddMembersAsync(ulong groupId, List<ulong> departmentIds = null, List<ulong> userIds = null, List<ulong> groupIds = null, List<ulong> externalContactIds = null) {
             var resuls = await Patch<object>($"{_options.URLGroups2}/{groupId}/members/add",
-                new { departmentIds, externalContactIds, groupIds },
+                new { departmentIds, externalContactIds, groupIds, userIds },
                 new System.Text.Json.JsonSerializerOptions { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull });
             return resuls is { };
         }
 
         public async Task<bool> DeleteMembersAsync(long groupId, List<ulong> departmentIds = null, List<ulong> userIds = null, List<ulong> groupIds = null, List<ulong> externalContactIds = null) {
             var resuls = await Patch<object>($"{_options.URLGroups2}/{groupId}/members/delete",
-                new { departmentIds, externalContactIds, groupIds },
+                new { departmentIds, externalContactIds, groupIds, userIds },
                 new System.Text.Json.JsonSerializerOptions { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull });
             return resuls is { };
+        }
+
+        public Task<bool> AddMembersAsync(ulong groupId, List<Member> members) {
+            var userIds = members.Where(x => x.type.Equals(Enums.MemberTypes.user))?.Select(u => u.id)?.ToList();
+            var departmentIds = members.Where(x => x.type.Equals(Enums.MemberTypes.department))?.Select(d => d.id)?.ToList();
+            var groupIds = members.Where(x => x.type.Equals(Enums.MemberTypes.group))?.Select(g => g.id)?.ToList();
+
+            if (userIds.Count == 0) { userIds = null; }
+            if (departmentIds.Count == 0) { departmentIds = null; }
+            if (groupIds.Count == 0) { groupIds = null; }
+
+            return AddMembersAsync(groupId, userIds: userIds, departmentIds: departmentIds, groupIds: groupIds);
         }
     }
 }
