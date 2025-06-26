@@ -91,6 +91,13 @@ namespace Yandex.API360.Enums {
         /// </summary>
         [EnumMember(Value = "fs-rm")]
         [Description("Удаление без переноса в корзину")]
-        FsRm
-    }
+        FsRm,
+        //TODO: Исправить Description типа события
+        /// <summary>
+        /// Неизвестный тип события, нет описания в документации
+        /// </summary>
+        [EnumMember(Value = "fs-set-public-settings")]
+        [Description("Неизвестный тип (нет описания в док.)")]
+        FsSetPublicSettings
+}
 }

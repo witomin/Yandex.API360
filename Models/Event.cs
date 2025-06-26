@@ -70,5 +70,9 @@ namespace Yandex.API360.Models {
         /// Идентификатор пользователя
         /// </summary>
         public ulong userUid { get; set; }
+        /// <summary>
+        /// IP клиента
+        /// </summary>
+        public string clientIp { get; set; }
     }
 }

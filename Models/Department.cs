@@ -15,7 +15,6 @@ namespace Yandex.API360.Models {
         /// </summary>
         public DateTime createdAt { get; set; }
         /// <summary>
-        /// <summary>
         /// Адрес почтовой рассылки подразделения
         /// </summary>
         public string email { get; set; }
