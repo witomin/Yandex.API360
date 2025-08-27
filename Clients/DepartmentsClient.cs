@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Yandex.API360.Enums;
 using Yandex.API360.Models;
@@ -9,43 +10,43 @@ namespace Yandex.API360 {
     public class DepartmentsClient : APIClient, IDepartmentsClient {
         public DepartmentsClient(Api360Options options, ILogger<APIClient>? logger = default) : base(options, logger) { }
 
-        public async Task<User> AddAliasAsync(ulong departmentId, string alias) {
+        public async Task<User> AddAliasAsync(ulong departmentId, string alias, CancellationToken cancellationToken = default) {
             if (string.IsNullOrEmpty(alias)) {
                 throw new ArgumentNullException(string.IsNullOrEmpty(alias) ? nameof(alias) : null);
             }
-            return await Post<User>($"{_options.URLDepartments}/{departmentId}/aliases", new { alias });
+            return await Post<User>($"{_options.URLDepartments}/{departmentId}/aliases", new { alias }, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task<bool> DeleteAliasAsync(ulong departmentId, string alias) {
+        public async Task<bool> DeleteAliasAsync(ulong departmentId, string alias, CancellationToken cancellationToken = default) {
             if (string.IsNullOrEmpty(alias)) {
                 throw new ArgumentNullException(string.IsNullOrEmpty(alias) ? nameof(alias) : null);
             }
-            var result = await Delete<RemovedAlias>($"{_options.URLDepartments}/{departmentId}/aliases/{alias}");
+            var result = await Delete<RemovedAlias>($"{_options.URLDepartments}/{departmentId}/aliases/{alias}", cancellationToken).ConfigureAwait(false);
             return result.removed;
         }
 
-        public async Task<Department> AddAsync(BaseDepartment department) {
+        public async Task<Department> AddAsync(BaseDepartment department, CancellationToken cancellationToken = default) {
             if (department is null) {
                 throw new ArgumentNullException(nameof(department));
             }
-            return await Post<Department>($"{_options.URLDepartments}", department);
+            return await Post<Department>($"{_options.URLDepartments}", department, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task<Department> GetByIdAsync(ulong departmentId) {
-            return await Get<Department>($"{_options.URLDepartments}/{departmentId}");
+        public async Task<Department> GetByIdAsync(ulong departmentId, CancellationToken cancellationToken = default) {
+            return await Get<Department>($"{_options.URLDepartments}/{departmentId}").ConfigureAwait(false);
         }
 
-        public async Task<DepartmentsList> GetListAsync(long page = 1, long perPage = 10, long? parentId = default, DepartmentsOrderBy orderBy = DepartmentsOrderBy.id) {
+        public async Task<DepartmentsList> GetListAsync(long page = 1, long perPage = 10, long? parentId = default, DepartmentsOrderBy orderBy = DepartmentsOrderBy.id, CancellationToken cancellationToken = default) {
             string url = $"{_options.URLDepartments}?page={page}&perPage={perPage}" +
                 $"{(parentId != null ? $"&parentId={parentId}" : string.Empty)}" +
                 $"&orderBy={orderBy}";
-            return await Get<DepartmentsList>(url);
+            return await Get<DepartmentsList>(url, cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task<List<Department>> GetListAllAsync(long? parentId = default, DepartmentsOrderBy orderBy = DepartmentsOrderBy.id) {
+        public async Task<List<Department>> GetListAllAsync(long? parentId = default, DepartmentsOrderBy orderBy = DepartmentsOrderBy.id, CancellationToken cancellationToken = default) {
             var result = new List<Department>();
             //пытаемся получить все подразделения в одном запросе
-            var response = await GetListAsync(1, _options.MaxResponseCount, parentId, orderBy);
+            var response = await GetListAsync(1, _options.MaxResponseCount, parentId, orderBy, cancellationToken).ConfigureAwait(false);
 
             //сохраняем, то что уже получили
             result.AddRange(response.departments);
@@ -53,22 +54,22 @@ namespace Yandex.API360 {
             var pages = response.pages;
             // получаем остальные страницы начиная со 2-й
             for (long i = 2; i <= pages; i++) {
-                response = await GetListAsync(i, _options.MaxResponseCount, parentId, orderBy);
+                response = await GetListAsync(i, _options.MaxResponseCount, parentId, orderBy, cancellationToken).ConfigureAwait(false);
                 result.AddRange(response.departments);
             }
 
             return result;
         }
 
-        public async Task<Department> EditAsync(Department department) {
+        public async Task<Department> EditAsync(Department department, CancellationToken cancellationToken = default) {
             if (department is null) {
                 throw new ArgumentNullException(nameof(department));
             }
-            return await Patch<Department>($"{_options.URLDepartments}/{department.id}", department);
+            return await Patch<Department>($"{_options.URLDepartments}/{department.id}", department, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task<bool> DeleteAsync(ulong departmentId) {
-            var result = await Delete<RemovedElement>($"{_options.URLDepartments}/{departmentId}");
+        public async Task<bool> DeleteAsync(ulong departmentId, CancellationToken cancellationToken = default) {
+            var result = await Delete<RemovedElement>($"{_options.URLDepartments}/{departmentId}", cancellationToken).ConfigureAwait(false);
             return result.removed;
         }
     }

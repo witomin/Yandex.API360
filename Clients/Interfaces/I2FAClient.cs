@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using Yandex.API360.Models;
 
 namespace Yandex.API360 {
@@ -10,17 +11,17 @@ namespace Yandex.API360 {
         /// Получить статус обязательной двухфакторной аутентификации (2FA) для пользователей домена.
         /// </summary>
         /// <returns></returns>
-        public Task<DomainStatus2FA> GetStatusAsync();
+        public Task<DomainStatus2FA> GetStatusAsync(CancellationToken cancellationToken = default);
         /// <summary>
         /// Включить обязательную двухфакторную аутентификацию (2FA) для пользователей домена.
         /// </summary>
         /// <param name="status2FA"></param>
         /// <returns></returns>
-        public Task<DomainStatus2FA> EnableAsync(EnableDomainStatus2FA status2FA);
+        public Task<DomainStatus2FA> EnableAsync(EnableDomainStatus2FA status2FA, CancellationToken cancellationToken = default);
         /// <summary>
         /// Выключить обязательную двухфакторную аутентификацию (2FA) для пользователей домена
         /// </summary>
         /// <returns></returns>
-        public Task<DomainStatus2FA> DisableAsync();
+        public Task<DomainStatus2FA> DisableAsync(CancellationToken cancellationToken = default);
     }
 }

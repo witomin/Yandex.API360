@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 
 namespace Yandex.API360 {
     /// <summary>
@@ -9,18 +10,18 @@ namespace Yandex.API360 {
         /// Получить время жизни cookie сессии в секуднах
         /// </summary>
         /// <returns></returns>
-        public Task<ulong> GetAuthTtlAsync();
+        public Task<ulong> GetAuthTtlAsync(CancellationToken cancellationToken = default);
         /// <summary>
         /// Установить время жизни cookie сессии
         /// </summary>
         /// <param name="authTTL">Время (в секундах), по истечении которого cookie сессии пользователей завершаются</param>
         /// <returns></returns>
-        public Task<ulong> SetAuthTtlAsync(ulong authTTL);
+        public Task<ulong> SetAuthTtlAsync(ulong authTTL, CancellationToken cancellationToken = default);
         /// <summary>
         /// Выйти из аккаунта пользователя на всех устройствах
         /// </summary>
         /// <param name="userId">Идентификатор сотрудника</param>
         /// <returns></returns>
-        public Task<ulong> LogoutUserAsync(ulong userId);
+        public Task<ulong> LogoutUserAsync(ulong userId, CancellationToken cancellationToken = default);
     }
 }

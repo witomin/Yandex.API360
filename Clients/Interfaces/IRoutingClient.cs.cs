@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Yandex.API360.Models;
 
@@ -11,12 +12,12 @@ namespace Yandex.API360 {
         /// Получить правила обработки писем
         /// </summary>
         /// <returns></returns>
-        public Task<List<Rule>> GetRulesAsync();
+        public Task<List<Rule>> GetRulesAsync(CancellationToken cancellationToken = default);
         /// <summary>
         /// Задать правила обработки писем
         /// </summary>
         /// <param name="rulelist">Список правил</param>
         /// <returns></returns>
-        public  Task<List<Rule>> SetRulesAsync(RulesList rulelist);
+        public  Task<List<Rule>> SetRulesAsync(RulesList rulelist, CancellationToken cancellationToken = default);
         }
 }

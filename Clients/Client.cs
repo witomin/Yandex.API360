@@ -14,10 +14,10 @@ namespace Yandex.API360 {
             Domains = new DomainsClient(_options, _logger);
             Groups = new GroupsClient(_options, _logger);
             Organization = new OrganizationsClient(_options, _logger);
-            PasswordManagement =new PasswordManagementClient(_options, _logger);
+            PasswordManagement = new PasswordManagementClient(_options, _logger);
             PostSettings = new PostSettingsClient(_options, _logger);
             Routing = new RoutingClient(_options, _logger);
-            Users=new UsersClient(_options, _logger);
+            Users = new UsersClient(_options, _logger);
         }
 
         public IMailboxesClient Mailboxes { get; }
@@ -32,7 +32,7 @@ namespace Yandex.API360 {
         public IOrganizationClient Organization { get; }
         public IPasswordManagementClient PasswordManagement { get; }
         public IPostSettingsClient PostSettings { get; }
-        public  IRoutingClient Routing { get; }
+        public IRoutingClient Routing { get; }
         public IUsersClient Users { get; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Yandex.API360.Models;
 
@@ -13,11 +14,11 @@ namespace Yandex.API360 {
         /// <param name="pageSize">Количество организаций на странице. Максимальное значение — 100. По умолчанию — 10.</param>
         /// <param name="pageToken">Токен постраничной навигации.</param>
         /// <returns></returns>
-        public Task<OrganizationList> GetListAsync(int? pageSize = 10, string? pageToken = null);
+        public Task<OrganizationList> GetListAsync(int? pageSize = 10, string? pageToken = null, CancellationToken cancellationToken = default);
         /// <summary>
         /// Получить полный список организаций
         /// </summary>
         /// <returns></returns>
-        public Task<List<Organization>> GetListAllAsync();
+        public Task<List<Organization>> GetListAllAsync(CancellationToken cancellationToken = default);
     }
 }

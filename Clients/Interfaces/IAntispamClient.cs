@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Yandex.API360{
@@ -10,18 +11,18 @@ namespace Yandex.API360{
         /// Получить список разрешенных IP-адресов и CIDR-подсетей.
         /// </summary>
         /// <returns></returns>
-        public Task<List<string>> GetAllowListAsync() ;
+        public Task<List<string>> GetAllowListAsync(CancellationToken cancellationToken = default) ;
 
         /// <summary>
         /// Создать/изменить список разрешенных IP-адресов и CIDR-подсетей.
         /// </summary>
         /// <param name="allowlist">Список разрешенных IP-адресов и CIDR-подсетей.</param>
         /// <returns></returns>
-        public Task<object> SetAllowListAsync(List<string> allowlist);
+        public Task<object> SetAllowListAsync(List<string> allowlist, CancellationToken cancellationToken = default);
         /// <summary>
         /// Удалить список разрешенных IP-адресов и CIDR-подсетей.
         /// </summary>
         /// <returns></returns>
-        public Task<object> DeleteAllowListAsync();
+        public Task<object> DeleteAllowListAsync(CancellationToken cancellationToken = default);
     }
 }
