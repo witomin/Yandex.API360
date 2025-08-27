@@ -22,7 +22,7 @@ namespace Yandex.API360 {
             if (rights is null || rights.Count==0) {
                 throw new ArgumentNullException(nameof(rights));
             }
-            var response = await httpClient.PostAsJsonAsync($"{_options.URLMailboxDelegation}?resourceId={mailboxOwnerId}&actorId={actorId}", new { rights = rights });
+            var response = await _httpClient.PostAsJsonAsync($"{_options.URLMailboxDelegation}?resourceId={mailboxOwnerId}&actorId={actorId}", new { rights = rights });
             await CheckResponseAsync(response);
             var result = await response.Content.ReadFromJsonAsync<TaskIdResponse>();
             return result.TaskId;
@@ -34,7 +34,7 @@ namespace Yandex.API360 {
         /// <param name="mailboxOwnerId">Идентификатор владельца почтового ящика, права доступа к которому необходимо проверить</param>
         /// <returns>Cписок сотрудников, у которых есть права доступа к почтовому ящику</returns>
         public async Task<List<Actor>> GetMailboxActorsAsync(ulong mailboxOwnerId) {
-            var response = await httpClient.GetAsync($"{_options.URLMailboxDelegation}/{mailboxOwnerId}/actors");
+            var response = await _httpClient.GetAsync($"{_options.URLMailboxDelegation}/{mailboxOwnerId}/actors");
             await CheckResponseAsync(response);
             var result = await response.Content.ReadFromJsonAsync<ActorList>();
             return result.Actors;
@@ -46,7 +46,7 @@ namespace Yandex.API360 {
         /// <param name="actorId">Идентификатор сотрудника, для которого запрашивается список доступных ящиков</param>
         /// <returns>Список почтовых ящиков, к которым у сотрудника есть права доступа</returns>
         public async Task<List<DelegatedMailbox>> GetDelegatedMailboxesAsync(ulong actorId) {
-            var response = await httpClient.GetAsync($"{_options.URLMailboxDelegation}/{actorId}/resources");
+            var response = await _httpClient.GetAsync($"{_options.URLMailboxDelegation}/{actorId}/resources");
             await CheckResponseAsync(response);
             var result = await response.Content.ReadFromJsonAsync<DelegatedMailboxList>();
             return result.DelegatedMailboxes;
@@ -62,7 +62,7 @@ namespace Yandex.API360 {
             if (string.IsNullOrEmpty(taskId)) {
                 throw new ArgumentNullException(nameof(taskId));
             }
-            var response = await httpClient.GetAsync($"{_options.URLMailboxDelegation}/tasks/{taskId}");
+            var response = await _httpClient.GetAsync($"{_options.URLMailboxDelegation}/tasks/{taskId}");
             await CheckResponseAsync(response);
             var result = await response.Content.ReadFromJsonAsync<TaskStatusResponse>();
             return result.Status;
@@ -76,7 +76,7 @@ namespace Yandex.API360 {
         /// <param name="actorId">Идентификатор сотрудника, у которого удаляется доступ</param>
         /// <returns>Идентификатор задачи, по которому можно проверить состояние ее выполнения</returns>
         public async Task<string> DeleteMailboxAccessRulesAsync(ulong mailboxOwnerId, ulong actorId) {
-            var response = await httpClient.DeleteAsync($"{_options.URLMailboxDelegation}?resourceId={mailboxOwnerId}&actorId={actorId}");
+            var response = await _httpClient.DeleteAsync($"{_options.URLMailboxDelegation}?resourceId={mailboxOwnerId}&actorId={actorId}");
             await CheckResponseAsync(response);
             var result = await response.Content.ReadFromJsonAsync<TaskIdResponse>();
             return result.TaskId;

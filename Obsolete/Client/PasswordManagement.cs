@@ -11,7 +11,7 @@ namespace Yandex.API360 {
         /// </summary>
         /// <returns></returns>
         public async Task<PasswordParameters> GetPasswordParametersAsync() {
-            var response = await httpClient.GetAsync(_options.URLpasswords);
+            var response = await _httpClient.GetAsync(_options.URLpasswords);
             await CheckResponseAsync(response);
             var result = await response.Content.ReadFromJsonAsync<PasswordParameters>();
             return result;
@@ -26,7 +26,7 @@ namespace Yandex.API360 {
             if (parameters is null) {
                 throw new ArgumentNullException(nameof(parameters));
             }
-            var response = await httpClient.PutAsJsonAsync(_options.URLpasswords, parameters);
+            var response = await _httpClient.PutAsJsonAsync(_options.URLpasswords, parameters);
             await CheckResponseAsync(response);
             return await response.Content.ReadFromJsonAsync<PasswordParameters>();
         }

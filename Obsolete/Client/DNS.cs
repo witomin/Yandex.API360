@@ -15,7 +15,7 @@ namespace Yandex.API360 {
         /// <param name="perPage">Количество сотрудников на одной странице ответа. Значение по умолчанию — 50.</param>
         /// <returns></returns>
         public async Task<DNSList> GetDNSAsync(string domainName, long page = 1, long perPage = 10) {
-            var response = await httpClient.GetAsync($"{_options.URLdomains}/{domainName}/dns?page={page}&perPage={perPage}");
+            var response = await _httpClient.GetAsync($"{_options.URLdomains}/{domainName}/dns?page={page}&perPage={perPage}");
             await CheckResponseAsync(response);
             var result = await response.Content.ReadFromJsonAsync<DNSList>();
             return result;
@@ -64,7 +64,7 @@ namespace Yandex.API360 {
             if (string.IsNullOrEmpty(domainName)) {
                 throw new ArgumentNullException(nameof(domainName));
             }
-            var response = await httpClient.DeleteAsync($"{_options.URLdomains}/{domainName}/dns/{recordId}");
+            var response = await _httpClient.DeleteAsync($"{_options.URLdomains}/{domainName}/dns/{recordId}");
             await CheckResponseAsync(response);
         }
         [Obsolete("Используйте методы Client.DNS"/*, true*/)]
@@ -81,7 +81,7 @@ namespace Yandex.API360 {
             if (dnsRecord is null) {
                 throw new ArgumentNullException(nameof(dnsRecord));
             }
-            var response = await httpClient.PostAsJsonAsync($"{_options.URLdomains}/{domainName}/dns", dnsRecord);
+            var response = await _httpClient.PostAsJsonAsync($"{_options.URLdomains}/{domainName}/dns", dnsRecord);
             await CheckResponseAsync(response);
             var result = await response.Content.ReadFromJsonAsync<DNSRecord>();
             return result;
@@ -100,7 +100,7 @@ namespace Yandex.API360 {
             if (dnsRecord.recordId is null) {
                 throw new ArgumentNullException(nameof(dnsRecord.recordId));
             }
-            var response = await httpClient.PostAsJsonAsync($"{_options.URLdomains}/{domainName}/dns/{dnsRecord.recordId}", dnsRecord);
+            var response = await _httpClient.PostAsJsonAsync($"{_options.URLdomains}/{domainName}/dns/{dnsRecord.recordId}", dnsRecord);
             await CheckResponseAsync(response);
             var result = await response.Content.ReadFromJsonAsync<DNSRecord>();
             return result;

@@ -1,21 +1,23 @@
 ﻿using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Reflection;
 using System.Text.Encodings.Web;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using Yandex.API360.Exceptions;
 
 namespace Yandex.API360 {
     public abstract class APIClient {
-        internal Api360Options _options;
-        internal HttpClient httpClient;
-        internal ILogger<APIClient>? _logger;
+        protected readonly Api360Options _options;
+        protected readonly HttpClient _httpClient;
+        protected readonly ILogger<APIClient>? _logger;
 
-        private JsonSerializerOptions logSerializeOptions = new JsonSerializerOptions {
+        private readonly JsonSerializerOptions _logSerializeOptions = new JsonSerializerOptions {
             Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
             WriteIndented = false
         };
@@ -23,11 +25,17 @@ namespace Yandex.API360 {
         protected APIClient(Api360Options options, ILogger<APIClient>? logger = default) {
             _logger = logger;
             _options = options;
-            httpClient = new HttpClient();
-            httpClient.DefaultRequestHeaders.Add("User-Agent", $"{Assembly.GetExecutingAssembly()?.GetName()?.Name}/{Assembly.GetExecutingAssembly()?.GetName()?.Version?.ToString()}");
-            httpClient.DefaultRequestHeaders.Accept.Clear();
-            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("OAuth", _options.Token);
+            _httpClient = new HttpClient();
+            ConfigureHttpClient();
+        }
+
+        private void ConfigureHttpClient() {
+            var assemblyName = Assembly.GetExecutingAssembly()?.GetName();
+            var userAgent = $"{assemblyName?.Name}/{assemblyName?.Version}";
+
+            _httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(userAgent);
+            _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("OAuth", _options.Token);
         }
 
         /// <summary>
@@ -50,85 +58,65 @@ namespace Yandex.API360 {
                 }
                 if (Codes.Contains(response.StatusCode)) {
                     FailedAPIResponse failedResponse;
-                    failedResponse = await response.Content.ReadFromJsonAsync<FailedAPIResponse>();
+                    failedResponse = await response.Content.ReadFromJsonAsync<FailedAPIResponse>().ConfigureAwait(false);
                     if (failedResponse != null) {
                         throw new APIRequestException(response.StatusCode, failedResponse);
                     }
                     else {
-                        throw new APIRequestException(response.ReasonPhrase, response.StatusCode);
+                        throw new APIRequestException(response.ReasonPhrase ?? "Unknown error", response.StatusCode);
                     }
                 }
-                throw new APIRequestException(response.ReasonPhrase, response.StatusCode);
+                throw new APIRequestException(response.ReasonPhrase ?? "Unknown error", response.StatusCode);
             }
         }
 
-        internal async Task<TEntity> Get<TEntity>(string requestUri) {
-            var response = await httpClient.GetAsync(requestUri);
-            await CheckResponseAsync(response);
-            _logger?.LogInformation(JsonSerializer.Serialize(
-                new {
-                    response.RequestMessage.RequestUri,
-                    response.RequestMessage.Method,
-                    response.RequestMessage.Headers
-                }, logSerializeOptions));
-            return await response.Content.ReadFromJsonAsync<TEntity>();
-        }
-        internal async Task<TEntity> Put<TEntity>(string requestUri, object body, JsonSerializerOptions? options = default) {
-            var response = await httpClient.PutAsJsonAsync(requestUri, body, options);
-            _logger?.LogInformation(JsonSerializer.Serialize(
-                new {
-                    response.RequestMessage.RequestUri,
-                    response.RequestMessage.Method,
-                    response.RequestMessage.Headers,
+        private void LogRequest(HttpResponseMessage response, object? body) {
+            _logger?.LogInformation("API Request: {RequestDetails}",
+                JsonSerializer.Serialize(new {
+                    response.RequestMessage?.RequestUri,
+                    response.RequestMessage?.Method,
+                    Headers = response.RequestMessage?.Headers.ToDictionary(h => h.Key, h => h.Value),
                     Body = body
-                }, logSerializeOptions));
-            await CheckResponseAsync(response);
-            return await response.Content.ReadFromJsonAsync<TEntity>();
+                }, _logSerializeOptions));
         }
-        internal async Task Delete(string requestUri) {
-            var response = await httpClient.DeleteAsync(requestUri);
-            _logger?.LogInformation(JsonSerializer.Serialize(
-                new {
-                    response.RequestMessage.RequestUri,
-                    response.RequestMessage.Method,
-                    response.RequestMessage.Headers
-                }, logSerializeOptions));
-            await CheckResponseAsync(response);
+
+        internal async Task<TEntity> Get<TEntity>(string requestUri, CancellationToken cancellationToken = default) {
+            var response = await _httpClient.GetAsync(requestUri, cancellationToken);
+            LogRequest(response, null);
+            await CheckResponseAsync(response).ConfigureAwait(false);
+            return await response.Content.ReadFromJsonAsync<TEntity>(cancellationToken: cancellationToken).ConfigureAwait(false);
         }
-        internal async Task<TEntity> Delete<TEntity>(string requestUri) {
-            var response = await httpClient.DeleteAsync(requestUri);
-            _logger?.LogInformation(JsonSerializer.Serialize(
-                new {
-                    response.RequestMessage.RequestUri,
-                    response.RequestMessage.Method,
-                    response.RequestMessage.Headers
-                }, logSerializeOptions));
-            await CheckResponseAsync(response);
-            return await response.Content.ReadFromJsonAsync<TEntity>();
+        internal async Task<TEntity> Put<TEntity>(string requestUri, object body, JsonSerializerOptions? options = default,
+            CancellationToken cancellationToken = default) {
+            var response = await _httpClient.PutAsJsonAsync(requestUri, body, options, cancellationToken).ConfigureAwait(false);
+            LogRequest(response, body);
+            await CheckResponseAsync(response).ConfigureAwait(false);
+            return await response.Content.ReadFromJsonAsync<TEntity>(cancellationToken: cancellationToken).ConfigureAwait(false);
         }
-        internal async Task<TEntity> Post<TEntity>(string requestUri, object body, JsonSerializerOptions? options = default) {
-            var response = await httpClient.PostAsJsonAsync(requestUri, body, options);
-            _logger?.LogInformation(JsonSerializer.Serialize(
-                new {
-                    response.RequestMessage.RequestUri,
-                    response.RequestMessage.Method,
-                    response.RequestMessage.Headers,
-                    Body = body
-                }, logSerializeOptions));
-            await CheckResponseAsync(response);
-            return await response.Content.ReadFromJsonAsync<TEntity>();
+        internal async Task Delete(string requestUri, CancellationToken cancellationToken = default) {
+            var response = await _httpClient.DeleteAsync(requestUri, cancellationToken).ConfigureAwait(false);
+            LogRequest(response, null);
+            await CheckResponseAsync(response).ConfigureAwait(false);
         }
-        internal async Task<TEntity> Patch<TEntity>(string requestUri, object body, JsonSerializerOptions? options = default) {
-            var response = await httpClient.PatchAsJsonAsync(requestUri, body, options);
-            _logger?.LogInformation(JsonSerializer.Serialize(
-                new {
-                    response.RequestMessage.RequestUri,
-                    response.RequestMessage.Method,
-                    response.RequestMessage.Headers,
-                    Body = body
-                }, logSerializeOptions));
-            await CheckResponseAsync(response);
-            return await response.Content.ReadFromJsonAsync<TEntity>();
+        internal async Task<TEntity> Delete<TEntity>(string requestUri, CancellationToken cancellationToken = default) {
+            var response = await _httpClient.DeleteAsync(requestUri, cancellationToken).ConfigureAwait(false);
+            LogRequest(response, null);
+            await CheckResponseAsync(response).ConfigureAwait(false);
+            return await response.Content.ReadFromJsonAsync<TEntity>(cancellationToken: cancellationToken).ConfigureAwait(false);
+        }
+        internal async Task<TEntity> Post<TEntity>(string requestUri, object body, JsonSerializerOptions? options = default,
+            CancellationToken cancellationToken = default) {
+            var response = await _httpClient.PostAsJsonAsync(requestUri, body, options, cancellationToken).ConfigureAwait(false);
+            LogRequest(response, body);
+            await CheckResponseAsync(response).ConfigureAwait(false);
+            return await response.Content.ReadFromJsonAsync<TEntity>(cancellationToken: cancellationToken).ConfigureAwait(false);
+        }
+        internal async Task<TEntity> Patch<TEntity>(string requestUri, object body, JsonSerializerOptions? options = default,
+            CancellationToken cancellationToken = default) {
+            var response = await _httpClient.PatchAsJsonAsync(requestUri, body, options, cancellationToken).ConfigureAwait(false);
+            LogRequest(response, body);
+            await CheckResponseAsync(response).ConfigureAwait(false);
+            return await response.Content.ReadFromJsonAsync<TEntity>(cancellationToken: cancellationToken).ConfigureAwait(false);
         }
     }
 }

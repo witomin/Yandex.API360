@@ -16,7 +16,7 @@ namespace Yandex.API360 {
         /// <param name="perPage">Количество записей на одной странице ответа</param>
         /// <returns>Возвращает список делегированных почтовых ящиков в организации</returns>
         public async Task<List<ResourceShort>> GetDelegatedMailboxesAsync(long page = 1, long perPage = 10) {
-            var response = await httpClient.GetAsync($"{_options.URLMailboxManagement}/delegated?page={page}&perPage={perPage}");
+            var response = await _httpClient.GetAsync($"{_options.URLMailboxManagement}/delegated?page={page}&perPage={perPage}");
             await CheckResponseAsync(response);
             var result = await response.Content.ReadFromJsonAsync<MailboxListAPIResponse>();
             return result.Resources;
@@ -28,11 +28,11 @@ namespace Yandex.API360 {
         /// <returns></returns>
         public async Task<List<ResourceShort>> GetDelegatedMailboxesAsync() {
             var result = new List<ResourceShort>();
-            var response = await httpClient.GetAsync($"{_options.URLMailboxManagement}/delegated");
+            var response = await _httpClient.GetAsync($"{_options.URLMailboxManagement}/delegated");
             await CheckResponseAsync(response);
             //определяем общее число записей
             var totalRecords = (await response.Content.ReadFromJsonAsync<MailboxListAPIResponse>()).Total;
-            response = await httpClient.GetAsync($"{_options.URLMailboxManagement}/delegated?page=1&perPage={totalRecords}");
+            response = await _httpClient.GetAsync($"{_options.URLMailboxManagement}/delegated?page=1&perPage={totalRecords}");
             await CheckResponseAsync(response);
             var apiResponse = await response.Content.ReadFromJsonAsync<MailboxListAPIResponse>();
             //Проверяем весь ли список получен
@@ -64,7 +64,7 @@ namespace Yandex.API360 {
         /// <param name="perPage">Количество записей на одной странице ответа</param>
         /// <exception cref="NotImplementedException"></exception>
         public async Task<List<ResourceShort>> GetMailboxesAsync(long page = 1, long perPage = 10) {
-            var response = await httpClient.GetAsync($"{_options.URLMailboxManagement}/shared?page={page}&perPage={perPage}");
+            var response = await _httpClient.GetAsync($"{_options.URLMailboxManagement}/shared?page={page}&perPage={perPage}");
             await CheckResponseAsync(response);
             var result = await response.Content.ReadFromJsonAsync<MailboxListAPIResponse>();
             return result.Resources;
@@ -88,7 +88,7 @@ namespace Yandex.API360 {
             if (string.IsNullOrEmpty(description)) {
                 throw new ArgumentException(nameof(description));
             }
-            var response = await httpClient.PutAsJsonAsync($"{_options.URLMailboxManagement}/shared", new { email, name, description });
+            var response = await _httpClient.PutAsJsonAsync($"{_options.URLMailboxManagement}/shared", new { email, name, description });
             await CheckResponseAsync(response);
             var result = await response.Content.ReadFromJsonAsync<ResourceIdAPIResponse>();
             return result.ResourceId;
@@ -101,7 +101,7 @@ namespace Yandex.API360 {
         /// <returns>Информация об общем ящике</returns>
         /// <exception cref="NotImplementedException"></exception>
         public async Task<MailboxInfo> GetMailboxInfoAsync(ulong id) {
-            var response = await httpClient.GetAsync($"{_options.URLMailboxManagement}/shared/{id}");
+            var response = await _httpClient.GetAsync($"{_options.URLMailboxManagement}/shared/{id}");
             await CheckResponseAsync(response);
             return await response.Content.ReadFromJsonAsync<MailboxInfo>();
         }
@@ -118,7 +118,7 @@ namespace Yandex.API360 {
             if (id == 0) {
                 throw new ArgumentException(nameof(id));
             }
-            var response = await httpClient.PutAsJsonAsync($"{_options.URLMailboxManagement}/shared/{id}", new { name, description });
+            var response = await _httpClient.PutAsJsonAsync($"{_options.URLMailboxManagement}/shared/{id}", new { name, description });
             await CheckResponseAsync(response);
             var result = await response.Content.ReadFromJsonAsync<ResourceIdAPIResponse>();
             return result.ResourceId;
@@ -134,7 +134,7 @@ namespace Yandex.API360 {
             if (id == 0) {
                 throw new ArgumentException(nameof(id));
             }
-            var response = await httpClient.DeleteAsync($"{_options.URLMailboxManagement}/shared/{id}");
+            var response = await _httpClient.DeleteAsync($"{_options.URLMailboxManagement}/shared/{id}");
             await CheckResponseAsync(response);
         }
         [Obsolete("Используйте методы Client.Mailboxes"/*, true*/)]
@@ -149,7 +149,7 @@ namespace Yandex.API360 {
             if (id == 0) {
                 throw new ArgumentException(nameof(id));
             }
-            var response = await httpClient.GetAsync($"{_options.URLMailboxManagement}/actors/{id}");
+            var response = await _httpClient.GetAsync($"{_options.URLMailboxManagement}/actors/{id}");
             await CheckResponseAsync(response);
             var result = await response.Content.ReadFromJsonAsync<ActorListAPIResponse>();
             return result.Actors;
@@ -165,7 +165,7 @@ namespace Yandex.API360 {
             if (id == 0) {
                 throw new ArgumentException(nameof(id));
             }
-            var response = await httpClient.GetAsync($"{_options.URLMailboxManagement}/resources/{id}");
+            var response = await _httpClient.GetAsync($"{_options.URLMailboxManagement}/resources/{id}");
             await CheckResponseAsync(response);
             var result = await response.Content.ReadFromJsonAsync<ResourceListAPIResponse>();
             return result.Resources;
@@ -181,7 +181,7 @@ namespace Yandex.API360 {
             if (id == 0) {
                 throw new ArgumentException(nameof(id));
             }
-            var response = await httpClient.PutAsJsonAsync($"{_options.URLMailboxManagement}/delegated", new { resourceId = $"{id}" });
+            var response = await _httpClient.PutAsJsonAsync($"{_options.URLMailboxManagement}/delegated", new { resourceId = $"{id}" });
             await CheckResponseAsync(response);
             var result = await response.Content.ReadFromJsonAsync<ResourceIdAPIResponse>();
             return result.ResourceId;
@@ -197,7 +197,7 @@ namespace Yandex.API360 {
             if (id == 0) {
                 throw new ArgumentException(nameof(id));
             }
-            var response = await httpClient.DeleteAsync($"{_options.URLMailboxManagement}/delegated/{id}");
+            var response = await _httpClient.DeleteAsync($"{_options.URLMailboxManagement}/delegated/{id}");
             await CheckResponseAsync(response);
         }
         [Obsolete("Используйте методы Client.Mailboxes"/*, true*/)]
@@ -224,7 +224,7 @@ namespace Yandex.API360 {
             if (roles.Count == 0) {
                 throw new ArgumentException(nameof(roles));
             }
-            var response = await httpClient.PostAsJsonAsync($"{_options.URLMailboxManagement}/set/{resourceId}?actorId={actorId}&notify={notify}", new { roles });
+            var response = await _httpClient.PostAsJsonAsync($"{_options.URLMailboxManagement}/set/{resourceId}?actorId={actorId}&notify={notify}", new { roles });
             await CheckResponseAsync(response);
             var result = await response.Content.ReadFromJsonAsync<TaskIdAPIResponse>();
             return result.TaskId;
@@ -240,7 +240,7 @@ namespace Yandex.API360 {
             if (string.IsNullOrEmpty(taskId)) {
                 throw new ArgumentNullException(nameof(taskId));
             }
-            var response = await httpClient.GetAsync($"{_options.URLMailboxManagement}/tasks/{taskId}");
+            var response = await _httpClient.GetAsync($"{_options.URLMailboxManagement}/tasks/{taskId}");
             await CheckResponseAsync(response);
             var result = await response.Content.ReadFromJsonAsync<TaskStatusResponse>();
             return result.Status;

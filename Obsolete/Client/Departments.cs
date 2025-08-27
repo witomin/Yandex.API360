@@ -18,7 +18,7 @@ namespace Yandex.API360 {
             if (string.IsNullOrEmpty(alias)) {
                 throw new ArgumentNullException(string.IsNullOrEmpty(alias) ? nameof(alias) : null);
             }
-            var response = await httpClient.PostAsJsonAsync($"{_options.URLDepartments}/{departmentId}/aliases", new { alias = alias });
+            var response = await _httpClient.PostAsJsonAsync($"{_options.URLDepartments}/{departmentId}/aliases", new { alias = alias });
             await CheckResponseAsync(response);
             return await response.Content.ReadFromJsonAsync<User>();
         }
@@ -33,7 +33,7 @@ namespace Yandex.API360 {
             if (string.IsNullOrEmpty(alias)) {
                 throw new ArgumentNullException(string.IsNullOrEmpty(alias) ? nameof(alias) : null);
             }
-            var response = await httpClient.DeleteAsync($"{_options.URLDepartments}/{departmentId}/aliases/{alias}");
+            var response = await _httpClient.DeleteAsync($"{_options.URLDepartments}/{departmentId}/aliases/{alias}");
             await CheckResponseAsync(response);
             var result = await response.Content.ReadFromJsonAsync<RemovedAlias>();
             return result.removed;
@@ -48,7 +48,7 @@ namespace Yandex.API360 {
             if (department is null) {
                 throw new ArgumentNullException(nameof(department));
             }
-            var response = await httpClient.PostAsJsonAsync($"{_options.URLDepartments}", department);
+            var response = await _httpClient.PostAsJsonAsync($"{_options.URLDepartments}", department);
             await CheckResponseAsync(response);
             return await response.Content.ReadFromJsonAsync<Department>();
         }
@@ -59,7 +59,7 @@ namespace Yandex.API360 {
         /// <param name="departmentId">Идентификатор подразделения</param>
         /// <returns></returns>
         public async Task<Department> GetDepartmentByIdAsync(ulong departmentId) {
-            var response = await httpClient.GetAsync($"{_options.URLDepartments}/{departmentId}");
+            var response = await _httpClient.GetAsync($"{_options.URLDepartments}/{departmentId}");
             await CheckResponseAsync(response);
             return await response.Content.ReadFromJsonAsync<Department>();
         }
@@ -76,7 +76,7 @@ namespace Yandex.API360 {
             string url = $"{_options.URLDepartments}?page={page}&perPage={perPage}" +
                 $"{(parentId != null ? $"&parentId={parentId}" : string.Empty)}" +
                 $"&orderBy={orderBy}";
-            var response = await httpClient.GetAsync(url);
+            var response = await _httpClient.GetAsync(url);
             await CheckResponseAsync(response);
             var apiResponse = await response.Content.ReadFromJsonAsync<DepartmentsList>();
             return apiResponse;
@@ -125,7 +125,7 @@ namespace Yandex.API360 {
             if (department is null) {
                 throw new ArgumentNullException(nameof(department));
             }
-            var response = await httpClient.PatchAsJsonAsync<BaseDepartment>($"{_options.URLDepartments}/{department.id}", department);
+            var response = await _httpClient.PatchAsJsonAsync<BaseDepartment>($"{_options.URLDepartments}/{department.id}", department);
             await CheckResponseAsync(response);
             return await response.Content.ReadFromJsonAsync<Department>();
         }
@@ -136,7 +136,7 @@ namespace Yandex.API360 {
         /// <param name="departmentId">Идентификатор подразделения</param>
         /// <returns></returns>
         public async Task<bool> DeleteDepartmentAsync(ulong departmentId) {
-            var response = await httpClient.DeleteAsync($"{_options.URLDepartments}/{departmentId}");
+            var response = await _httpClient.DeleteAsync($"{_options.URLDepartments}/{departmentId}");
             await CheckResponseAsync(response);
             var result = await response.Content.ReadFromJsonAsync<RemovedElement>();
             return result.removed;

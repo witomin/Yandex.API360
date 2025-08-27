@@ -11,7 +11,7 @@ namespace Yandex.API360 {
         /// <returns></returns>
         [Obsolete("Используйте методы Client.TwoFA"/*, true*/)]
         public async Task<DomainStatus2FA> GetStatus2faAsync() {
-            var response = await httpClient.GetAsync($"{_options.URL2fa}");
+            var response = await _httpClient.GetAsync($"{_options.URL2fa}");
             await CheckResponseAsync(response);
             return await response.Content.ReadFromJsonAsync<DomainStatus2FA>();
         }
@@ -25,7 +25,7 @@ namespace Yandex.API360 {
             if (status2FA is null) {
                 throw new ArgumentNullException(nameof(status2FA));
             }
-            var response = await httpClient.PostAsJsonAsync($"{_options.URL2fa}", status2FA);
+            var response = await _httpClient.PostAsJsonAsync($"{_options.URL2fa}", status2FA);
             await CheckResponseAsync(response);
             return await response.Content.ReadFromJsonAsync<DomainStatus2FA>();
         }
@@ -35,7 +35,7 @@ namespace Yandex.API360 {
         /// <returns></returns>
         [Obsolete("Используйте методы Client.TwoFA"/*, true*/)]
         public async Task<DomainStatus2FA> Disable2faAsync() {
-            var response = await httpClient.DeleteAsync($"{_options.URL2fa}");
+            var response = await _httpClient.DeleteAsync($"{_options.URL2fa}");
             await CheckResponseAsync(response);
             return await response.Content.ReadFromJsonAsync<DomainStatus2FA>();
         }

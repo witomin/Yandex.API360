@@ -12,7 +12,7 @@ namespace Yandex.API360 {
         /// </summary>
         /// <returns></returns>
         public async Task<List<Rule>> GetRulesAsync() {
-            var response = await httpClient.GetAsync(_options.URLrouting);
+            var response = await _httpClient.GetAsync(_options.URLrouting);
             await CheckResponseAsync(response);
             var result = await response.Content.ReadFromJsonAsync<RulesList>();
             return result.rules;
@@ -24,7 +24,7 @@ namespace Yandex.API360 {
         /// <param name="rulelist">Список правил</param>
         /// <returns></returns>
         public async Task<List<Rule>> SetRulesAsync(RulesList rulelist) {
-            var response = await httpClient.PutAsJsonAsync(_options.URLrouting, rulelist);
+            var response = await _httpClient.PutAsJsonAsync(_options.URLrouting, rulelist);
             await CheckResponseAsync(response);
             var result = await response.Content.ReadFromJsonAsync<RulesList>();
             return result.rules;

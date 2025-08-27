@@ -14,7 +14,7 @@ namespace Yandex.API360 {
         /// <param name="perPage">Количество доменов на одной странице ответа. Значение по умолчанию — 10.</param>
         /// <returns></returns>
         public async Task<DomainList> GetDomainsAsync(long page = 1, long perPage = 10) {
-            var response = await httpClient.GetAsync($"{_options.URLdomains}?page={page}&perPage={perPage}");
+            var response = await _httpClient.GetAsync($"{_options.URLdomains}?page={page}&perPage={perPage}");
             await CheckResponseAsync(response);
             var result = await response.Content.ReadFromJsonAsync<DomainList>();
             return result;
@@ -61,7 +61,7 @@ namespace Yandex.API360 {
             if (string.IsNullOrEmpty(domainName)) {
                 throw new ArgumentNullException(nameof(domainName));
             }
-            var response = await httpClient.PostAsJsonAsync($"{_options.URLdomains}", domainName);
+            var response = await _httpClient.PostAsJsonAsync($"{_options.URLdomains}", domainName);
             await CheckResponseAsync(response);
             var result = await response.Content.ReadFromJsonAsync<Domain>();
             return result;
@@ -76,7 +76,7 @@ namespace Yandex.API360 {
             if (string.IsNullOrEmpty(domainName)) {
                 throw new ArgumentNullException(nameof(domainName));
             }
-            var response = await httpClient.DeleteAsync($"{_options.URLdomains}/{domainName}");
+            var response = await _httpClient.DeleteAsync($"{_options.URLdomains}/{domainName}");
             await CheckResponseAsync(response);
         }
         [Obsolete("Используйте методы Client.Domains"/*, true*/)]
@@ -86,7 +86,7 @@ namespace Yandex.API360 {
         /// <param name="domainName">Полное имя домена. Например example.com. Для кириллических доменов (например домен.рф) используйте кодировку Punycode.</param>
         /// <returns></returns>
         public async Task<DomainConnectStatus> GetDomainStatusAsync(string domainName) {
-            var response = await httpClient.GetAsync($"{_options.URLdomains}/{domainName}/status");
+            var response = await _httpClient.GetAsync($"{_options.URLdomains}/{domainName}/status");
             await CheckResponseAsync(response);
             var result = await response.Content.ReadFromJsonAsync<DomainConnectStatus>();
             return result;

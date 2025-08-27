@@ -12,7 +12,7 @@ namespace Yandex.API360 {
         /// <param name="userId">Идентификатор пользователя</param>
         /// <returns></returns>
         public async Task<UserPersonalSettings> GetUserPersonalSettingsAsync(ulong userId) {
-            var response = await httpClient.GetAsync($"{_options.URLPostSettings}/users/{userId}/settings/sender_info");
+            var response = await _httpClient.GetAsync($"{_options.URLPostSettings}/users/{userId}/settings/sender_info");
             await CheckResponseAsync(response);
             return await response.Content.ReadFromJsonAsync<UserPersonalSettings>();
         }
@@ -27,7 +27,7 @@ namespace Yandex.API360 {
             if (UserSettings is null) {
                 throw new ArgumentNullException(nameof(UserSettings));
             }
-            var response = await httpClient.PostAsJsonAsync($"{_options.URLPostSettings}/users/{userId}/settings/sender_info", UserSettings);
+            var response = await _httpClient.PostAsJsonAsync($"{_options.URLPostSettings}/users/{userId}/settings/sender_info", UserSettings);
             await CheckResponseAsync(response);
             return await response.Content.ReadFromJsonAsync<UserPersonalSettings>();
         }
@@ -39,7 +39,7 @@ namespace Yandex.API360 {
         /// <param name="userId">Идентификатор пользователя</param>
         /// <returns></returns>
         public async Task<CollectAddressStatus> GetСollectAddressesAsync(ulong userId) {
-            var response = await httpClient.GetAsync($"{_options.URLPostSettings}/users/{userId}/settings/address_book");
+            var response = await _httpClient.GetAsync($"{_options.URLPostSettings}/users/{userId}/settings/address_book");
             await CheckResponseAsync(response);
             return await response.Content.ReadFromJsonAsync<CollectAddressStatus>();
         }
@@ -55,7 +55,7 @@ namespace Yandex.API360 {
             if (collectAddresses is null) {
                 throw new ArgumentNullException(nameof(collectAddresses));
             }
-            var response = await httpClient.PostAsJsonAsync($"{_options.URLPostSettings}/users/{userId}/settings/address_book", collectAddresses);
+            var response = await _httpClient.PostAsJsonAsync($"{_options.URLPostSettings}/users/{userId}/settings/address_book", collectAddresses);
             await CheckResponseAsync(response);
             return await response.Content.ReadFromJsonAsync<CollectAddressStatus>();
         }
@@ -67,7 +67,7 @@ namespace Yandex.API360 {
         /// <param name="userId">Идентификатор пользователя</param>
         /// <returns></returns>
         public async Task<UserRulesList> GetUserRulesAsync(ulong userId) {
-            var response = await httpClient.GetAsync($"{_options.URLPostSettings}/users/{userId}/settings/user_rules");
+            var response = await _httpClient.GetAsync($"{_options.URLPostSettings}/users/{userId}/settings/user_rules");
             await CheckResponseAsync(response);
             return await response.Content.ReadFromJsonAsync<UserRulesList>();
         }
@@ -83,7 +83,7 @@ namespace Yandex.API360 {
             if (userRule is null) {
                 throw new ArgumentNullException(nameof(userRule));
             }
-            var response = await httpClient.PostAsJsonAsync($"{_options.URLPostSettings}/users/{userId}/settings/user_rules", userRule);
+            var response = await _httpClient.PostAsJsonAsync($"{_options.URLPostSettings}/users/{userId}/settings/user_rules", userRule);
             await CheckResponseAsync(response);
             var result = await response.Content.ReadFromJsonAsync<UserRuleAddResponse>();
             return result.ruleId;
@@ -96,7 +96,7 @@ namespace Yandex.API360 {
         /// <param name="ruleId">Идентификатор правила</param>
         /// <returns></returns>
         public async Task DeleteUserRuleAsync(ulong userId, ulong ruleId) {
-            var response = await httpClient.DeleteAsync($"{_options.URLPostSettings}/users/{userId}/settings/user_rules/{ruleId}");
+            var response = await _httpClient.DeleteAsync($"{_options.URLPostSettings}/users/{userId}/settings/user_rules/{ruleId}");
             await CheckResponseAsync(response);
         }
     }

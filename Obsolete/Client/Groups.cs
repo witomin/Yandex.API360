@@ -14,7 +14,7 @@ namespace Yandex.API360 {
         /// <param name="perPage">Количество групп на одной странице ответа</param>
         /// <returns></returns>
         public async Task<GroupsList> GetGroupsAsync(long page = 1, long perPage = 10) {
-            var response = await httpClient.GetAsync($"{_options.URLGroups}?page={page}&perPage={perPage}");
+            var response = await _httpClient.GetAsync($"{_options.URLGroups}?page={page}&perPage={perPage}");
             await CheckResponseAsync(response);
             var apiResponse = await response.Content.ReadFromJsonAsync<GroupsList>();
             return apiResponse;
@@ -25,11 +25,11 @@ namespace Yandex.API360 {
         /// </summary>
         /// <returns></returns>
         public async Task<List<Group>> GetAllGroupsAsync() {
-            var response = await httpClient.GetAsync($"{_options.URLGroups}");
+            var response = await _httpClient.GetAsync($"{_options.URLGroups}");
             await CheckResponseAsync(response);
             var apiResponse = await response.Content.ReadFromJsonAsync<GroupsList>();
             var totalGroups = apiResponse.total;
-            response = await httpClient.GetAsync($"{_options.URLGroups}?page={1}&perPage={totalGroups}");
+            response = await _httpClient.GetAsync($"{_options.URLGroups}?page={1}&perPage={totalGroups}");
             await CheckResponseAsync(response);
             apiResponse = await response.Content.ReadFromJsonAsync<GroupsList>();
             return apiResponse.groups;
@@ -44,7 +44,7 @@ namespace Yandex.API360 {
             if (group is null) {
                 throw new ArgumentNullException(nameof(group));
             }
-            var response = await httpClient.PostAsJsonAsync($"{_options.URLGroups}", group);
+            var response = await _httpClient.PostAsJsonAsync($"{_options.URLGroups}", group);
             await CheckResponseAsync(response);
             return await response.Content.ReadFromJsonAsync<Group>();
         }
@@ -55,7 +55,7 @@ namespace Yandex.API360 {
         /// <param name="groupId">идентификатор группы</param>
         /// <returns></returns>
         public async Task<bool> DeleteGroupAsync(ulong groupId) {
-            var response = await httpClient.DeleteAsync($"{_options.URLGroups}/{groupId}");
+            var response = await _httpClient.DeleteAsync($"{_options.URLGroups}/{groupId}");
             await CheckResponseAsync(response);
             var result = await response.Content.ReadFromJsonAsync<RemovedElement>();
             return result.removed;
@@ -71,7 +71,7 @@ namespace Yandex.API360 {
             if (member is null) {
                 throw new ArgumentNullException(nameof(member));
             }
-            var response = await httpClient.PostAsJsonAsync($"{_options.URLGroups}/{groupId}/members", member);
+            var response = await _httpClient.PostAsJsonAsync($"{_options.URLGroups}/{groupId}/members", member);
             await CheckResponseAsync(response);
             var result = await response.Content.ReadFromJsonAsync<AddedMember>();
             return result.added;
@@ -84,7 +84,7 @@ namespace Yandex.API360 {
         /// <param name="member">Участник группы</param>
         /// <returns></returns>
         public async Task<bool> DeleteMemberFromGroupAsync(ulong groupId, Member member) {
-            var response = await httpClient.DeleteAsync($"{_options.URLGroups}/{groupId}/members/{member.type}/{member.id}");
+            var response = await _httpClient.DeleteAsync($"{_options.URLGroups}/{groupId}/members/{member.type}/{member.id}");
             await CheckResponseAsync(response);
             var result = await response.Content.ReadFromJsonAsync<DeletedMember>();
             return result.deleted;
@@ -96,7 +96,7 @@ namespace Yandex.API360 {
         /// <param name="groupId">Идентификатор группы</param>
         /// <returns></returns>
         public async Task<MembersList> DeleteAllMembersFromGroupAsync(ulong groupId) {
-            var response = await httpClient.DeleteAsync($"{_options.URLGroups}/{groupId}/members");
+            var response = await _httpClient.DeleteAsync($"{_options.URLGroups}/{groupId}/members");
             await CheckResponseAsync(response);
             var result = await response.Content.ReadFromJsonAsync<MembersList>();
             return result;
@@ -108,7 +108,7 @@ namespace Yandex.API360 {
         /// <param name="groupId"></param>
         /// <returns></returns>
         public async Task<Group> DeleteAllManagersFromGroupAsync(ulong groupId) {
-            var response = await httpClient.DeleteAsync($"{_options.URLGroups}/{groupId}/admins");
+            var response = await _httpClient.DeleteAsync($"{_options.URLGroups}/{groupId}/admins");
             await CheckResponseAsync(response);
             var result = await response.Content.ReadFromJsonAsync<Group>();
             return result;
@@ -120,7 +120,7 @@ namespace Yandex.API360 {
         /// <param name="groupId">Идентификатор группы</param>
         /// <returns></returns>
         public async Task<MembersList> GetGroupMembersAsync(ulong groupId) {
-            var response = await httpClient.GetAsync($"{_options.URLGroups}/{groupId}/members");
+            var response = await _httpClient.GetAsync($"{_options.URLGroups}/{groupId}/members");
             await CheckResponseAsync(response);
             return await response.Content.ReadFromJsonAsync<MembersList>();
         }
@@ -131,7 +131,7 @@ namespace Yandex.API360 {
         /// <param name="groupId">Идентификатор группы</param>
         /// <returns></returns>
         public async Task<Group> GetGroupAsync(ulong groupId) {
-            var response = await httpClient.GetAsync($"{_options.URLGroups}/{groupId}");
+            var response = await _httpClient.GetAsync($"{_options.URLGroups}/{groupId}");
             await CheckResponseAsync(response);
             return await response.Content.ReadFromJsonAsync<Group>();
         }
@@ -142,7 +142,7 @@ namespace Yandex.API360 {
         /// <param name="group">Группа</param>
         /// <returns></returns>
         public async Task<Group> EditGroupAsync(Group group) {
-            var response = await httpClient.PatchAsJsonAsync<BaseGroup>($"{_options.URLGroups}/{group.id}", group);
+            var response = await _httpClient.PatchAsJsonAsync<BaseGroup>($"{_options.URLGroups}/{group.id}", group);
             await CheckResponseAsync(response);
             return await response.Content.ReadFromJsonAsync<Group>();
         }
@@ -154,7 +154,7 @@ namespace Yandex.API360 {
         /// <param name="adminIds">Идентификаторы руководителей группы</param>
         /// <returns></returns>
         public async Task<Group> EditManagersFromGroupAsync(ulong groupId, List<string> adminIds) {
-            var response = await httpClient.PutAsJsonAsync($"{_options.URLGroups}/{groupId}/admins", new { adminIds = adminIds });
+            var response = await _httpClient.PutAsJsonAsync($"{_options.URLGroups}/{groupId}/admins", new { adminIds = adminIds });
             await CheckResponseAsync(response);
             return await response.Content.ReadFromJsonAsync<Group>();
         }
@@ -166,7 +166,7 @@ namespace Yandex.API360 {
         /// <param name="members">Участники группы</param>
         /// <returns></returns>
         public async Task<Group> EditMembersFromGroupAsync(ulong groupId, List<Member> members) {
-            var response = await httpClient.PutAsJsonAsync($"{_options.URLGroups}/{groupId}/members", new { members = members });
+            var response = await _httpClient.PutAsJsonAsync($"{_options.URLGroups}/{groupId}/members", new { members = members });
             await CheckResponseAsync(response);
             return await response.Content.ReadFromJsonAsync<Group>();
         }
